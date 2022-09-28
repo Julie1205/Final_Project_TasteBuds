@@ -1,6 +1,10 @@
 import { createGlobalStyle } from "styled-components";
 
 export default createGlobalStyle`
+	:root {
+		--body-font: 1.2rem;
+		--offset-top: 10px;
+	}
 
 /* http://meyerweb.com/eric/tools/css/reset/ 
     v2.0 | 20110126

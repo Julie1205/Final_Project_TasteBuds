@@ -3,10 +3,12 @@ import { useEffect } from "react";
 import styled from "styled-components";
 import NavigationSideBar from "../NavigationSideBar";
 import LogoutButton from "../LogoutButton";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const HomePage = () => {
     const location = useLocation().pathname;
     const navigate = useNavigate();
+    const { user } = useAuth0();
 
     useEffect(() => {
         if(location === "/home") {
@@ -17,8 +19,8 @@ const HomePage = () => {
     return (
         <Wrapper>
             <Header>
-                <Link to="/home">TasteBuds</Link>
-                <p>Welcome User!</p>
+                <Link to="/home/explore">TasteBuds</Link>
+                {user ? <p>{`Welcome ${user.name}!`}</p> : null}
                 <LogoutButton/>
             </Header>
             <Content>
@@ -32,6 +34,7 @@ const HomePage = () => {
 export default HomePage;
 
 const Wrapper = styled.div`
+    font-size: var(--body-font);
     margin: 10px;
 `;
 

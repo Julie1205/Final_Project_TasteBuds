@@ -15,6 +15,7 @@ const ExplorePage = () => {
 export default ExplorePage;
 
 const Wrapper = styled.div`
+    font-size: var(--body-font);
     display: flex;
     flex-direction: column;
     width: calc(100vw - 250px);

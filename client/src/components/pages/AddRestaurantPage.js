@@ -34,4 +34,6 @@ const Wrapper = styled.div`
     width: calc(100vw - 250px);
     justify-content: center;
     align-items: center;
+    font-size: var(--body-font);
+    margin-top: var(--offset-top);
 `;
