@@ -1,9 +1,10 @@
+import LoginButton from "../auth0/LoginButton";
 const LandingPage = () => {
     return (
         <div>
             <p>Logo</p>
             <p>TasteBuds</p>
-            <button>sign in</button>
+            <LoginButton/>
         </div>
     )
 };

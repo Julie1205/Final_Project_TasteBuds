@@ -1,6 +1,8 @@
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
-import NavigationBar from "../NavigationBar";
+import styled from "styled-components";
+import NavigationSideBar from "../NavigationSideBar";
+import LogoutButton from "../auth0/LogoutButton";
 
 const HomePage = () => {
     const location = useLocation().pathname;
@@ -13,16 +15,31 @@ const HomePage = () => {
     }, [location]);
 
     return (
-        <div>
-            <div>
-                <p>Logo</p>
+        <Wrapper>
+            <Header>
+                <Link to="/home">TasteBuds</Link>
                 <p>Welcome User!</p>
-                <button>Logout</button>
-            </div>
-            <NavigationBar/>
-            <Outlet />
-        </div>
+                <LogoutButton/>
+            </Header>
+            <Content>
+                <NavigationSideBar/>
+                <Outlet />
+            </Content>
+        </Wrapper>
     )
 };
 
 export default HomePage;
+
+const Wrapper = styled.div`
+    margin: 10px;
+`;
+
+const Header = styled.div`
+    display: flex;
+    justify-content: space-between;
+`;
+
+const Content = styled.div`
+    display: flex;
+`;

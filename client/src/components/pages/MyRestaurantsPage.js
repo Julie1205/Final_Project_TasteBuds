@@ -1,32 +1,18 @@
+import { Outlet, NavLink } from "react-router-dom";
+
 const MyRestaurantsPage = () => {
     return (
         <div>
             <p>My Restaurants</p>
-            <p>filter by:</p>
-            <label>
-                <input type="radio" name="category" value="all"/>
-                All
-            </label>
-            <label>
-                <input type="radio" name="category" value="like"/>
-                Liked
-            </label>
-            <label>
-                <input type="radio" name="category" value="dislike"/>
-                Disliked
-            </label>
-            <label>
-                <input type="radio" name="category" value="favorite"/>
-                Favorite
-            </label>
-            <label>
-                <input type="radio" name="category" value="been_to" />
-                Liked/Disliked
-            </label>
-            <label>
-                <input type="radio"name="category" value="wished"/>
-                Wish List
-            </label>
+            <div>
+                <NavLink to={"all"}>All</NavLink>
+                <NavLink to={"beenTo"}>Been To</NavLink>
+                <NavLink to={"liked"}>Liked</NavLink>
+                <NavLink to={"disliked"}>Disliked</NavLink>
+                <NavLink to={"favorite"}>Favorite</NavLink>
+                <NavLink to={"want"}>Want to go to</NavLink>
+            </div>
+            <Outlet/>
         </div>
     );
 };
