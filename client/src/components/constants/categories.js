@@ -1,0 +1,1 @@
+export const CATEGORIES = ["All", "Been_To", "Liked", "Disliked", "Favorite", "Wish_List"];

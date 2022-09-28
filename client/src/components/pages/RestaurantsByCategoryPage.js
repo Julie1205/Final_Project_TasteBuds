@@ -1,6 +1,10 @@
+import { useParams } from "react-router-dom";
+
 const RestaurantsByCategoryPage = () => {
+    const { category } = useParams();
+
     return (
-        <p>Restaurants by category</p>
+        <p>{`${category.replace("_", " ")} Restaurants`}</p>
     )
 };
 

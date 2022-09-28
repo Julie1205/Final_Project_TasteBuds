@@ -2,7 +2,7 @@ import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
 import styled from "styled-components";
 import NavigationSideBar from "../NavigationSideBar";
-import LogoutButton from "../auth0/LogoutButton";
+import LogoutButton from "../LogoutButton";
 
 const HomePage = () => {
     const location = useLocation().pathname;

@@ -7,6 +7,7 @@ import MyRestaurantsPage from "./components/pages/MyRestaurantsPage";
 import ExplorePage from "./components/pages/ExplorePage";
 import RestaurantsByCategoryPage from "./components/pages/RestaurantsByCategoryPage";
 import ProfilePage from "./components/pages/ProfilePage";
+import AddRestaurantPage from "./components/pages/AddRestaurantPage";
 
 const App = () => {
 
@@ -22,7 +23,7 @@ const App = () => {
             <Route path=":category" element={<RestaurantsByCategoryPage />} />
           </Route>
           <Route path="myRestaurants/:id" element={<>Restaurants page</>} />
-          <Route path="AddRestaurant" element={<>add a restaurant</>}/>
+          <Route path="AddRestaurant" element={<AddRestaurantPage />}/>
           <Route path="*" element={<p>Page not found</p>} />
         </Route> 
         <Route path="*" element={<p>Page not found</p>} />

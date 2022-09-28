@@ -1,16 +1,17 @@
 import { Outlet, NavLink } from "react-router-dom";
 
+import { CATEGORIES } from "../constants/categories";
+
 const MyRestaurantsPage = () => {
     return (
         <div>
             <p>My Restaurants</p>
             <div>
-                <NavLink to={"all"}>All</NavLink>
-                <NavLink to={"beenTo"}>Been To</NavLink>
-                <NavLink to={"liked"}>Liked</NavLink>
-                <NavLink to={"disliked"}>Disliked</NavLink>
-                <NavLink to={"favorite"}>Favorite</NavLink>
-                <NavLink to={"want"}>Want to go to</NavLink>
+                {
+                    CATEGORIES.map((category) => {
+                        return <NavLink to={category}>{category.replace("_", " ")}</NavLink>
+                    })
+                }
             </div>
             <Outlet/>
         </div>

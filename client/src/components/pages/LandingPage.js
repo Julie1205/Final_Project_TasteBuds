@@ -1,4 +1,4 @@
-import LoginButton from "../auth0/LoginButton";
+import LoginButton from "../LoginButton";
 const LandingPage = () => {
     return (
         <div>
