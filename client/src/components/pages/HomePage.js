@@ -20,7 +20,7 @@ const HomePage = () => {
         <Wrapper>
             <Header>
                 <Link to="/home/explore">TasteBuds</Link>
-                {user ? <p>{`Welcome ${user.name}!`}</p> : null}
+                {user ? <p>{`Welcome ${user.nickname}!`}</p> : null}
                 <LogoutButton/>
             </Header>
             <Content>
