@@ -37,7 +37,7 @@ const getRestaurantsNearMe = (req, res) => {
         })
         .then(location => {
             return fetch(
-                `https://trueway-places.p.rapidapi.com/FindPlacesNearby?location=${location}&type=restaurant&radius=200&language=en`, 
+                `https://trueway-places.p.rapidapi.com/FindPlacesNearby?location=${location}&type=restaurant&radius=1000&language=en`, 
                 placesOptions
             )
         })
