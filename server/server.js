@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const { getRestaurantsNearMe, findRestaurant } = require("./api_handlers");
+const { getUserRestaurants, addRestaurant } = require("./mongoDb_handlers");
 const app = express();
 const port = 8000;
 
@@ -10,6 +11,10 @@ app.use(express.json());
 //restaurant search endpoints
 app.get("/get-restaurants-near-me/:address", getRestaurantsNearMe);
 app.get("/get-find-restaurant/:restaurantName/:city", findRestaurant);
+
+//user enpoints
+app.get("/get-user-restaurants/:email", getUserRestaurants);
+app.post("/add-restaurant/:email", addRestaurant);
 
 app.get("*", (req, res) => {
     res.status(404).json({
