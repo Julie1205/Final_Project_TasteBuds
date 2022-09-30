@@ -10,7 +10,13 @@ const restaurant = ( { restaurant } ) => {
                 {restaurant.phone_number ? <p>{`Phone Number: ${restaurant.phone_number}`}</p> : null}
                 {restaurant.website ? <p>
                     Website: 
-                    <a href={`${restaurant.website}`}>{restaurant.website}</a>
+                    <a 
+                        href={`${restaurant.website}`} 
+                        target="_blank"
+                        rel="noreferrer noopener"
+                    >
+                        {restaurant.website}
+                    </a>
                 </p> : null}
                 <p>{`Distance: ${restaurant.distance}m`}</p>
             </div>

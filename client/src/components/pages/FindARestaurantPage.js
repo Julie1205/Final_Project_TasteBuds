@@ -3,45 +3,57 @@ import { useState } from "react";
 
 import SearchResults from "../SearchResults";
 
-const ExplorePage = () => {
-    const [address, setAddress] = useState("");
+const FindARestaurantPage = () => {
+    const [restaurantName, setRestaurantName] = useState("");
     const [city, setCity] = useState("");
+    const [street, setStreet] = useState("");
     const [searchResults, setSearchResults] = useState(null);
     const [searchState, setSearchState] = useState(false);
     const [errorStatus, setErrorStatus] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("Please enter an address and city.");
+    const [errorMessage, setErrorMessage] = useState("Please enter an restaurant name and city.");
 
     const handleAddressInputChange = (e) => {
         if(errorStatus){
             setErrorStatus(false);
-            setErrorMessage("Please enter an address and city.");
+            setErrorMessage("Please enter an restaurant name and city.");
         }
-        setAddress(e.target.value);
+        setStreet(e.target.value);
+    };
+    
+    const handleRestaurantNameInputChange = (e) => {
+        if(errorStatus){
+            setErrorStatus(false);
+            setErrorMessage("Please enter an restaurant name and city.");
+        }
+        setRestaurantName(e.target.value);
     };
 
     const handleCityInputChange = (e) => {
         if(errorStatus){
             setErrorStatus(false);
-            setErrorMessage("Please enter an address and city.");
+            setErrorMessage("Please enter an restaurant name and city.");
         }
         setCity(e.target.value);
     };
 
     const handleSearch = () => {
-        if(address === " " || city === " ") {
+        if(restaurantName === " " || city === " ") {
             setErrorStatus(true);
         }
         else {
             setSearchState(true);
-            const addressParam = `${address.trim().toLowerCase()} ${city.trim().toLowerCase()}`;
-            const uri = encodeURI(`/get-restaurants-near-me/${addressParam}`);
+            const restaurantNameParam = `${restaurantName.trim().toLowerCase()}`;
+            const cityParam = `${city.trim().toLowerCase()}`;
+            const streetParam = `${street.trim().toLowerCase()}`;
 
+            const uri = encodeURI(`/get-find-restaurant/${restaurantNameParam}/${cityParam}?street=${streetParam}`);
             fetch(uri)
             .then(res => res.json())
             .then(results => {
                 if(results.status === 200) {
-                    setAddress("");
+                    setRestaurantName("");
                     setCity("");
+                    setStreet("");
                     setSearchResults(results.data);
                 }
                 else {
@@ -59,23 +71,24 @@ const ExplorePage = () => {
 
     const handleMakeNewSearch = () => {
         setSearchResults(null);
-        setAddress("");
+        setRestaurantName("");
         setCity("");
+        setStreet("");
         setSearchState(false);
     };
 
     return (
         <Wrapper>
+            <p>Find a Restaurant</p>
             {!searchState && !searchState ?    
                 (<>
-                    <p>Explore Your area. Find restaurants near you.</p>
                     <InputSection>
                         <label>
-                            Street Address:
-                            <AddressInput
-                                value={address}
-                                placeholder="123 Guy"
-                                onChange={handleAddressInputChange}
+                            Restaurant Name:
+                            <RestaurantInput
+                                value={restaurantName}
+                                placeholder="Onoir"
+                                onChange={handleRestaurantNameInputChange}
                             />
                         </label>
                         <label>
@@ -86,9 +99,17 @@ const ExplorePage = () => {
                                 onChange={handleCityInputChange}
                             />
                         </label>
+                        <label>
+                            Street:
+                            <StreetInput
+                                value={street}
+                                placeholder="saint-catherine"
+                                onChange={handleAddressInputChange}
+                            />
+                        </label>
                     </InputSection>
                     <button 
-                        disabled={!address || !city}
+                        disabled={!restaurantName || !city}
                         onClick={handleSearch}
                     >
                         Search
@@ -97,29 +118,23 @@ const ExplorePage = () => {
             : searchResults && searchState
             ? (
                 <div>
-                    <p>Restaurants Near You</p>
+                    <button onClick={handleMakeNewSearch}>Make another search</button>
                     <div>
-                        {searchResults.length > 0 ?
-                        <>
-                            <button onClick={handleMakeNewSearch}>Make another search</button>
-                            {searchResults.map((restaurant) => {
+                        {
+                            searchResults.map((restaurant) => {
                                 return <SearchResults key={`search${restaurant.id}`} restaurant={restaurant} />
-                            })}
-                        </>
-                        : <div>
-                            <p>No Restaurants Found</p>
-                            <button onClick={handleMakeNewSearch}>Make another search</button>
-                        </div>}
+                            })
+                        }
                     </div>
                 </div>
             )
             : <p>Loading...</p>}
             {errorStatus ? <p>{errorMessage}</p> : null}
         </Wrapper>
-    );
+    )
 };
 
-export default ExplorePage;
+export default FindARestaurantPage;
 
 const Wrapper = styled.div`
     font-size: var(--body-font);
@@ -136,12 +151,16 @@ const InputSection = styled.div`
     margin: 20px 0;
 `;
 
-const AddressInput = styled.input`
+const RestaurantInput = styled.input`
     border: none;
     border-bottom: 1px solid black;
     padding: 5px;
 `;
 
-const CityInput = styled(AddressInput)`
-    width: 250px;
+const CityInput = styled(RestaurantInput)`
+    width: 269px;
+`;
+
+const StreetInput = styled(RestaurantInput)`
+    width: 257px;
 `;

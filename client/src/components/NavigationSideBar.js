@@ -7,7 +7,8 @@ const NavigationSideBar = () => {
             <HomeLink to="/home/explore">Home</HomeLink>
             <ProfileLink to="profile">Profile</ProfileLink>
             <MyRestaurantsLink to="myRestaurants">My Restaurants</MyRestaurantsLink>
-            <AddRestaurantsLink to="AddRestaurant">Add a Restaurant</AddRestaurantsLink>
+            <FindARestaurantsLink to="findARestaurant">Find a Restaurant</FindARestaurantsLink>
+            <AddRestaurantsLink to="addRestaurant">Add a Restaurant</AddRestaurantsLink>
         </NavigationSection>
     );
 };
@@ -40,4 +41,7 @@ const MyRestaurantsLink = styled(HomeLink)`
 `;
 
 const AddRestaurantsLink = styled(HomeLink)`
+`;
+
+const FindARestaurantsLink = styled(HomeLink)`
 `;

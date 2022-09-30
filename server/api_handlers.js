@@ -55,9 +55,11 @@ const getRestaurantsNearMe = (req, res) => {
 //this handler will search for a restaurant by name
 const findRestaurant = (req, res) => {
     const { restaurantName, city } = req.params;
+    const { street } = req.query;
 
-    const url = encodeURI(`https://trueway-places.p.rapidapi.com/FindPlaceByText?text=${restaurantName}%20restaurant%20${city}&language=en`);
-
+    const query = `${restaurantName} restaurant ${city} ${street}`
+    const url = encodeURI(`https://trueway-places.p.rapidapi.com/FindPlaceByText?text=${query}&language=en`);
+    console.log(url)
     const options = {
     method: 'GET',
     headers: {
@@ -73,7 +75,7 @@ const findRestaurant = (req, res) => {
                     return Promise.reject( { status: 404, message: "No match found" } );
                 }
                 else {
-                    res.status(200).json( { data: searchResults.results } );
+                    res.status(200).json( { status: 200, data: searchResults.results } );
                 }
             })
             .catch(err => {
