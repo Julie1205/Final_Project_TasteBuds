@@ -20,7 +20,7 @@ const restaurant = ( { restaurant } ) => {
                 </p> : null}
                 <p>{`Distance: ${restaurant.distance}m`}</p>
             </div>
-            <button>Save</button>
+            <Link to="/home/addRestaurant" state={{data: restaurant}}>Save</Link>
         </RestaurantInfo>
     )
 };
