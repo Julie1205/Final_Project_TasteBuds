@@ -10,6 +10,10 @@ const mongoOptions = {
     useUnifiedTopology: true
 };
 
+// restaurantVisitStatus", - true, false
+//     "restaurantCategory" -liked, disliked,
+//     "restaurantFavorite", - true, false
+
 const getUserRestaurants = async (req, res) => {
     const { email } = req.params;
     const client = new MongoClient(MONGO_URI, mongoOptions);
