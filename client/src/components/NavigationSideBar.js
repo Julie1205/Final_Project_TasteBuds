@@ -6,7 +6,7 @@ const NavigationSideBar = () => {
         <NavigationSection>
             <HomeLink to="/home/explore">Home</HomeLink>
             <ProfileLink to="profile">Profile</ProfileLink>
-            <MyRestaurantsLink to="myRestaurants">My Restaurants</MyRestaurantsLink>
+            <MyRestaurantsLink to="myRestaurants/All">My Restaurants</MyRestaurantsLink>
             <FindARestaurantsLink to="findARestaurant">Find a Restaurant</FindARestaurantsLink>
             <AddRestaurantsLink to="addRestaurant">Add a Restaurant</AddRestaurantsLink>
         </NavigationSection>

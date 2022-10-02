@@ -1,18 +1,9 @@
-import { Outlet, NavLink, useNavigate, useLocation, Link } from "react-router-dom";
-import { useEffect } from "react";
+import { Outlet, NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 import { CATEGORIES } from "../constants/categories";
 
 const MyRestaurantsPage = () => {
-    const location = useLocation().pathname;
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if(location === "/home/myRestaurants") {
-            navigate(CATEGORIES[0]);
-        }
-    }, [location]);
 
     return (
         <Wrapper>

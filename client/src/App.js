@@ -9,6 +9,7 @@ import RestaurantsByCategoryPage from "./components/pages/RestaurantsByCategoryP
 import ProfilePage from "./components/pages/ProfilePage";
 import AddRestaurantPage from "./components/pages/AddRestaurantPage";
 import FindARestaurantPage from "./components/pages/FindARestaurantPage";
+import RestaurantDetailsPage from "./components/pages/RestaurantDetailsPage"
 
 const App = () => {
 
@@ -23,7 +24,7 @@ const App = () => {
           <Route path="myRestaurants" element={<MyRestaurantsPage />} >
             <Route path=":category" element={<RestaurantsByCategoryPage />} />
           </Route>
-          <Route path="myRestaurants/:id" element={<>Restaurants page</>} />
+          <Route path="restaurant/:id" element={<RestaurantDetailsPage/>} />
           <Route path="addRestaurant" element={<AddRestaurantPage />}/>
           <Route path="findARestaurant" element={<FindARestaurantPage />}/>
           <Route path="*" element={<p>Page not found</p>} />
