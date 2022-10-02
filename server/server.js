@@ -1,7 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const { getRestaurantsNearMe, findRestaurant } = require("./api_handlers");
-const { getUserRestaurants, addRestaurant, deleteRestaurant, updateRestaurant } = require("./restaurants_handlers");
+const { getUserRestaurants, getRestaurant, addRestaurant, deleteRestaurant, updateRestaurant } = require("./restaurants_handlers");
 const { getUser } = require("./user_handlers");
 const app = express();
 const port = 8000;
@@ -15,6 +15,7 @@ app.get("/get-find-restaurant/:restaurantName/:city", findRestaurant);
 
 //user restaurants endpoints
 app.get("/get-user-restaurants/:email", getUserRestaurants);
+app.get("/get-restaurant/:email/:_id", getRestaurant);
 app.post("/add-restaurant/:email", addRestaurant);
 app.patch("/delete-restaurant/:email", deleteRestaurant);
 app.patch("/update-restaurant/:email", updateRestaurant);

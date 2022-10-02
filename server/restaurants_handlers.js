@@ -14,6 +14,13 @@ const mongoOptions = {
 //     "restaurantCategory" -liked, disliked,
 //     "restaurantFavorite", - true, false
 
+const FILTER_FOR_ALL= "All";
+const FILTER_FOR_BEEN_TO = "Been_To";
+const FILTER_FOR_LIKED = "Liked";
+const FILTER_FOR_DISLIKED = "Disliked";
+const FILTER_FOR_FAVORITE = "Favorite";
+const FILTER_FOR_WISH_TO = "Wish_List";
+//change getUserRestaurants to take query for catergory
 const getUserRestaurants = async (req, res) => {
     const { email } = req.params;
     const client = new MongoClient(MONGO_URI, mongoOptions);
@@ -21,7 +28,16 @@ const getUserRestaurants = async (req, res) => {
     try {
         await client.connect();
         const db = client.db(DATABASE_NAME);
-        const results = await db.collection(USERS_COLLECTION).findOne({email: email}, { projection: { _id: 0, restaurants: 1 } });
+        const fieldsToReturn = { 
+            projection: { 
+                _id: 0,
+                "restaurants._id": 1, 
+                "restaurants.restaurantName": 1, 
+                "restaurants.restaurantVisitStatus": 1,
+                "restaurants.restaurantFavorite": 1
+            } 
+        }
+        const results = await db.collection(USERS_COLLECTION).findOne({email: email}, fieldsToReturn);
 
         results
             ? res.status(200).json( { status: 200, data: results} )
@@ -34,7 +50,30 @@ const getUserRestaurants = async (req, res) => {
     finally {
         client.close();
     }
-}
+};
+
+const getRestaurant = async (req, res) => {
+    const { email, _id } = req.params;
+    const client = new MongoClient(MONGO_URI, mongoOptions);
+
+    try {
+        await client.connect();
+        const db = client.db(DATABASE_NAME);
+        const results = await db.collection(USERS_COLLECTION).findOne( { email,  "restaurants._id": { $eq: _id } }, { projection: { "restaurants.$": 1} });
+
+        results
+            ? res.status(200).json( { status: 200, data: results} )
+            : res.status(404).json( {status: 404, data: email, message: "Restaurant not found"})
+    }
+    catch (err) {
+        console.log(err.stack);
+        res.status(500).json( { status: 500, data: email, message: err.message } );
+    }
+    finally {
+        client.close();
+    }
+
+};
 
 const addRestaurant = async (req, res) => {
     const { email } = req.params;
@@ -176,6 +215,6 @@ const updateRestaurant = async (req, res) => {
     else {
         res.status(400).json( { status: 400, data: { email, _id, updatedvalue: req.body }, message: "Missing information to find user or update restaurant" } )
     }
-}
+};
 
-module.exports = { getUserRestaurants, addRestaurant, deleteRestaurant, updateRestaurant }
+module.exports = { getUserRestaurants, getRestaurant, addRestaurant, deleteRestaurant, updateRestaurant }
