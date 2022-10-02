@@ -10,17 +10,6 @@ const mongoOptions = {
     useUnifiedTopology: true
 };
 
-// restaurantVisitStatus", - true, false
-//     "restaurantCategory" -liked, disliked,
-//     "restaurantFavorite", - true, false
-
-const FILTER_FOR_ALL= "All";
-const FILTER_FOR_BEEN_TO = "Been_To";
-const FILTER_FOR_LIKED = "Liked";
-const FILTER_FOR_DISLIKED = "Disliked";
-const FILTER_FOR_FAVORITE = "Favorite";
-const FILTER_FOR_WISH_TO = "Wish_List";
-//change getUserRestaurants to take query for catergory
 const getUserRestaurants = async (req, res) => {
     const { email } = req.params;
     const client = new MongoClient(MONGO_URI, mongoOptions);
@@ -31,10 +20,7 @@ const getUserRestaurants = async (req, res) => {
         const fieldsToReturn = { 
             projection: { 
                 _id: 0,
-                "restaurants._id": 1, 
-                "restaurants.restaurantName": 1, 
-                "restaurants.restaurantVisitStatus": 1,
-                "restaurants.restaurantFavorite": 1
+                restaurants: 1
             } 
         }
         const results = await db.collection(USERS_COLLECTION).findOne({email: email}, fieldsToReturn);
