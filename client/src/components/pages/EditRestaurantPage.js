@@ -138,7 +138,7 @@ const EditRestaurantPage = () => {
                     <p>What did you think about the restaurant?</p>
                     <label>
                         <input
-                            disabled={updatedValues.restaurantVisitStatus === false}
+                            disabled={updatedValues.restaurantVisitStatus === false || updatedValues.restaurantVisitStatus === undefined}
                             type="radio"
                             name="category"
                             value="liked"
@@ -160,7 +160,7 @@ const EditRestaurantPage = () => {
                     </label>
                     <label>
                         <input
-                            disabled={updatedValues.restaurantVisitStatus === false}
+                            disabled={updatedValues.restaurantVisitStatus === false || updatedValues.restaurantVisitStatus === undefined}
                             type="radio"
                             name="category"
                             value="disliked"
@@ -186,7 +186,7 @@ const EditRestaurantPage = () => {
                     <p>Would you like to add restaurant to favorites?</p>
                     <label>
                         <input
-                            disabled={updatedValues.restaurantVisitStatus === false || updatedValues.restaurantCategory === "disliked"}
+                            disabled={updatedValues.restaurantVisitStatus === false || updatedValues.restaurantCategory === "disliked" || updatedValues.restaurantCategory === undefined}
                             type="radio"
                             name="favoriteStatus"
                             value={true}
@@ -208,7 +208,7 @@ const EditRestaurantPage = () => {
                     </label>
                     <label>
                         <input
-                            disabled={updatedValues.restaurantVisitStatus === false || updatedValues.restaurantCategory === "disliked"}
+                            disabled={updatedValues.restaurantVisitStatus === false || updatedValues.restaurantCategory === "disliked" || updatedValues.restaurantCategory === undefined}
                             type="radio"
                             name="favoriteStatus"
                             value={false}

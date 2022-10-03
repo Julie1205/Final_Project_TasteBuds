@@ -10,7 +10,7 @@ const INITIAL_STATE = {
     restaurantWebsite: "",
     restaurantVisitStatus: false,
     restaurantCategory: "",
-    restaurantFavorite: true,
+    restaurantFavorite: false,
     restaurantComment: ""
 }
 
@@ -221,7 +221,11 @@ const AddRestaurantPage = () => {
                 </div>
                 <button 
                     onClick={handleSubmit}
-                    disabled={newRestaurantInfo.restaurantName === "" || newRestaurantInfo.restaurantCategory === ""}
+                    disabled={
+                        newRestaurantInfo.restaurantName === "" 
+                        || (newRestaurantInfo.restaurantVisitStatus === true 
+                            && newRestaurantInfo.restaurantCategory === "")
+                    }
                 >
                     Submit
                 </button>

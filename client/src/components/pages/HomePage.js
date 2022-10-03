@@ -1,11 +1,12 @@
 import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import NavigationSideBar from "../NavigationSideBar";
 import LogoutButton from "../LogoutButton";
 import { useAuth0 } from "@auth0/auth0-react";
 
 const HomePage = () => {
+    const [userName, setUserName] = useState(null);
     const location = useLocation().pathname;
     const navigate = useNavigate();
     const { user } = useAuth0();
@@ -16,11 +17,30 @@ const HomePage = () => {
         }
     }, [location]);
 
+    useEffect(() => {
+        if(user){
+            fetch(`/get-user/${user.email}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === 200) {
+                    localStorage.setItem("username", JSON.stringify(data.data.username))
+                    setUserName(JSON.parse(localStorage.getItem("username")));
+                }
+                else {
+                    return Promise.reject(data);
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        }
+    }, [user])
+
     return (
         <Wrapper>
             <Header>
                 <Link to="/home/explore">TasteBuds</Link>
-                {user ? <p>{`Welcome ${user.nickname}!`}</p> : null}
+                {user ? <p>{`Welcome ${userName}!`}</p> : null}
                 <LogoutButton/>
             </Header>
             <Content>
