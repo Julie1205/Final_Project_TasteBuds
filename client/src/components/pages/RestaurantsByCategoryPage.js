@@ -70,7 +70,8 @@ const RestaurantsByCategoryPage = () => {
         <div>
             {errorStatus ? <p>Restaurants Not Found</p> : null}
             {restaurantInfo 
-            ? restaurantInfo.length >= 1 ?
+            ? restaurantInfo.length >= 1 
+            ?
                 restaurantInfo.map((restaurant) => {
                     return <RestaurantTile key={`tile${restaurant._id}`} restaurant={restaurant}/>
                 })

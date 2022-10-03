@@ -221,7 +221,7 @@ const AddRestaurantPage = () => {
                 </div>
                 <button 
                     onClick={handleSubmit}
-                    disabled={newRestaurantInfo.restaurantName === ""}
+                    disabled={newRestaurantInfo.restaurantName === "" || newRestaurantInfo.restaurantCategory === ""}
                 >
                     Submit
                 </button>

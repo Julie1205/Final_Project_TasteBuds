@@ -1,22 +1,28 @@
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 
 const RestaurantDetailsPage = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const { data } = location.state;
-    
+    console.log(data)
     return (
         <div>
-            <p>{data.restaurantName}</p>
-            <p>{data.restaurantAddress}</p>
-            <p>{data.restaurantPhoneNumber}</p>
-            <p>{data.restaurantWebsite}</p>
+            <button onClick={ () => navigate(-1) }>Back</button>
+            { data
+            ? <>
+                <p>{data.restaurantName}</p>
+                {data.restaurantAddress ? <p>{data.restaurantAddress}</p> : null}
+                {data.restaurantPhoneNumber ? <p>{data.restaurantPhoneNumber}</p> : null}
+                {data.restaurantWebsite ? <p>{data.restaurantWebsite}</p> : null}
 
-            <p>{data.restaurantVisitStatus}</p>
-            <p>{data.restaurantCategory}</p>
-            <p>{data.restaurantFavorite}</p>
-            
-            <p>{data.restaurantComment}</p>
+                <p>{data.restaurantVisitStatus}</p>
+                {data.restaurantCategory ? <p>{data.restaurantCategory}</p> : null}
+                {data.restaurantFavorite ? <p>Favorite</p> : null}
+                
+                {data.restaurantComment ? <p>{data.restaurantComment}</p> : null}
+                <Link to={`/home/restaurant/edit/${ data._id }`} state={ { data: data } }>Edit</Link>
+            </>
+            : null }
         </div>
     )
 

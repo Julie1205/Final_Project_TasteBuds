@@ -154,17 +154,16 @@ const updateRestaurant = async (req, res) => {
     const { _id } = req.body;
     const fieldsSent = Object.keys(req.body);
     let isfieldAcceptable = false;
-
     UPDATABLE_FIELDS.forEach((field) => {
         if(!isfieldAcceptable && fieldsSent.includes(field)) {
-                isfieldAcceptable = true;
+            isfieldAcceptable = true;
         }
     });
-
+    
     const client = new MongoClient(MONGO_URI, mongoOptions);
-
+    
     if(email && _id && isfieldAcceptable) {
-
+        
         try {
             await client.connect();
             const db = client.db(DATABASE_NAME);
@@ -173,11 +172,11 @@ const updateRestaurant = async (req, res) => {
             let valuesToUpdate = { $set: {} };
             
             UPDATABLE_FIELDS.forEach((field) => {
-                if(req.body[field]) {
+                if(req.body[field] !== undefined) {
                     valuesToUpdate.$set[`restaurants.$[restaurantSelected].${field}`] = req.body[field];
                 } 
             });
-
+            
             const results = await db.collection(USERS_COLLECTION).updateOne(filter, valuesToUpdate, restaurantToUpdate);
             
             if(results.matchedCount === 0) {
