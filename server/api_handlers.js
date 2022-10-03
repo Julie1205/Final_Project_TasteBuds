@@ -3,7 +3,7 @@ const fetch = require('node-fetch');
 require("dotenv").config();
 const { TRUEWAY_KEY } = process.env;
 
-//this handler will take the user's address convert it to geo codinates to be used to find restaurants within 200m.
+//this handler will take the user's address convert it to geo coordinates to be used to find restaurants within 1000m.
 const getRestaurantsNearMe = (req, res) => {
     const { address } = req.params;
 
@@ -59,7 +59,7 @@ const findRestaurant = (req, res) => {
 
     const query = `${restaurantName} restaurant ${city} ${street}`
     const url = encodeURI(`https://trueway-places.p.rapidapi.com/FindPlaceByText?text=${query}&language=en`);
-    console.log(url)
+
     const options = {
     method: 'GET',
     headers: {

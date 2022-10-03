@@ -122,7 +122,7 @@ const deleteRestaurant = async (req,res) => {
                 res.status(400).json( {status: 400, data: email, message: "Unable to delete restaurant."});
             }
             else if(results.matchedCount === 1 && results.modifiedCount === 1) {
-                res.status(201).json( { status: 201, message: "Restaurant deleted." } )
+                res.status(200).json( { status: 200, message: "Restaurant deleted." } )
             }
         }
         catch (err) {

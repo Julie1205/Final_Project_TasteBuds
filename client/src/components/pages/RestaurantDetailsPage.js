@@ -23,7 +23,7 @@ const RestaurantDetailsPage = () => {
         })
         .then(res => res.json())
         .then(data => {
-            if(data.status === 201) {
+            if(data.status === 200) {
                 setDeleteStatus(true);
             }
             else {
