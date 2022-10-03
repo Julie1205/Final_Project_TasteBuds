@@ -1,8 +1,23 @@
 const express = require("express");
 const morgan = require("morgan");
-const { getRestaurantsNearMe, findRestaurant } = require("./api_handlers");
-const { getUserRestaurants, getRestaurant, addRestaurant, deleteRestaurant, updateRestaurant } = require("./restaurants_handlers");
+
+const { 
+    getRestaurantsNearMe, 
+    findRestaurant 
+} = require("./api_handlers");
+
+const { 
+    getUserRestaurants, 
+    getRestaurant, 
+    addRestaurant, 
+    deleteRestaurant, 
+    updateRestaurant 
+} = require("./restaurants_handlers");
+
 const { getUser } = require("./user_handlers");
+
+const { deleteImage } = require("./image_handlers");
+
 const app = express();
 const port = 8000;
 
@@ -22,6 +37,9 @@ app.delete("/delete-restaurant/:email", deleteRestaurant);
 
 //user profile endpoints
 app.get("/get-user/:email", getUser)
+
+//cloudinary images endpoints
+app.delete("/delete-image", deleteImage)
 
 app.get("*", (req, res) => {
     res.status(404).json({

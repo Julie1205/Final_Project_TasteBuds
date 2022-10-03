@@ -10,6 +10,30 @@ const RestaurantDetailsPage = () => {
     const { data } = location.state;
     const { user } = useAuth0();
 
+    const handleDeleteImageInCloudinary = () => {
+        const deletePromises = data.imageUrl.map((image) => {
+            return fetch("/delete-image", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify( { public_id: image.public_id } )
+            })
+            .then(res => res.json())
+            .then(result => {
+                if(result.status === 201) {
+                    return "success"
+                }
+                else {
+                    return Promise.reject(result)
+                }
+            })
+            .catch((err) => console.log(err))
+        });
+        return(deletePromises);
+    };
+
     const handleDelete = () => {
         setErrorStatus(false);
 
@@ -22,9 +46,25 @@ const RestaurantDetailsPage = () => {
             body: JSON.stringify({ _id: data._id })
         })
         .then(res => res.json())
-        .then(data => {
-            if(data.status === 200) {
-                setDeleteStatus(true);
+        .then(restaurantDeleteResult => {
+            if(restaurantDeleteResult.status === 200) {
+                if(data.imageUrl.length > 0) {
+                    const deletePromises = handleDeleteImageInCloudinary();
+                    Promise.all(deletePromises)
+                    .then(result => {
+                        if(result.includes("success")) {
+                            setDeleteStatus(true);
+                            return;
+                        }
+                        else {
+                            setErrorStatus(true);
+                            return Promise.reject(result);
+                        }
+                    })
+                }
+                else {
+                    setDeleteStatus(true);
+                }
             }
             else {
                 setErrorStatus(true);
@@ -58,6 +98,12 @@ const RestaurantDetailsPage = () => {
                 {data.restaurantFavorite ? <p>Favorite</p> : null}
                 
                 {data.restaurantComment ? <p>{data.restaurantComment}</p> : null}
+                {data.imageUrl.length > 0 ?
+                    data.imageUrl.map((image) => {
+                        return <img  key={image.public_id} src={image.url} alt="image uploaded"/>
+                    })
+                : null}
+
                 <Link to={`/home/restaurant/edit/${ data._id }`} state={ { data: data } }>Edit</Link>
                 <button onClick={handleDelete}>Delete</button>
                 {errorStatus ? <p>Could not delete restaurant</p> : null}

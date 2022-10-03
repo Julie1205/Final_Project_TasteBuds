@@ -11,13 +11,15 @@ const INITIAL_STATE = {
     restaurantVisitStatus: false,
     restaurantCategory: "",
     restaurantFavorite: false,
-    restaurantComment: ""
+    restaurantComment: "",
+    imageUrl: []
 }
 
 const AddRestaurantPage = () => {
     const [newRestaurantInfo, setNewRestaurantInfo] = useState(INITIAL_STATE);
+    const [image, setImage] = useState(null);
     const [submitStatus, setSubmitStatus] = useState(false);
-    const [errorStatus, setErrorStatus] =useState(false);
+    const [errorStatus, setErrorStatus] = useState(false);
     const { user } = useAuth0();
     const location = useLocation();
 
@@ -60,6 +62,53 @@ const AddRestaurantPage = () => {
         .catch((err) => console.log(err))
     };
 
+    const handleUploadImage = (imageFile) => {
+        const formData = new FormData();
+        formData.append("file", imageFile);
+        formData.append("upload_preset", "rfleb4gq")
+
+        fetch("https://api.cloudinary.com/v1_1/tastebuds32/image/upload", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            setNewRestaurantInfo({
+                ...newRestaurantInfo,
+                imageUrl: [...newRestaurantInfo.imageUrl, {public_id: data.public_id, url: data.secure_url}]
+            })
+        })
+        .catch((err) => console.log(err))
+    }; 
+
+    const handleDeleteImage = (public_id) => {
+        fetch("/delete-image", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({public_id})
+            })
+        .then(res => res.json())
+        .then(result => {
+            if(result.status === 201) {
+                const imageIndex = newRestaurantInfo.imageUrl.findIndex((image) => image.public_id === public_id);
+                const newImageUrlArr = [...newRestaurantInfo.imageUrl]
+                newImageUrlArr.splice(imageIndex, 1);
+                
+                setNewRestaurantInfo({
+                    ...newRestaurantInfo,
+                    imageUrl: newImageUrlArr
+                })
+            }
+            else {
+                return Promise.reject(result)
+            }
+        })
+        .catch((err) => console.log(err))
+    }
+    
     return (
         <Wrapper>
             {!submitStatus 
@@ -217,6 +266,39 @@ const AddRestaurantPage = () => {
                                 })}
                             />
                         </label>
+                    </div>
+                </div>
+                <div>
+                    <p>Add pictures? You can add up to 3 images</p>
+                    <div>
+                        <input 
+                            disabled={newRestaurantInfo.imageUrl.length === 3}
+                            type="file" 
+                            accept="image/*"
+                            onChange={(e) => setImage(e.target.files[0])}
+                        />
+                        <button 
+                            disabled={newRestaurantInfo.imageUrl.length === 3}
+                            onClick={() => handleUploadImage(image)}
+                        >
+                            add Image
+                        </button>
+                        {newRestaurantInfo.imageUrl.length > 0 
+                        ? <div>
+                            {newRestaurantInfo.imageUrl.map((image) => {
+                                return (
+                                    <div key={image.public_id}>
+                                        <img  src={image.url} alt="image uploaded"/>
+                                        <button onClick={
+                                            () => handleDeleteImage(image.public_id)
+                                        }>
+                                            Delete
+                                        </button>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                        : null}
                     </div>
                 </div>
                 <button 
