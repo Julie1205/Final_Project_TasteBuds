@@ -17,7 +17,7 @@ app.get("/get-find-restaurant/:restaurantName/:city", findRestaurant);
 app.get("/get-user-restaurants/:email", getUserRestaurants);
 app.get("/get-restaurant/:email/:_id", getRestaurant);
 app.post("/add-restaurant/:email", addRestaurant);
-app.patch("/delete-restaurant/:email", deleteRestaurant);
+app.delete("/delete-restaurant/:email", deleteRestaurant);
 app.patch("/update-restaurant/:email", updateRestaurant);
 
 //user profile endpoints
