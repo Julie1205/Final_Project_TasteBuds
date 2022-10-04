@@ -1,9 +1,8 @@
 const { MongoClient } = require("mongodb");
 require("dotenv").config();
-const { v4: uuidv4 } = require("uuid");
 
 const { MONGO_URI } = process.env;
-const { DATABASE_NAME, USERS_COLLECTION } = require("./constants/mongoDbConstants");
+const { DATABASE_NAME, USERS_COLLECTION } = require("../constants/mongoDbConstants");
 
 const options = {
     useNewUrlParser: true,

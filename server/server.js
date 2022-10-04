@@ -4,7 +4,7 @@ const morgan = require("morgan");
 const { 
     getRestaurantsNearMe, 
     findRestaurant 
-} = require("./api_handlers");
+} = require("./handlers/api_handlers");
 
 const { 
     getUserRestaurants, 
@@ -12,11 +12,11 @@ const {
     addRestaurant, 
     deleteRestaurant, 
     updateRestaurant 
-} = require("./restaurants_handlers");
+} = require("./handlers/restaurants_handlers");
 
-const { getUser } = require("./user_handlers");
+const { getUser } = require("./handlers/user_handlers");
 
-const { deleteImage } = require("./image_handlers");
+const { deleteImage } = require("./handlers/image_handlers");
 
 const app = express();
 const port = 8000;

@@ -9,6 +9,7 @@ cloudinary.config({
     secure: true
 })
 
+//handler to delete images stored in cloudinary
 const deleteImage = async (req, res) => {
     const { public_id } = req.body;
 

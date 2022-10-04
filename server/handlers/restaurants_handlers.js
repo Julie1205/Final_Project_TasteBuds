@@ -3,13 +3,14 @@ require("dotenv").config();
 const { v4: uuidv4 } = require("uuid");
 
 const { MONGO_URI } = process.env;
-const { DATABASE_NAME, USERS_COLLECTION } = require("./constants/mongoDbConstants");
+const { DATABASE_NAME, USERS_COLLECTION } = require("../constants/mongoDbConstants");
 
 const mongoOptions = {
     useNewUrlParser: true,
     useUnifiedTopology: true
 };
 
+//handler to get all the user's restaurants
 const getUserRestaurants = async (req, res) => {
     const { email } = req.params;
     const client = new MongoClient(MONGO_URI, mongoOptions);
@@ -38,6 +39,7 @@ const getUserRestaurants = async (req, res) => {
     }
 };
 
+//handler to get one restaurant based on id
 const getRestaurant = async (req, res) => {
     const { email, _id } = req.params;
     const client = new MongoClient(MONGO_URI, mongoOptions);
@@ -61,6 +63,7 @@ const getRestaurant = async (req, res) => {
 
 };
 
+//add a restaurant to user's restaurants array
 const addRestaurant = async (req, res) => {
     const { email } = req.params;
     const newRestaurantInfo = {
@@ -101,6 +104,7 @@ const addRestaurant = async (req, res) => {
     }
 };
 
+//removes one restaurant from user's restaurant's array based on id
 const deleteRestaurant = async (req,res) => {
     const { email } = req.params;
     const { _id } = req.body;
@@ -151,6 +155,7 @@ const UPDATABLE_FIELDS = [
     "imageUrl"
 ];
 
+//update a restaurant in user's restaurant array
 const updateRestaurant = async (req, res) => {
     const { email } = req.params;
     const { _id } = req.body;
