@@ -40,7 +40,10 @@ const HomePage = () => {
         <Wrapper>
             <Header>
                 <Link to="/home/explore">TasteBuds</Link>
-                {user ? <p>{`Welcome ${userName}!`}</p> : null}
+                {userName 
+                ? <p>{`Welcome ${userName.charAt(0).toUpperCase() + userName.slice(1)}!`}</p> 
+                : <p>Welcome!</p>
+                }
                 <LogoutButton/>
             </Header>
             <Content>

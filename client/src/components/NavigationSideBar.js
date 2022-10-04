@@ -5,7 +5,6 @@ const NavigationSideBar = () => {
     return (
         <NavigationSection>
             <HomeLink to="/home/explore">Home</HomeLink>
-            <ProfileLink to="profile">Profile</ProfileLink>
             <MyRestaurantsLink to="myRestaurants/All">My Restaurants</MyRestaurantsLink>
             <FindARestaurantsLink to="findARestaurant">Find a Restaurant</FindARestaurantsLink>
             <AddRestaurantsLink to="addRestaurant">Add a Restaurant</AddRestaurantsLink>
@@ -32,9 +31,6 @@ const HomeLink = styled(NavLink)`
         &.active {
             color: red;
         };
-`;
-
-const ProfileLink = styled(HomeLink)`
 `;
 
 const MyRestaurantsLink = styled(HomeLink)`
