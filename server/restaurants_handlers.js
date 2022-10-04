@@ -146,7 +146,9 @@ const UPDATABLE_FIELDS = [
     "restaurantVisitStatus",
     "restaurantCategory",
     "restaurantFavorite",
-    "restaurantComment"
+    "restaurantCuisine",
+    "restaurantComment",
+    "imageUrl"
 ];
 
 const updateRestaurant = async (req, res) => {

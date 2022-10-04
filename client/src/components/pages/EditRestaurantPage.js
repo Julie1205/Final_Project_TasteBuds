@@ -48,7 +48,11 @@ const EditRestaurantPage = () => {
                     Restaurant Name:
                     <input
                         required
-                        value={updatedValues.restaurantName ? updatedValues.restaurantName : data.restaurantName}
+                        value={
+                            updatedValues.restaurantName 
+                            ? updatedValues.restaurantName 
+                            : data.restaurantName
+                        }
                         onChange={(e) => setUpdatedValues({
                             ...updatedValues, 
                             restaurantName: e.target.value
@@ -58,7 +62,11 @@ const EditRestaurantPage = () => {
                 <label>
                     Restaurant Address:
                     <input
-                        value={updatedValues.restaurantAddress ? updatedValues.restaurantAddress : data.restaurantAddress}
+                        value={
+                            updatedValues.restaurantAddress 
+                            ? updatedValues.restaurantAddress 
+                            : data.restaurantAddress
+                        }
                         onChange={(e) => setUpdatedValues({
                             ...updatedValues, 
                             restaurantAddress: e.target.value
@@ -68,7 +76,11 @@ const EditRestaurantPage = () => {
                 <label>
                     Restaurant Phone number:
                     <input 
-                        value={updatedValues.restaurantPhoneNumber ? updatedValues.restaurantPhoneNumber : data.restaurantPhoneNumber}
+                        value={
+                            updatedValues.restaurantPhoneNumber 
+                            ? updatedValues.restaurantPhoneNumber 
+                            : data.restaurantPhoneNumber
+                        }
                         onChange={(e) => setUpdatedValues({
                             ...updatedValues,
                             restaurantPhoneNumber: e.target.value
@@ -78,10 +90,28 @@ const EditRestaurantPage = () => {
                 <label>
                     Restaurant website:
                     <input 
-                        value={updatedValues.restaurantWebsite ? updatedValues.restaurantWebsite : data.restaurantWebsite}
+                        value={
+                            updatedValues.restaurantWebsite 
+                            ? updatedValues.restaurantWebsite 
+                            : data.restaurantWebsite
+                        }
                         onChange={(e) => setUpdatedValues({
                             ...updatedValues,
                             restaurantWebsite: e.target.value
+                        })}
+                    />
+                </label>
+                <label>
+                    Restaurant cusine:
+                    <input 
+                        value={
+                            updatedValues.restaurantCuisine 
+                            ? updatedValues.restaurantCuisine 
+                            : data.restaurantCuisine
+                        }
+                        onChange={(e) => setUpdatedValues({
+                            ...updatedValues,
+                            restaurantCuisine: (e.target.value).trim().charAt(0).toLocaleUpperCase() + (e.target.value).toLocaleLowerCase().slice(1)
                         })}
                     />
                 </label>
@@ -138,7 +168,10 @@ const EditRestaurantPage = () => {
                     <p>What did you think about the restaurant?</p>
                     <label>
                         <input
-                            disabled={updatedValues.restaurantVisitStatus === false || updatedValues.restaurantVisitStatus === undefined}
+                            disabled={
+                                updatedValues.restaurantVisitStatus === false 
+                                || updatedValues.restaurantVisitStatus === undefined
+                            }
                             type="radio"
                             name="category"
                             value="liked"
@@ -160,7 +193,10 @@ const EditRestaurantPage = () => {
                     </label>
                     <label>
                         <input
-                            disabled={updatedValues.restaurantVisitStatus === false || updatedValues.restaurantVisitStatus === undefined}
+                            disabled={
+                                updatedValues.restaurantVisitStatus === false 
+                                || updatedValues.restaurantVisitStatus === undefined
+                            }
                             type="radio"
                             name="category"
                             value="disliked"
@@ -186,7 +222,11 @@ const EditRestaurantPage = () => {
                     <p>Would you like to add restaurant to favorites?</p>
                     <label>
                         <input
-                            disabled={updatedValues.restaurantVisitStatus === false || updatedValues.restaurantCategory === "disliked" || updatedValues.restaurantCategory === undefined}
+                            disabled={
+                                updatedValues.restaurantVisitStatus === false 
+                                || updatedValues.restaurantCategory === "disliked" 
+                                || updatedValues.restaurantCategory === undefined
+                            }
                             type="radio"
                             name="favoriteStatus"
                             value={true}
@@ -208,7 +248,11 @@ const EditRestaurantPage = () => {
                     </label>
                     <label>
                         <input
-                            disabled={updatedValues.restaurantVisitStatus === false || updatedValues.restaurantCategory === "disliked" || updatedValues.restaurantCategory === undefined}
+                            disabled={
+                                updatedValues.restaurantVisitStatus === false 
+                                || updatedValues.restaurantCategory === "disliked" 
+                                || updatedValues.restaurantCategory === undefined
+                            }
                             type="radio"
                             name="favoriteStatus"
                             value={false}
@@ -233,7 +277,11 @@ const EditRestaurantPage = () => {
                     <label>
                         Comments about the restaurant:
                         <textarea
-                            value={updatedValues.restaurantComment ? updatedValues.restaurantComment : data.restaurantComment}
+                            value={
+                                updatedValues.restaurantComment 
+                                ? updatedValues.restaurantComment 
+                                : data.restaurantComment
+                            }
                             onChange={(e) => setUpdatedValues({
                                 ...updatedValues,
                                 restaurantComment: e.target.value
@@ -243,7 +291,10 @@ const EditRestaurantPage = () => {
                 </div>
                 <button 
                     onClick={handleSubmit}
-                    disabled={updatedValues.restaurantName === "" || Object.keys(updatedValues).length === 0}
+                    disabled={
+                        updatedValues.restaurantName === "" 
+                        || Object.keys(updatedValues).length === 0
+                    }
                 >
                     Submit
                 </button>

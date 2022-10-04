@@ -12,6 +12,7 @@ const INITIAL_STATE = {
     restaurantCategory: "",
     restaurantFavorite: false,
     restaurantComment: "",
+    restaurantCuisine: "",
     imageUrl: []
 }
 
@@ -158,6 +159,17 @@ const AddRestaurantPage = () => {
                                 onChange={(e) => setNewRestaurantInfo({
                                     ...newRestaurantInfo,
                                     restaurantWebsite: e.target.value
+                                })}
+                            />
+                        </label>
+                        <label>
+                            Restaurant cusine:
+                            <input 
+                                placeholder="French Cuisine"
+                                value={newRestaurantInfo.restaurantCuisine}
+                                onChange={(e) => setNewRestaurantInfo({
+                                    ...newRestaurantInfo,
+                                    restaurantCuisine: ((e.target.value).trim().charAt(0).toLocaleUpperCase() + (e.target.value).toLocaleLowerCase().slice(1)).trim()
                                 })}
                             />
                         </label>

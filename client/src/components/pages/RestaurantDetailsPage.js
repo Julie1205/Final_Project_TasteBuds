@@ -80,6 +80,7 @@ const RestaurantDetailsPage = () => {
             { data && user && !deleteStatus
             ? <>
                 <p>{data.restaurantName}</p>
+                {data.restaurantCuisine ? <p>{data.restaurantCuisine}</p> : null}
                 {data.restaurantAddress ? <p>{data.restaurantAddress}</p> : null}
                 {data.restaurantPhoneNumber ? <p>{data.restaurantPhoneNumber}</p> : null}
                 {data.restaurantWebsite 
