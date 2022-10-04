@@ -16,14 +16,17 @@ const INITIAL_STATE = {
     imageUrl: []
 }
 
+const INITIAL_STATE_FOR_IMAGES_TO_UPLOAD = [];
+
 const AddRestaurantPage = () => {
     const [newRestaurantInfo, setNewRestaurantInfo] = useState(INITIAL_STATE);
     const [image, setImage] = useState(null);
+    const [imagesToUpload, setImagesToUpload] = useState(INITIAL_STATE_FOR_IMAGES_TO_UPLOAD)
     const [submitStatus, setSubmitStatus] = useState(false);
     const [errorStatus, setErrorStatus] = useState(false);
     const { user } = useAuth0();
     const location = useLocation();
-    
+
     //this useEffect is to update the newRestaurantInfo with details from a searched restautant
     useEffect(() => {
         if(location.state) {
@@ -39,81 +42,105 @@ const AddRestaurantPage = () => {
         }
     }, [])
 
-    //this will handle posting a new restaurant to Mongodb
-    const handleSubmit = () => {
-        setErrorStatus(false);
+    const AddToImageUpload = () => {
+        setImagesToUpload([...imagesToUpload, image]);
+    }
 
-        fetch(`/add-restaurant/${user.email}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify(newRestaurantInfo)
-        })
-        .then(res => res.json())
-        .then(data => {
-            if(data.status === 201) {
-                setNewRestaurantInfo(INITIAL_STATE);
-                setSubmitStatus(true);
-            }
-            else {
-                setErrorStatus(true);
-                return Promise.reject(data);
-            }
-        })
-        .catch((err) => console.log(err))
+    const handleDeleteImage = (imageFile) => {
+        const imageIndex = imagesToUpload.findIndex((image) => {
+            return image.name === imageFile.name && image.lastModified === imageFile.lastModified
+        });
+        
+        const updatedImagesToUpload = [...imagesToUpload];
+        updatedImagesToUpload.splice(imageIndex, 1);
+
+        setImagesToUpload(updatedImagesToUpload);
+        URL.revokeObjectURL(imageFile);
     };
 
-    //when image is uploaded in add restaurant page, it will be automatically uploaded to cloudiary
-    const handleUploadImage = (imageFile) => {
+    //creates an array of promises to upload images to cloudinary and return data needed to store in Mongodb
+    const handleCloudinaryUpload = (imageFile) => {
         const formData = new FormData();
         formData.append("file", imageFile);
         formData.append("upload_preset", "rfleb4gq")
 
-        fetch("https://api.cloudinary.com/v1_1/tastebuds32/image/upload", {
+        return fetch("https://api.cloudinary.com/v1_1/tastebuds32/image/upload", {
             method: "POST",
             body: formData
         })
         .then(res => res.json())
         .then(data => {
-            setNewRestaurantInfo({
-                ...newRestaurantInfo,
-                imageUrl: [...newRestaurantInfo.imageUrl, {public_id: data.public_id, url: data.secure_url}]
-            })
+            URL.revokeObjectURL(imageFile);
+            return {public_id: data.public_id, url: data.secure_url};
         })
         .catch((err) => console.log(err))
-    }; 
-
-    //when image is deleted from restaurant info, it is removed from cloudinary and newRestaurantInfo
-    const handleDeleteImage = (public_id) => {
-        fetch("/delete-image", {
-                method: "DELETE",
+    };
+    
+    //handles adding restaurant to mongodb
+    const handleSubmit = () => {
+        setErrorStatus(false);
+        if(imagesToUpload.length > 0) {
+            const cloudinaryUploadPromises = imagesToUpload.map((image) => {
+                return handleCloudinaryUpload(image);
+            });
+            Promise.all(cloudinaryUploadPromises)
+            .then(result => {
+                if(Array.isArray(result)) {
+                    fetch(`/add-restaurant/${user.email}`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json"
+                        },
+                        body: JSON.stringify({...newRestaurantInfo, imageUrl: result})
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if(data.status === 201) {
+                            setImage(null);
+                            setImagesToUpload(INITIAL_STATE_FOR_IMAGES_TO_UPLOAD)
+                            setNewRestaurantInfo(INITIAL_STATE);
+                            setSubmitStatus(true);
+                        }
+                        else {
+                            setErrorStatus(true);
+                            return Promise.reject(data);
+                        }
+                    })
+                }
+                else {
+                    setErrorStatus(true);
+                    return Promise.reject(result);
+                }
+            })
+            .catch((err) => console.log(err))
+        }
+        else {
+            fetch(`/add-restaurant/${user.email}`, {
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Accept": "application/json"
                 },
-                body: JSON.stringify({public_id})
+                body: JSON.stringify(newRestaurantInfo)
             })
-        .then(res => res.json())
-        .then(result => {
-            if(result.status === 201) {
-                const imageIndex = newRestaurantInfo.imageUrl.findIndex((image) => image.public_id === public_id);
-                const newImageUrlArr = [...newRestaurantInfo.imageUrl]
-                newImageUrlArr.splice(imageIndex, 1);
-                
-                setNewRestaurantInfo({
-                    ...newRestaurantInfo,
-                    imageUrl: newImageUrlArr
-                })
-            }
-            else {
-                return Promise.reject(result)
-            }
-        })
-        .catch((err) => console.log(err))
-    }
-    
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === 201) {
+                    setImage(null);
+                    setImagesToUpload(INITIAL_STATE_FOR_IMAGES_TO_UPLOAD)
+                    setNewRestaurantInfo(INITIAL_STATE);
+                    setSubmitStatus(true);
+                }
+                else {
+                    setErrorStatus(true);
+                    return Promise.reject(data);
+                }
+            })
+            .catch((err) => console.log(err))
+        }
+    };
+
     return (
         <Wrapper>
             {!submitStatus 
@@ -288,26 +315,24 @@ const AddRestaurantPage = () => {
                     <p>Add pictures? You can add up to 3 images</p>
                     <div>
                         <input 
-                            disabled={newRestaurantInfo.imageUrl.length === 3}
+                            disabled={imagesToUpload.length === 3}
                             type="file" 
                             accept="image/*"
                             onChange={(e) => setImage(e.target.files[0])}
                         />
                         <button 
-                            disabled={newRestaurantInfo.imageUrl.length === 3}
-                            onClick={() => handleUploadImage(image)}
+                            disabled={imagesToUpload.length === 3}
+                            onClick={() => AddToImageUpload()}
                         >
                             add Image
                         </button>
-                        {newRestaurantInfo.imageUrl.length > 0 
+                        {imagesToUpload.length > 0 
                         ? <div>
-                            {newRestaurantInfo.imageUrl.map((image) => {
+                            {imagesToUpload.map((image, index) => {
                                 return (
-                                    <div key={image.public_id}>
-                                        <img  src={image.url} alt="image uploaded"/>
-                                        <button onClick={
-                                            () => handleDeleteImage(image.public_id)
-                                        }>
+                                    <div key={image.name + index}>
+                                        <img  src={URL.createObjectURL(image)} alt={image.name}/>
+                                        <button onClick={ () => handleDeleteImage(image)}>
                                             Delete
                                         </button>
                                     </div>
@@ -328,7 +353,11 @@ const AddRestaurantPage = () => {
                     Submit
                 </button>
             </>
-            : <p>Restaurant Added!</p>}
+            : <div>
+                <p>Restaurant Added!</p>
+                <button onClick={() => setSubmitStatus(false)}>Add another restaurant</button>
+            </div>
+            }
             {errorStatus ? <p>Failed to add restaurant. Please try again.</p> : null}
         </Wrapper>
     );
