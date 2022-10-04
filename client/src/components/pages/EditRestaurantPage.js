@@ -2,17 +2,22 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 
-const INITIAL_STATE = {};
 
 const EditRestaurantPage = () => {
-    const [updatedValues, setUpdatedValues] = useState(INITIAL_STATE);
-    const [submitStatus, setSubmitStatus] = useState(false);
-    const [errorStatus, setErrorStatus] =useState(false);
     const location = useLocation();
     const { data } = location.state;
+    const INITIAL_STATE = { imageUrl: [...data.imageUrl] };
+
+    const [updatedValues, setUpdatedValues] = useState(INITIAL_STATE);
+    const [changeInImageUrl, setChangeInImageUrl] = useState(false);
+    const [image, setImage] = useState(null);
+    const [submitStatus, setSubmitStatus] = useState(false);
+    const [errorStatus, setErrorStatus] =useState(false);
+
     const { user } = useAuth0();
     const navigate = useNavigate();
 
+    //handles update of restaurant in mongodb
     const handleSubmit = () => {
         fetch(`/update-restaurant/${user.email}`, {
             method: "PATCH",
@@ -29,6 +34,9 @@ const EditRestaurantPage = () => {
         .then(data => {
             if(data.status === 200) {
                 setUpdatedValues(INITIAL_STATE);
+                setChangeInImageUrl(false);
+                setImage(null);
+                setErrorStatus(false);
                 setSubmitStatus(true);
             }
             else {
@@ -38,6 +46,62 @@ const EditRestaurantPage = () => {
         })
         .catch((err) => console.log(err))
     };
+
+    //handles image upload to cloudinary 
+    const handleUploadImage = (imageFile) => {
+        const formData = new FormData();
+        formData.append("file", imageFile);
+        formData.append("upload_preset", "rfleb4gq")
+
+        fetch("https://api.cloudinary.com/v1_1/tastebuds32/image/upload", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+                setChangeInImageUrl(true);
+                setImage(null);
+                setUpdatedValues({
+                    ...updatedValues,
+                    imageUrl: [...updatedValues.imageUrl, {public_id: data.public_id, url: data.secure_url}]
+                })
+        })
+        .catch((err) => console.log(err))
+    };
+
+    //handles removal of image from cloudinary and updateValues array
+    const handleDeleteImage = (public_id) => {
+        fetch("/delete-image", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({public_id})
+            })
+        .then(res => res.json())
+        .then(result => {
+            if(result.status === 201) {
+                const imageIndex = updatedValues.imageUrl.findIndex((image) => image.public_id === public_id);
+                const newImageUrlArr = [...updatedValues.imageUrl]
+                newImageUrlArr.splice(imageIndex, 1);
+                setChangeInImageUrl(true);
+                setUpdatedValues({
+                    ...updatedValues,
+                    imageUrl: newImageUrlArr
+                })
+            }
+            else {
+                return Promise.reject(result)
+            }
+        })
+        .catch((err) => console.log(err))
+    }
+
+    //handles re-uploading initial images if user cancels edit
+    const handleCancelUpdate = () => {
+        const images = [...data.imageUrl]
+    }
 
     return (
         <div>
@@ -49,7 +113,7 @@ const EditRestaurantPage = () => {
                     <input
                         required
                         value={
-                            updatedValues.restaurantName 
+                            updatedValues.restaurantName !== undefined
                             ? updatedValues.restaurantName 
                             : data.restaurantName
                         }
@@ -63,7 +127,7 @@ const EditRestaurantPage = () => {
                     Restaurant Address:
                     <input
                         value={
-                            updatedValues.restaurantAddress 
+                            updatedValues.restaurantAddress !== undefined
                             ? updatedValues.restaurantAddress 
                             : data.restaurantAddress
                         }
@@ -77,7 +141,7 @@ const EditRestaurantPage = () => {
                     Restaurant Phone number:
                     <input 
                         value={
-                            updatedValues.restaurantPhoneNumber 
+                            updatedValues.restaurantPhoneNumber !== undefined
                             ? updatedValues.restaurantPhoneNumber 
                             : data.restaurantPhoneNumber
                         }
@@ -91,7 +155,7 @@ const EditRestaurantPage = () => {
                     Restaurant website:
                     <input 
                         value={
-                            updatedValues.restaurantWebsite 
+                            updatedValues.restaurantWebsite !== undefined
                             ? updatedValues.restaurantWebsite 
                             : data.restaurantWebsite
                         }
@@ -105,7 +169,7 @@ const EditRestaurantPage = () => {
                     Restaurant cusine:
                     <input 
                         value={
-                            updatedValues.restaurantCuisine 
+                            updatedValues.restaurantCuisine !== undefined
                             ? updatedValues.restaurantCuisine 
                             : data.restaurantCuisine
                         }
@@ -289,11 +353,54 @@ const EditRestaurantPage = () => {
                         />
                     </label>
                 </div>
+                <div>
+                    <p>Add pictures? You can add up to 3 images</p>
+                    <div>
+                        <input 
+                            disabled={
+                                updatedValues.imageUrl && updatedValues.imageUrl.length === 3
+                                ? true 
+                                : data.imageUrl.length === 3
+                            }
+                            type="file" 
+                            accept="image/*"
+                            onChange={(e) => setImage(e.target.files[0])}
+                        />
+                        <button 
+                            disabled={
+                                updatedValues.imageUrl && updatedValues.imageUrl.length === 3
+                                ? true 
+                                : data.imageUrl.length === 3
+                            }
+                            onClick={() => handleUploadImage(image)}
+                        >
+                            add Image
+                        </button>
+                        {updatedValues.imageUrl.length > 0
+                        ? <div>
+                                <p>Current pictures</p>
+                                {updatedValues.imageUrl.map((image) => {
+                                    return (
+                                        <div key={image.public_id}>
+                                            <img  src={image.url} alt="image uploaded"/>
+                                            <button onClick={ () => {
+                                                handleDeleteImage(image.public_id);
+                                            }}>
+                                                Delete
+                                            </button>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        : null
+                        }
+                    </div>
+                </div>
                 <button 
                     onClick={handleSubmit}
                     disabled={
                         updatedValues.restaurantName === "" 
-                        || Object.keys(updatedValues).length === 0
+                        || (Object.keys(updatedValues).length === 1 && changeInImageUrl === false)
                     }
                 >
                     Submit

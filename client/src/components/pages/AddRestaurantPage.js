@@ -23,7 +23,8 @@ const AddRestaurantPage = () => {
     const [errorStatus, setErrorStatus] = useState(false);
     const { user } = useAuth0();
     const location = useLocation();
-
+    
+    //this useEffect is to update the newRestaurantInfo with details from a searched restautant
     useEffect(() => {
         if(location.state) {
             const { data } = location.state;
@@ -38,6 +39,7 @@ const AddRestaurantPage = () => {
         }
     }, [])
 
+    //this will handle posting a new restaurant to Mongodb
     const handleSubmit = () => {
         setErrorStatus(false);
 
@@ -63,6 +65,7 @@ const AddRestaurantPage = () => {
         .catch((err) => console.log(err))
     };
 
+    //when image is uploaded in add restaurant page, it will be automatically uploaded to cloudiary
     const handleUploadImage = (imageFile) => {
         const formData = new FormData();
         formData.append("file", imageFile);
@@ -82,6 +85,7 @@ const AddRestaurantPage = () => {
         .catch((err) => console.log(err))
     }; 
 
+    //when image is deleted from restaurant info, it is removed from cloudinary and newRestaurantInfo
     const handleDeleteImage = (public_id) => {
         fetch("/delete-image", {
                 method: "DELETE",
