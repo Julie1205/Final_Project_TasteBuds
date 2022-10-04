@@ -2,76 +2,75 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 
+const INITIAL_STATE = {};
+const INITIAL_STATE_IMAGES_ADDED = [];
+const INITIAL_STATE_IMAGES_DELETED = [];
 
 const EditRestaurantPage = () => {
     const location = useLocation();
     const { data } = location.state;
-    const INITIAL_STATE = { imageUrl: [...data.imageUrl] };
+    const { user } = useAuth0();
 
     const [updatedValues, setUpdatedValues] = useState(INITIAL_STATE);
     const [changeInImageUrl, setChangeInImageUrl] = useState(false);
     const [image, setImage] = useState(null);
+    const [newImageUrlArr, setNewImageUrlArr] = useState(data.imageUrl);
+    const [imageAddedArr, setImageAddedArr] = useState(INITIAL_STATE_IMAGES_ADDED);
+    const [imageDeletedArr, setImageDeletedArr] = useState(INITIAL_STATE_IMAGES_DELETED);
     const [submitStatus, setSubmitStatus] = useState(false);
     const [errorStatus, setErrorStatus] =useState(false);
 
-    const { user } = useAuth0();
     const navigate = useNavigate();
 
-    //handles update of restaurant in mongodb
-    const handleSubmit = () => {
-        fetch(`/update-restaurant/${user.email}`, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify({
-                ...updatedValues, 
-                _id: data._id
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if(data.status === 200) {
-                setUpdatedValues(INITIAL_STATE);
-                setChangeInImageUrl(false);
-                setImage(null);
-                setErrorStatus(false);
-                setSubmitStatus(true);
-            }
-            else {
-                setErrorStatus(true);
-                return Promise.reject(data);
-            }
-        })
-        .catch((err) => console.log(err))
+    const addImage =(imageFile) => {
+        setNewImageUrlArr([...newImageUrlArr, imageFile]);
+        setImageAddedArr([...imageAddedArr, imageFile]);
+        setChangeInImageUrl(true);
     };
 
-    //handles image upload to cloudinary 
-    const handleUploadImage = (imageFile) => {
+    const removeImage =(imageIdentifier) => {
+        setChangeInImageUrl(true);
+
+        if(typeof(imageIdentifier) === "string") {
+            setImageDeletedArr([...imageDeletedArr, imageIdentifier]);
+            const imageIndex = newImageUrlArr.findIndex((image) => image.public_id === imageIdentifier);
+            const updatedImageUrlArr = [...newImageUrlArr];
+            updatedImageUrlArr.splice(imageIndex, 1);
+            setNewImageUrlArr(updatedImageUrlArr);
+        }
+        else {
+            const imageFileIndex = newImageUrlArr.findIndex((image) => {
+                return image.name === newImageUrlArr.name && image.lastModified === newImageUrlArr.lastModified
+            });
+            
+            const updatedImageUrlArr = [...newImageUrlArr];
+            updatedImageUrlArr.splice(imageFileIndex, 1);
+            setNewImageUrlArr(updatedImageUrlArr);
+            URL.revokeObjectURL(imageIdentifier);
+        } 
+    };
+
+    //create upload image to Cloudinary promises 
+    const handleUploadImageToCloudinary = (imageFile) => {
         const formData = new FormData();
         formData.append("file", imageFile);
         formData.append("upload_preset", "rfleb4gq")
 
-        fetch("https://api.cloudinary.com/v1_1/tastebuds32/image/upload", {
+        return fetch("https://api.cloudinary.com/v1_1/tastebuds32/image/upload", {
             method: "POST",
             body: formData
         })
         .then(res => res.json())
         .then(data => {
-                setChangeInImageUrl(true);
-                setImage(null);
-                setUpdatedValues({
-                    ...updatedValues,
-                    imageUrl: [...updatedValues.imageUrl, {public_id: data.public_id, url: data.secure_url}]
-                })
+            URL.revokeObjectURL(imageFile);
+            return {public_id: data.public_id, url: data.secure_url};
         })
         .catch((err) => console.log(err))
     };
 
-    //handles removal of image from cloudinary and updateValues array
-    const handleDeleteImage = (public_id) => {
-        fetch("/delete-image", {
+    //create delete image from cloudinary promises
+    const handleDeleteImageFromCloudinary = (public_id) => {
+        return fetch("/delete-image", {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -82,14 +81,7 @@ const EditRestaurantPage = () => {
         .then(res => res.json())
         .then(result => {
             if(result.status === 201) {
-                const imageIndex = updatedValues.imageUrl.findIndex((image) => image.public_id === public_id);
-                const newImageUrlArr = [...updatedValues.imageUrl]
-                newImageUrlArr.splice(imageIndex, 1);
-                setChangeInImageUrl(true);
-                setUpdatedValues({
-                    ...updatedValues,
-                    imageUrl: newImageUrlArr
-                })
+                return "success"
             }
             else {
                 return Promise.reject(result)
@@ -98,10 +90,97 @@ const EditRestaurantPage = () => {
         .catch((err) => console.log(err))
     }
 
-    //handles re-uploading initial images if user cancels edit
-    const handleCancelUpdate = () => {
-        const images = [...data.imageUrl]
-    }
+    //handles update of restaurant in mongodb
+    //resolves deletepromises and upload promises for changes in cloudinary
+    //then updates restaurant in mongodb
+    const handleSubmit = () => {
+        if(changeInImageUrl) {
+            const cloudinaryDeletePromises = imageDeletedArr.map((image) => {
+                return handleDeleteImageFromCloudinary(image);
+            });
+
+            Promise.all(cloudinaryDeletePromises)
+            .then(deleteResult => {
+                if(Array.isArray(deleteResult)) {
+                    const cloudinaryUploadPromises = imageAddedArr.map((imageAdded) => {
+                        return handleUploadImageToCloudinary(image);
+                    });
+                    Promise.all(cloudinaryUploadPromises)
+                    .then(uploadResults => {
+                        if(Array.isArray(uploadResults)) {
+                            const oldImagesArr = newImageUrlArr.filter((image) => {
+                                return image.public_id !== undefined
+                            });
+
+                            fetch(`/update-restaurant/${user.email}`, {
+                                method: "PATCH",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "Accept": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    ...updatedValues, 
+                                    _id: data._id,
+                                    imageUrl: [...oldImagesArr, ...uploadResults]
+                                })
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if(data.status === 200) {
+                                    setUpdatedValues(INITIAL_STATE);
+                                    setChangeInImageUrl(false);
+                                    setImage(null);
+                                    setErrorStatus(false);
+                                    setSubmitStatus(true);
+                                }
+                                else {
+                                    setErrorStatus(true);
+                                    return Promise.reject(data);
+                                }
+                            })
+                        }
+                        else {
+                            setErrorStatus(true);
+                            return Promise.reject(uploadResults);
+                        }
+                    })
+                }
+                else {
+                    setErrorStatus(true);
+                    return Promise.reject(deleteResult);
+                }
+            })
+            .catch((err) => console.log(err))
+        }
+        else {
+            fetch(`/update-restaurant/${user.email}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({
+                    ...updatedValues, 
+                    _id: data._id
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === 200) {
+                    setUpdatedValues(INITIAL_STATE);
+                    setChangeInImageUrl(false);
+                    setImage(null);
+                    setErrorStatus(false);
+                    setSubmitStatus(true);
+                }
+                else {
+                    setErrorStatus(true);
+                    return Promise.reject(data);
+                }
+            })
+            .catch((err) => console.log(err))
+        }
+    };
 
     return (
         <div>
@@ -357,39 +436,43 @@ const EditRestaurantPage = () => {
                     <p>Add pictures? You can add up to 3 images</p>
                     <div>
                         <input 
-                            disabled={
-                                updatedValues.imageUrl && updatedValues.imageUrl.length === 3
-                                ? true 
-                                : data.imageUrl.length === 3
-                            }
+                            disabled={ newImageUrlArr.length === 3 }
                             type="file" 
                             accept="image/*"
                             onChange={(e) => setImage(e.target.files[0])}
                         />
                         <button 
-                            disabled={
-                                updatedValues.imageUrl && updatedValues.imageUrl.length === 3
-                                ? true 
-                                : data.imageUrl.length === 3
-                            }
-                            onClick={() => handleUploadImage(image)}
+                            disabled={ newImageUrlArr.length === 3 }
+                            onClick={() => addImage(image)}
                         >
                             add Image
                         </button>
-                        {updatedValues.imageUrl.length > 0
+                        {newImageUrlArr.length > 0
                         ? <div>
                                 <p>Current pictures</p>
-                                {updatedValues.imageUrl.map((image) => {
-                                    return (
-                                        <div key={image.public_id}>
-                                            <img  src={image.url} alt="image uploaded"/>
-                                            <button onClick={ () => {
-                                                handleDeleteImage(image.public_id);
-                                            }}>
-                                                Delete
-                                            </button>
-                                        </div>
-                                    )
+                                {newImageUrlArr.map((image, index) => {
+                                    if(image.url !== undefined) {
+                                        return (
+                                            <div key={image.public_id}>
+                                                <img  src={image.url} alt="image uploaded"/>
+                                                <button onClick={ () => {
+                                                    removeImage(image.public_id);
+                                                }}>
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        )
+                                    }
+                                    else {
+                                        return (
+                                            <div key={image.name + index}>
+                                                <img  src={URL.createObjectURL(image)} alt={image.name}/>
+                                                <button onClick={ () => removeImage(image)}>
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        )
+                                    }
                                 })}
                             </div>
                         : null
@@ -400,7 +483,7 @@ const EditRestaurantPage = () => {
                     onClick={handleSubmit}
                     disabled={
                         updatedValues.restaurantName === "" 
-                        || (Object.keys(updatedValues).length === 1 && changeInImageUrl === false)
+                        || (Object.keys(updatedValues).length === 0 && changeInImageUrl !== true)
                     }
                 >
                     Submit
