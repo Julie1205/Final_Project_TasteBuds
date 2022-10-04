@@ -1,17 +1,33 @@
-import { useLocation, useNavigate, Link } from "react-router-dom";
-import { useState } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 
 const RestaurantDetailsPage = () => {
+    const { id } = useParams();
+    const { user } = useAuth0();
+    const [restaurantDetails, setRestaurantDetails] = useState(null);
     const [deleteStatus, setDeleteStatus] = useState(false);
     const [errorStatus, setErrorStatus] =useState(false);
-    const location = useLocation();
     const navigate = useNavigate();
-    const { data } = location.state;
-    const { user } = useAuth0();
+
+    useEffect(() => {
+        if(user) {
+            fetch(`/get-restaurant/${ user.email }/${ id }`)
+            .then(res => res.json())
+            .then(result => {
+                if(result.status === 200) {
+                    setRestaurantDetails(result.data.restaurants[0]);
+                }
+                else{
+                    return Promise.reject(result)
+                    }
+            })
+            .catch((err) => console.log(err))
+        }
+    }, [id, user])
 
     const handleDeleteImageInCloudinary = () => {
-        const deletePromises = data.imageUrl.map((image) => {
+        const deletePromises = restaurantDetails.imageUrl.map((image) => {
             return fetch("/delete-image", {
                 method: "DELETE",
                 headers: {
@@ -43,12 +59,12 @@ const RestaurantDetailsPage = () => {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             },
-            body: JSON.stringify({ _id: data._id })
+            body: JSON.stringify({ _id: restaurantDetails._id })
         })
         .then(res => res.json())
         .then(restaurantDeleteResult => {
             if(restaurantDeleteResult.status === 200) {
-                if(data.imageUrl.length > 0) {
+                if(restaurantDetails.imageUrl.length > 0) {
                     const deletePromises = handleDeleteImageInCloudinary();
                     Promise.all(deletePromises)
                     .then(result => {
@@ -68,7 +84,7 @@ const RestaurantDetailsPage = () => {
             }
             else {
                 setErrorStatus(true);
-                return Promise.reject(data);
+                return Promise.reject(restaurantDeleteResult);
             }
         })
         .catch((err) => console.log(err))
@@ -77,39 +93,39 @@ const RestaurantDetailsPage = () => {
     return (
         <div>
             <button onClick={ () => navigate(-1) }>Back</button>
-            { data && user && !deleteStatus
+            { restaurantDetails && user && !deleteStatus
             ? <>
-                <p>{data.restaurantName}</p>
-                {data.restaurantCuisine ? <p>{data.restaurantCuisine}</p> : null}
-                {data.restaurantAddress ? <p>{data.restaurantAddress}</p> : null}
-                {data.restaurantPhoneNumber ? <p>{data.restaurantPhoneNumber}</p> : null}
-                {data.restaurantWebsite 
+                <p>{restaurantDetails.restaurantName}</p>
+                {restaurantDetails.restaurantCuisine ? <p>{restaurantDetails.restaurantCuisine}</p> : null}
+                {restaurantDetails.restaurantAddress ? <p>{restaurantDetails.restaurantAddress}</p> : null}
+                {restaurantDetails.restaurantPhoneNumber ? <p>{restaurantDetails.restaurantPhoneNumber}</p> : null}
+                {restaurantDetails.restaurantWebsite 
                 ? <a 
-                    href={data.restaurantWebsite}                         
+                    href={restaurantDetails.restaurantWebsite}                         
                     target="_blank"
                     rel="noreferrer noopener"
                 >
-                    {data.restaurantWebsite}
+                    {restaurantDetails.restaurantWebsite}
                 </a> 
                 : null
                 }
 
-                <p>{data.restaurantVisitStatus}</p>
-                {data.restaurantCategory ? <p>{data.restaurantCategory}</p> : null}
-                {data.restaurantFavorite ? <p>Favorite</p> : null}
+                <p>{restaurantDetails.restaurantVisitStatus}</p>
+                {restaurantDetails.restaurantCategory ? <p>{restaurantDetails.restaurantCategory}</p> : null}
+                {restaurantDetails.restaurantFavorite ? <p>Favorite</p> : null}
                 
-                {data.restaurantComment ? <p>{data.restaurantComment}</p> : null}
-                {data.imageUrl.length > 0 ?
-                    data.imageUrl.map((image) => {
+                {restaurantDetails.restaurantComment ? <p>{restaurantDetails.restaurantComment}</p> : null}
+                {restaurantDetails.imageUrl.length > 0 ?
+                    restaurantDetails.imageUrl.map((image) => {
                         return <img  key={image.public_id} src={image.url} alt="image uploaded"/>
                     })
                 : null}
 
-                <Link to={`/home/restaurant/edit/${ data._id }`} state={ { data: data } }>Edit</Link>
+                <Link to={`/home/restaurant/edit/${ restaurantDetails._id }`} state={ { data: restaurantDetails } }>Edit</Link>
                 <button onClick={handleDelete}>Delete</button>
                 {errorStatus ? <p>Could not delete restaurant</p> : null}
             </>
-            : data && user && deleteStatus 
+            : restaurantDetails && user && deleteStatus 
             ? <p>Restaurant Deleted</p>
             : null}
         </div>

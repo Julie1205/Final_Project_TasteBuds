@@ -407,7 +407,11 @@ const EditRestaurantPage = () => {
                 </button>
                 <button onClick={() => navigate(-1)}>Cancel</button>
                 </>
-                : <p>Restaurant Info Updated</p>}
+                : <div>
+                    <p>Restaurant Info Updated</p>
+                    <button onClick={() => navigate(-1)}>Back</button>
+                </div>
+                }
                 {errorStatus ? <p>Failed to update restaurant. Please try again.</p> : null}
         </div>
     )
