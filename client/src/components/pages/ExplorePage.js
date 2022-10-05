@@ -12,10 +12,16 @@ const ExplorePage = () => {
     const [errorStatus, setErrorStatus] = useState(false);
 
     const handleAddressInputChange = (e) => {
+        if(errorStatus) {
+            setErrorStatus(false);
+        }
         setAddress(e.target.value);
     };
 
     const handleCityInputChange = (e) => {
+        if(errorStatus) {
+            setErrorStatus(false);
+        }
         setCity(e.target.value);
     };
 

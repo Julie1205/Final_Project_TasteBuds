@@ -48,7 +48,8 @@ const restaurant = ( { restaurant } ) => {
                 </WebsiteSection> 
                 : null
                 }
-                <DistanceSection>
+                {restaurant.distance 
+                ? <DistanceSection>
                     <DistanceLabel>
                         Distance:
                     </DistanceLabel>
@@ -56,6 +57,8 @@ const restaurant = ( { restaurant } ) => {
                         {`${restaurant.distance}m`}
                     </DistanceResult>
                 </DistanceSection>
+                : null
+                }
             </RestaurantInfoSection>
             <SaveIcon 
                 to="/home/addRestaurant" 

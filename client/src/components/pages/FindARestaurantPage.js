@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
-
+import TextField from '@mui/material/TextField';
+import CircularProgress from '@mui/material/CircularProgress';
 import SearchResults from "../SearchResults";
 
 const FindARestaurantPage = () => {
@@ -10,63 +11,53 @@ const FindARestaurantPage = () => {
     const [searchResults, setSearchResults] = useState(null);
     const [searchState, setSearchState] = useState(false);
     const [errorStatus, setErrorStatus] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("Please enter an restaurant name and city.");
 
     const handleAddressInputChange = (e) => {
-        if(errorStatus){
+        if(errorStatus) {
             setErrorStatus(false);
-            setErrorMessage("Please enter an restaurant name and city.");
         }
         setStreet(e.target.value);
     };
     
     const handleRestaurantNameInputChange = (e) => {
-        if(errorStatus){
+        if(errorStatus) {
             setErrorStatus(false);
-            setErrorMessage("Please enter an restaurant name and city.");
         }
         setRestaurantName(e.target.value);
     };
 
     const handleCityInputChange = (e) => {
-        if(errorStatus){
+        if(errorStatus) {
             setErrorStatus(false);
-            setErrorMessage("Please enter an restaurant name and city.");
         }
         setCity(e.target.value);
     };
 
     const handleSearch = () => {
-        if(restaurantName === " " || city === " ") {
-            setErrorStatus(true);
-        }
-        else {
-            setSearchState(true);
-            const restaurantNameParam = `${restaurantName.trim().toLowerCase()}`;
-            const cityParam = `${city.trim().toLowerCase()}`;
-            const streetParam = `${street.trim().toLowerCase()}`;
+        setSearchState(true);
+        const restaurantNameParam = `${restaurantName.trim().toLowerCase()}`;
+        const cityParam = `${city.trim().toLowerCase()}`;
+        const streetParam = `${street.trim().toLowerCase()}`;
 
-            const uri = encodeURI(`/get-find-restaurant/${restaurantNameParam}/${cityParam}?street=${streetParam}`);
-            fetch(uri)
-            .then(res => res.json())
-            .then(results => {
-                if(results.status === 200) {
-                    setRestaurantName("");
-                    setCity("");
-                    setStreet("");
-                    setSearchResults(results.data);
-                }
-                else {
-                    setSearchState(false);
-                    return Promise.reject(results);
-                }
-            })
-            .catch(err => {
-                setErrorStatus(true);
-                setErrorMessage(err.message);
-                console.log(err)
-            })
-        }
+        const uri = encodeURI(`/get-find-restaurant/${restaurantNameParam}/${cityParam}?street=${streetParam}`);
+        fetch(uri)
+        .then(res => res.json())
+        .then(results => {
+            if(results.status === 200) {
+                setRestaurantName("");
+                setCity("");
+                setStreet("");
+                setSearchResults(results.data);
+            }
+            else {
+                setSearchState(false);
+                return Promise.reject(results);
+            }
+        })
+        .catch(err => {
+            setErrorStatus(true);
+            console.log(err)
+        })
     };
 
     const handleMakeNewSearch = () => {
@@ -79,57 +70,62 @@ const FindARestaurantPage = () => {
 
     return (
         <Wrapper>
-            <p>Find a Restaurant</p>
-            {!searchState && !searchState ?    
-                (<>
+            <PageTitle>Find a Restaurant</PageTitle>
+            <p>Search for a restaurant by name and city</p>
+            {!searchResults && !searchState ?    
+                (<div>
                     <InputSection>
-                        <label>
-                            Restaurant Name:
-                            <RestaurantInput
-                                value={restaurantName}
-                                placeholder="Onoir"
-                                onChange={handleRestaurantNameInputChange}
-                            />
-                        </label>
-                        <label>
-                            City:
-                            <CityInput 
-                                value={city}
-                                placeholder="Montreal"
-                                onChange={handleCityInputChange}
-                            />
-                        </label>
-                        <label>
-                            Street:
-                            <StreetInput
-                                value={street}
-                                placeholder="saint-catherine"
-                                onChange={handleAddressInputChange}
-                            />
-                        </label>
+                        <TextField 
+                            id="standard-basic" 
+                            label="Restaurant Name" 
+                            variant="standard" 
+                            value={restaurantName}
+                            onChange={handleRestaurantNameInputChange}
+                        />
+                        <TextField 
+                            id="standard-basic" 
+                            label="City" 
+                            variant="standard" 
+                            value={city}
+                            onChange={handleCityInputChange}
+                        />
+                            <TextField 
+                            id="standard-basic" 
+                            label="Street Name (optional)" 
+                            variant="standard" 
+                            value={street}
+                            onChange={handleAddressInputChange}
+                        />
                     </InputSection>
-                    <button 
+
+                    {errorStatus 
+                    ? <ErrorMessage>Could not find restaurant.</ErrorMessage> 
+                    : null
+                    }
+
+                    <SearchBtn 
                         disabled={!restaurantName || !city}
                         onClick={handleSearch}
                     >
                         Search
-                    </button>
-                </>)
+                    </SearchBtn>
+                </div>)
             : searchResults && searchState
             ? (
                 <div>
-                    <button onClick={handleMakeNewSearch}>Make another search</button>
-                    <div>
-                        {
-                            searchResults.map((restaurant) => {
-                                return <SearchResults key={`search${restaurant.id}`} restaurant={restaurant} />
-                            })
-                        }
-                    </div>
+                    <MakeNewSearchBtn onClick={handleMakeNewSearch}>Make another search</MakeNewSearchBtn>
+                    {
+                        searchResults.map((restaurant) => {
+                            return <SearchResults key={`search${restaurant.id}`} restaurant={restaurant} />
+                        })
+                    }
                 </div>
             )
-            : <p>Loading...</p>}
-            {errorStatus ? <p>{errorMessage}</p> : null}
+            : (
+                <LoadingSection>
+                    <CircularProgress />
+                </LoadingSection>
+            )}
         </Wrapper>
     )
 };
@@ -140,27 +136,66 @@ const Wrapper = styled.div`
     font-size: var(--body-font);
     display: flex;
     flex-direction: column;
-    width: calc(100vw - 250px);
-    justify-content: center;
-    align-items: center;
+    margin: var(--offset-top) 20px;
 `;
 
 const InputSection = styled.div`
     display: flex;
     flex-direction: column;
     margin: 20px 0;
+    padding: 20px 30px 40px 30px;
+    width: 50%;
+    max-width: 500px;
+    border: 1px solid #f0f0f0;
+    border-radius: 15px;
+    box-shadow: 0 2px 5px #e8e8e8;
+    background-color: white;
+
+    @media (max-width: 850px){
+            width: 75%;
+    }
 `;
 
-const RestaurantInput = styled.input`
-    border: none;
-    border-bottom: 1px solid black;
-    padding: 5px;
+const PageTitle = styled.p`
+    font-size: 2rem;
 `;
 
-const CityInput = styled(RestaurantInput)`
-    width: 269px;
+const LoadingSection = styled.div`
+    display: flex;
+    justify-content: center;
+    margin-top: 15%;
 `;
 
-const StreetInput = styled(RestaurantInput)`
-    width: 257px;
+const SearchBtn = styled.button`
+    font-family: var(--body-font);
+    font-size: 0.95rem;
+    padding: 5px 10px;
+    border: 1px solid #0c5a4a;
+    border-radius: 10px;
+    background-color: #0c5a4a;
+    color: white;
+
+    &:hover {
+        cursor: pointer;
+        border: 1px solid #0c5a4a;
+        background-color: transparent;
+        color: #0c5a4a;
+    };
+
+    &:active {
+        transform: scale(0.85);
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+    }
+`;
+
+const MakeNewSearchBtn = styled(SearchBtn)`
+    margin-top: 5px;
+`;
+
+const ErrorMessage = styled.p`
+    margin: 15px 0;
+    color: red;
 `;
