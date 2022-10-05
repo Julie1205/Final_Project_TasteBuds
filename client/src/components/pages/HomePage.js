@@ -70,7 +70,7 @@ const Wrapper = styled.div`
     grid-template-rows: 100px calc(100vh - 100px);
 
         @media (max-width: 850px){
-            grid-template-rows: 25% calc(100vh - 25%);
+            grid-template-rows: 75px calc(100vh - 75px);
         }
 `;
 
@@ -132,4 +132,5 @@ const WelcomeMessage = styled.div`
 const LogOutSection = styled.div`
     display: flex;
     justify-content: flex-end;
+    margin-right: 15px;
 `;
