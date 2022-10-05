@@ -1,23 +1,12 @@
-const { MongoClient } = require("mongodb");
-require("dotenv").config();
+const { USERS_COLLECTION } = require("../constants/mongoDbConstants");
 const { v4: uuidv4 } = require("uuid");
-
-const { MONGO_URI } = process.env;
-const { DATABASE_NAME, USERS_COLLECTION } = require("../constants/mongoDbConstants");
-
-const mongoOptions = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-};
 
 //handler to get all the user's restaurants
 const getUserRestaurants = async (req, res) => {
     const { email } = req.params;
-    const client = new MongoClient(MONGO_URI, mongoOptions);
+    const db = req.app.locals.db;
 
     try {
-        await client.connect();
-        const db = client.db(DATABASE_NAME);
         const fieldsToReturn = { 
             projection: { 
                 _id: 0,
@@ -34,19 +23,14 @@ const getUserRestaurants = async (req, res) => {
         console.log(err.stack);
         res.status(500).json( { status: 500, data: email, message: err.message } );
     }
-    finally {
-        client.close();
-    }
 };
 
 //handler to get one restaurant based on id
 const getRestaurant = async (req, res) => {
     const { email, _id } = req.params;
-    const client = new MongoClient(MONGO_URI, mongoOptions);
+    const db = req.app.locals.db;
 
     try {
-        await client.connect();
-        const db = client.db(DATABASE_NAME);
         const results = await db.collection(USERS_COLLECTION).findOne( { email,  "restaurants._id": { $eq: _id } }, { projection: { "restaurants.$": 1} });
 
         results
@@ -57,26 +41,21 @@ const getRestaurant = async (req, res) => {
         console.log(err.stack);
         res.status(500).json( { status: 500, data: email, message: err.message } );
     }
-    finally {
-        client.close();
-    }
-
 };
 
 //add a restaurant to user's restaurants array
 const addRestaurant = async (req, res) => {
     const { email } = req.params;
+    const db = req.app.locals.db;
+    
     const newRestaurantInfo = {
         _id: uuidv4(),
         ...req.body
     }
 
     if(email && newRestaurantInfo.restaurantName) {
-        const client = new MongoClient(MONGO_URI, mongoOptions);
 
         try {
-            await client.connect();
-            const db = client.db(DATABASE_NAME);
             const filter = {email: email};
             const updateValue = { $push: {restaurants: newRestaurantInfo} }
             const results = await db.collection(USERS_COLLECTION).updateOne(filter, updateValue);
@@ -95,9 +74,6 @@ const addRestaurant = async (req, res) => {
             console.log(err.stack);
             res.status(500).json( { status: 500, data: email, message: err.message } );
         }
-        finally {
-            client.close();
-        }
     }
     else {
         res.status(400).json( {status: 400, data: email, message: "Missing information to identify user."});
@@ -107,14 +83,12 @@ const addRestaurant = async (req, res) => {
 //removes one restaurant from user's restaurant's array based on id
 const deleteRestaurant = async (req,res) => {
     const { email } = req.params;
+    const db = req.app.locals.db;
     const { _id } = req.body;
 
     if(_id){
-        const client = new MongoClient(MONGO_URI, mongoOptions);
 
         try{
-            await client.connect();
-            const db = client.db(DATABASE_NAME);
             const filter = { email };
             const restaurantToRemove = { $pull: { restaurants: { _id }} }
             const results = await db.collection(USERS_COLLECTION).updateOne(filter, restaurantToRemove);
@@ -132,9 +106,6 @@ const deleteRestaurant = async (req,res) => {
         catch (err) {
             console.log(err.stack);
             res.status(500).json( { status: 500, data: email, message: err.message } );
-        }
-        finally {
-            client.close();
         }
     }
     else {
@@ -159,6 +130,8 @@ const UPDATABLE_FIELDS = [
 const updateRestaurant = async (req, res) => {
     const { email } = req.params;
     const { _id } = req.body;
+    const db = req.app.locals.db;
+
     const fieldsSent = Object.keys(req.body);
     let isfieldAcceptable = false;
     UPDATABLE_FIELDS.forEach((field) => {
@@ -167,13 +140,9 @@ const updateRestaurant = async (req, res) => {
         }
     });
     
-    const client = new MongoClient(MONGO_URI, mongoOptions);
-    
     if(email && _id && isfieldAcceptable) {
         
         try {
-            await client.connect();
-            const db = client.db(DATABASE_NAME);
             const filter = { email };
             const restaurantToUpdate = { arrayFilters: [ {"restaurantSelected._id": _id} ] };
             let valuesToUpdate = { $set: {} };
@@ -199,9 +168,6 @@ const updateRestaurant = async (req, res) => {
         catch (err) {
             console.log(err.stack);
             res.status(500).json( { status: 500, data: email, message: err.message } );
-        }
-        finally {
-            client.close();
         }
     }
     else {
