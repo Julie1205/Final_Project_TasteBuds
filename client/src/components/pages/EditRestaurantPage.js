@@ -245,7 +245,7 @@ const EditRestaurantPage = () => {
                     />
                 </label>
                 <label>
-                    Restaurant cusine:
+                    Restaurant cusine/type:
                     <input 
                         value={
                             updatedValues.restaurantCuisine !== undefined

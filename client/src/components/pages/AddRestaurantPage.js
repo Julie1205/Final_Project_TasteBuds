@@ -194,7 +194,7 @@ const AddRestaurantPage = () => {
                             />
                         </label>
                         <label>
-                            Restaurant cusine:
+                            Restaurant cusine/type:
                             <input 
                                 placeholder="French Cuisine"
                                 value={newRestaurantInfo.restaurantCuisine}

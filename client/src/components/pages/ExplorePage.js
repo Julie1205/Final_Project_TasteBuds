@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
-
+import TextField from '@mui/material/TextField';
+import CircularProgress from '@mui/material/CircularProgress';
 import SearchResults from "../SearchResults";
 
 const ExplorePage = () => {
@@ -9,52 +10,37 @@ const ExplorePage = () => {
     const [searchResults, setSearchResults] = useState(null);
     const [searchState, setSearchState] = useState(false);
     const [errorStatus, setErrorStatus] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("Please enter an address and city.");
 
     const handleAddressInputChange = (e) => {
-        if(errorStatus){
-            setErrorStatus(false);
-            setErrorMessage("Please enter an address and city.");
-        }
         setAddress(e.target.value);
     };
 
     const handleCityInputChange = (e) => {
-        if(errorStatus){
-            setErrorStatus(false);
-            setErrorMessage("Please enter an address and city.");
-        }
         setCity(e.target.value);
     };
 
     const handleSearch = () => {
-        if(address === " " || city === " ") {
-            setErrorStatus(true);
-        }
-        else {
-            setSearchState(true);
-            const addressParam = `${address.trim().toLowerCase()} ${city.trim().toLowerCase()}`;
-            const uri = encodeURI(`/get-restaurants-near-me/${addressParam}`);
+        setSearchState(true);
+        const addressParam = `${address.trim().toLowerCase()} ${city.trim().toLowerCase()}`;
+        const uri = encodeURI(`/get-restaurants-near-me/${addressParam}`);
 
-            fetch(uri)
-            .then(res => res.json())
-            .then(results => {
-                if(results.status === 200) {
-                    setAddress("");
-                    setCity("");
-                    setSearchResults(results.data);
-                }
-                else {
-                    setSearchState(false);
-                    return Promise.reject(results);
-                }
-            })
-            .catch(err => {
-                setErrorStatus(true);
-                setErrorMessage(err.message);
-                console.log(err)
-            })
-        }
+        fetch(uri)
+        .then(res => res.json())
+        .then(results => {
+            if(results.status === 200) {
+                setAddress("");
+                setCity("");
+                setSearchResults(results.data);
+            }
+            else {
+                setSearchState(false);
+                return Promise.reject(results);
+            }
+        })
+        .catch(err => {
+            setErrorStatus(true);
+            console.log(err)
+        })
     };
 
     const handleMakeNewSearch = () => {
@@ -66,55 +52,68 @@ const ExplorePage = () => {
 
     return (
         <Wrapper>
-            {!searchState && !searchState ?    
-                (<>
-                    <p>Explore Your area. Find restaurants near you.</p>
+            {!searchResults && !searchState ?    
+                (<div>
+                    <div>
+                        <PageTitle>Explore Your area</PageTitle> 
+                        <p>Enter a street address and city to find restaurants near you</p>
+                    </div>
                     <InputSection>
-                        <label>
-                            Street Address:
-                            <AddressInput
-                                value={address}
-                                placeholder="123 Guy"
-                                onChange={handleAddressInputChange}
-                            />
-                        </label>
-                        <label>
-                            City:
-                            <CityInput 
-                                value={city}
-                                placeholder="Montreal"
-                                onChange={handleCityInputChange}
-                            />
-                        </label>
+                        <TextField 
+                            id="standard-basic" 
+                            label="Street Address" 
+                            variant="standard" 
+                            value={address}
+                            onChange={handleAddressInputChange}
+                        />
+                        <TextField 
+                            id="standard-basic" 
+                            label="City" 
+                            variant="standard" 
+                            value={city}
+                            onChange={handleCityInputChange}
+                        />
                     </InputSection>
-                    <button 
+
+                    {
+                        errorStatus
+                        ? <ErrorMessage>Address not found. Please try a different address</ErrorMessage> 
+                        : null
+                    }
+
+                    <SearchBtn 
                         disabled={!address || !city}
                         onClick={handleSearch}
                     >
                         Search
-                    </button>
-                </>)
+                    </SearchBtn>
+                </div>)
             : searchResults && searchState
             ? (
                 <div>
-                    <p>Restaurants Near You</p>
+                    <SearchTitle>Restaurants Near You</SearchTitle>
                     <div>
                         {searchResults.length > 0 ?
                         <>
-                            <button onClick={handleMakeNewSearch}>Make another search</button>
-                            {searchResults.map((restaurant) => {
-                                return <SearchResults key={`search${restaurant.id}`} restaurant={restaurant} />
-                            })}
+                            <MakeNewSearchBtn onClick={handleMakeNewSearch}>Make another search</MakeNewSearchBtn>
+                            {
+                                searchResults.map((restaurant) => {
+                                    return <SearchResults key={`search${restaurant.id}`} restaurant={restaurant} />
+                                })
+                            }
                         </>
                         : <div>
-                            <p>No Restaurants Found</p>
-                            <button onClick={handleMakeNewSearch}>Make another search</button>
+                            <NoRestaurant>No Restaurants Found</NoRestaurant>
+                            <NewSearchBtn onClick={handleMakeNewSearch}>Make another search</NewSearchBtn>
                         </div>}
                     </div>
                 </div>
             )
-            : <p>Loading...</p>}
-            {errorStatus ? <p>{errorMessage}</p> : null}
+            : (
+                <LoadingSection>
+                    <CircularProgress />
+                </LoadingSection>
+            )}
         </Wrapper>
     );
 };
@@ -125,23 +124,76 @@ const Wrapper = styled.div`
     font-size: var(--body-font);
     display: flex;
     flex-direction: column;
-    /* width: calc(100vw - 250px); */
-    justify-content: center;
-    align-items: center;
+    margin: var(--offset-top) 20px;
 `;
 
 const InputSection = styled.div`
     display: flex;
     flex-direction: column;
     margin: 20px 0;
+    padding: 20px 30px 40px 30px;
+    width: 50%;
+    max-width: 500px;
+    border: 1px solid #f0f0f0;
+    border-radius: 15px;
+    box-shadow: 0 2px 5px #e8e8e8;
+    background-color: white;
+
+    @media (max-width: 850px){
+            width: 75%;
+    }
 `;
 
-const AddressInput = styled.input`
-    border: none;
-    border-bottom: 1px solid black;
-    padding: 5px;
+const PageTitle = styled.p`
+    font-size: 2rem;
 `;
 
-const CityInput = styled(AddressInput)`
-    width: 250px;
+const SearchBtn = styled.button`
+    font-family: var(--body-font);
+    font-size: 0.95rem;
+    padding: 5px 10px;
+    border: 1px solid #0c5a4a;
+    border-radius: 10px;
+    background-color: #0c5a4a;
+    color: white;
+
+    &:hover {
+        cursor: pointer;
+        border: 1px solid #0c5a4a;
+        background-color: transparent;
+        color: #0c5a4a;
+    };
+
+    &:active {
+        transform: scale(0.85);
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+    }
+`;
+
+const SearchTitle = styled(PageTitle)`
+`;
+
+const LoadingSection = styled.div`
+    position: absolute;
+    left: 50%;
+    top: 25%;
+`;
+
+const ErrorMessage = styled.p`
+    margin: 15px 0;
+    color: red;
+`;
+
+const NoRestaurant = styled.p`
+    margin: 20px 0;
+`;
+
+const NewSearchBtn = styled(SearchBtn)`
+`;
+
+const MakeNewSearchBtn = styled(SearchBtn)`
+    margin-top: 5px;
 `;

@@ -85,7 +85,7 @@ const Header = styled.div`
 
 const Content = styled.div`
     display: grid;
-    grid-template-columns: 215px calc(100vw - 215px);
+    grid-template-columns: 215px calc(100vw - 250px);
 
         @media (max-width: 850px){
             grid-template-columns: 15% 85%;

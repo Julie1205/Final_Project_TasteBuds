@@ -2,6 +2,7 @@ import { createGlobalStyle } from "styled-components";
 
 export default createGlobalStyle`
 	:root {
+		background-color: #f7f7f7;
 		--body-font: 1.3rem;
 		--offset-top: 10px;
 		--body-font: 'Roboto', sans-serif;
