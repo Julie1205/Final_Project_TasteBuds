@@ -2,8 +2,9 @@ import { createGlobalStyle } from "styled-components";
 
 export default createGlobalStyle`
 	:root {
-		--body-font: 1.2rem;
+		--body-font: 1.3rem;
 		--offset-top: 10px;
+		--body-font: 'Roboto', sans-serif;
 	}
 
 /* http://meyerweb.com/eric/tools/css/reset/ 

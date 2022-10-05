@@ -125,7 +125,7 @@ const Wrapper = styled.div`
     font-size: var(--body-font);
     display: flex;
     flex-direction: column;
-    width: calc(100vw - 250px);
+    /* width: calc(100vw - 250px); */
     justify-content: center;
     align-items: center;
 `;

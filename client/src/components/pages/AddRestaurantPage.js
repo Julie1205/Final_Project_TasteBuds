@@ -366,11 +366,7 @@ const AddRestaurantPage = () => {
 export default AddRestaurantPage;
 
 const Wrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 75vw;
-    font-size: var(--body-font);
-    margin-top: var(--offset-top);
+
 `;
 
 const InputSection = styled.div`
