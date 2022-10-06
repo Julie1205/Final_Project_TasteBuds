@@ -144,7 +144,11 @@ const AddRestaurantPage = () => {
                     return Promise.reject(data);
                 }
             })
-            .catch((err) => console.log(err))
+            .catch((err) => {
+                setUploadStatus(false);
+                setErrorStatus(true);
+                console.log(err)
+            })
         }
     };
 
