@@ -27,6 +27,7 @@ const AddRestaurantPage = () => {
     const [submitStatus, setSubmitStatus] = useState(false);
     const [uploadStatus, setUploadStatus] = useState(false);
     const [errorStatus, setErrorStatus] = useState(false);
+    const [imageTypeError, setImageTypeError] = useState(false);
     const { user } = useAuth0();
     const location = useLocation();
     const navigate = useNavigate();
@@ -47,7 +48,14 @@ const AddRestaurantPage = () => {
     }, [])
 
     const AddToImageUpload = () => {
-        setImagesToUpload([...imagesToUpload, image]);
+        const fileExtensionIndex = image.name.lastIndexOf(".") + 1;
+        const fileExtension = image.name.slice(fileExtensionIndex).toLocaleLowerCase();
+        if(fileExtension === "jpg" || fileExtension === "jpeg" || fileExtension === "png") {
+            setImagesToUpload([...imagesToUpload, image]);
+        }
+        else {
+            setImageTypeError(true);
+        }
     }
 
     const handleDeleteImage = (imageFile) => {
@@ -284,7 +292,7 @@ const AddRestaurantPage = () => {
                         </LikeOrDislikeQUestion>
                         : null}
                         {newRestaurantInfo.restaurantVisitStatus && newRestaurantInfo.restaurantCategory === "liked"
-                        ? <FavoriteQUestion>
+                        ? <FavoriteQuestion>
                             <p>Would you like to add restaurant to favorites?</p>
                             <FavoriteAnswer>
                                 <label>
@@ -314,7 +322,7 @@ const AddRestaurantPage = () => {
                                     no
                                 </label>
                             </FavoriteAnswer>
-                        </FavoriteQUestion>
+                        </FavoriteQuestion>
                         : null}
                     </QuestionSection>
 
@@ -333,18 +341,26 @@ const AddRestaurantPage = () => {
 
                     <div>
                         <p>Add pictures?</p>
-                        <PictureInstruction>{`(You can add up to 3 images)`}</PictureInstruction>
+                        <PictureInstruction>{`(You can add up to 3 images of format JPEG, JPG or PNG)`}</PictureInstruction>
+                        {imageTypeError 
+                        ? <ImageTypeErrorMessage>Only images of type JPEG, JPG or PNG are allowed.</ImageTypeErrorMessage> 
+                        : null}
                         <PictureSection>
                             {imagesToUpload.length < 3 ? 
                                 <>
                                     <ChooseFileBtn 
                                         disabled={imagesToUpload.length === 3}
                                         type="file" 
-                                        accept="image/*"
-                                        onChange={(e) => setImage(e.target.files[0])}
+                                        accept="image/png, image/jpeg"
+                                        onChange={(e) => {
+                                            setImageTypeError(false);
+                                            setImage(e.target.files[0])
+                                        }}
                                     />
                                     <AddImageBtn 
-                                        disabled={imagesToUpload.length === 3}
+                                        disabled={
+                                            imagesToUpload.length === 3
+                                        }
                                         onClick={() => AddToImageUpload()}
                                     >
                                         <AddImageText>Add Image</AddImageText>
@@ -437,7 +453,6 @@ const FormSection = styled.div`
     padding: 20px 40px 40px 30px;
     width: 75%;
     max-width: 1000px;
-    max-width: 1000px;
     border: 1px solid #f0f0f0;
     border-radius: 15px;
     box-shadow: 0 2px 5px #e8e8e8;
@@ -491,7 +506,7 @@ const VisitStatusQuestion = styled.div`
 const LikeOrDislikeQUestion = styled(VisitStatusQuestion)`
 `;
 
-const FavoriteQUestion = styled(VisitStatusQuestion)`
+const FavoriteQuestion = styled(VisitStatusQuestion)`
 `;
 
 const VisitStatusAnswer = styled.div`
@@ -591,6 +606,10 @@ const AddImageBtn = styled.button`
         transform: scale(0.85);
     }
 
+    &:disabled {
+        cursor: not-allowed;
+    }
+
     @media (max-width: 850px){
         border: none;
         color: #0c5a2a;
@@ -618,8 +637,9 @@ const AddImageIcon = styled.span`
         position: relative;
         top: 5px;
         font-size: 1.2rem;
-    }
-`
+    };
+`;
+
 const UploadedImage = styled.img`
     max-height: 150px;
     margin: 0 5px;
@@ -677,4 +697,7 @@ const LoadingSection = styled.div`
     position: absolute;
     left: 50%;
     top: 25%;
+`;
+
+const ImageTypeErrorMessage = styled(ErrorMessage)`
 `;
