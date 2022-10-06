@@ -62,18 +62,18 @@ const ExplorePage = () => {
                 (<div>
                     <div>
                         <PageTitle>Explore Your area</PageTitle> 
-                        <p>Enter a street address and city to find restaurants near you</p>
+                        <SecondTextLine>Enter a street address and city to find restaurants near you</SecondTextLine>
                     </div>
                     <InputSection>
                         <TextField 
-                            id="standard-basic" 
+                            id="streetAddress" 
                             label="Street Address" 
                             variant="standard" 
                             value={address}
                             onChange={handleAddressInputChange}
                         />
                         <TextField 
-                            id="standard-basic" 
+                            id="city" 
                             label="City" 
                             variant="standard" 
                             value={city}
@@ -202,4 +202,8 @@ const NewSearchBtn = styled(SearchBtn)`
 
 const MakeNewSearchBtn = styled(SearchBtn)`
     margin-top: 5px;
+`;
+
+const SecondTextLine = styled.p`
+    font-size: 1.1rem;
 `;

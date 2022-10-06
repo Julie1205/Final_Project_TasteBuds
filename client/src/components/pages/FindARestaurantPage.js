@@ -71,26 +71,26 @@ const FindARestaurantPage = () => {
     return (
         <Wrapper>
             <PageTitle>Find a Restaurant</PageTitle>
-            <p>Search for a restaurant by name and city</p>
+            <SecondTextLine>Search for a restaurant by name and city</SecondTextLine>
             {!searchResults && !searchState ?    
                 (<div>
                     <InputSection>
                         <TextField 
-                            id="standard-basic" 
+                            id="restaurantName" 
                             label="Restaurant Name" 
                             variant="standard" 
                             value={restaurantName}
                             onChange={handleRestaurantNameInputChange}
                         />
                         <TextField 
-                            id="standard-basic" 
+                            id="city" 
                             label="City" 
                             variant="standard" 
                             value={city}
                             onChange={handleCityInputChange}
                         />
                             <TextField 
-                            id="standard-basic" 
+                            id="streetName" 
                             label="Street Name (optional)" 
                             variant="standard" 
                             value={street}
@@ -198,4 +198,8 @@ const MakeNewSearchBtn = styled(SearchBtn)`
 const ErrorMessage = styled.p`
     margin: 15px 0;
     color: red;
+`;
+
+const SecondTextLine = styled.p`
+    font-size: 1.1rem;
 `;

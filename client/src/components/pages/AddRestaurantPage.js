@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
+import { IoIosAddCircle } from "react-icons/io";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const INITIAL_STATE = {
     restaurantName: "",
@@ -21,11 +23,13 @@ const INITIAL_STATE_FOR_IMAGES_TO_UPLOAD = [];
 const AddRestaurantPage = () => {
     const [newRestaurantInfo, setNewRestaurantInfo] = useState(INITIAL_STATE);
     const [image, setImage] = useState(null);
-    const [imagesToUpload, setImagesToUpload] = useState(INITIAL_STATE_FOR_IMAGES_TO_UPLOAD)
+    const [imagesToUpload, setImagesToUpload] = useState(INITIAL_STATE_FOR_IMAGES_TO_UPLOAD);
     const [submitStatus, setSubmitStatus] = useState(false);
+    const [uploadStatus, setUploadStatus] = useState(false);
     const [errorStatus, setErrorStatus] = useState(false);
     const { user } = useAuth0();
     const location = useLocation();
+    const navigate = useNavigate();
 
     //this useEffect is to update the newRestaurantInfo with details from a searched restautant
     useEffect(() => {
@@ -78,7 +82,9 @@ const AddRestaurantPage = () => {
     
     //handles adding restaurant to mongodb
     const handleSubmit = () => {
+        setUploadStatus(true);
         setErrorStatus(false);
+        
         if(imagesToUpload.length > 0) {
             const cloudinaryUploadPromises = imagesToUpload.map((image) => {
                 return handleCloudinaryUpload(image);
@@ -103,6 +109,7 @@ const AddRestaurantPage = () => {
                             setSubmitStatus(true);
                         }
                         else {
+                            setUploadStatus(false);
                             setErrorStatus(true);
                             return Promise.reject(data);
                         }
@@ -143,16 +150,16 @@ const AddRestaurantPage = () => {
 
     return (
         <Wrapper>
-            {!submitStatus 
-            ? <>
-                <div>
+            <PageTitle>Add a Restaurant</PageTitle>
+            {!submitStatus && !uploadStatus
+            ? <div>
+                <FormSection>
                     <InputSection>
-                        <p>Add a Restaurant</p>
                         <label>
-                            Restaurant Name:
-                            <input
+                            Restaurant Name
+                            <NameInput
                                 required
-                                placeholder="O noir"
+                                placeholder="Example: O noir"
                                 value={newRestaurantInfo.restaurantName}
                                 onChange={(e) => setNewRestaurantInfo({
                                     ...newRestaurantInfo, 
@@ -161,9 +168,9 @@ const AddRestaurantPage = () => {
                             />
                         </label>
                         <label>
-                            Restaurant Address:
-                            <input
-                                placeholder="124 Rue Prince Arthur East, Montreal QC H2X 1B5"
+                            Restaurant Address
+                            <AddressInput
+                                placeholder="Example: 124 Rue Prince Arthur East, Montreal QC H2X 1B5"
                                 value={newRestaurantInfo.restaurantAddress}
                                 onChange={(e) => setNewRestaurantInfo({
                                     ...newRestaurantInfo, 
@@ -172,9 +179,9 @@ const AddRestaurantPage = () => {
                             />
                         </label>
                         <label>
-                            Restaurant Phone number:
-                            <input 
-                                placeholder="+1-514-937-9727"
+                            Restaurant Phone number
+                            <PhoneNumberInput 
+                                placeholder="Example: +1-514-937-9727"
                                 value={newRestaurantInfo.restaurantPhoneNumber}
                                 onChange={(e) => setNewRestaurantInfo({
                                     ...newRestaurantInfo,
@@ -183,9 +190,9 @@ const AddRestaurantPage = () => {
                             />
                         </label>
                         <label>
-                            Restaurant website:
-                            <input 
-                                placeholder="www.onoir.com"
+                            Restaurant website
+                            <WebsiteInput 
+                                placeholder="Example: www.onoir.com"
                                 value={newRestaurantInfo.restaurantWebsite}
                                 onChange={(e) => setNewRestaurantInfo({
                                     ...newRestaurantInfo,
@@ -194,9 +201,9 @@ const AddRestaurantPage = () => {
                             />
                         </label>
                         <label>
-                            Restaurant cusine/type:
-                            <input 
-                                placeholder="French Cuisine"
+                            Restaurant cusine/type
+                            <CuisineInput 
+                                placeholder="Example: French Cuisine"
                                 value={newRestaurantInfo.restaurantCuisine}
                                 onChange={(e) => setNewRestaurantInfo({
                                     ...newRestaurantInfo,
@@ -205,103 +212,112 @@ const AddRestaurantPage = () => {
                             />
                         </label>
                     </InputSection>
+                    <QuestionSection>
+                        <VisitStatusQuestion>
+                            <p>Have you been to this restaurant?</p>
+                            <VisitStatusAnswer>
+                                <label>
+                                    <input 
+                                        type="radio"
+                                        name="visitSate"
+                                        value={true}
+                                        checked={newRestaurantInfo.restaurantVisitStatus === true}
+                                        onChange={(e) => setNewRestaurantInfo({
+                                            ...newRestaurantInfo, 
+                                            restaurantVisitStatus: true
+                                        })}
+                                    />
+                                    yes
+                                </label>
+                                <label>
+                                    <input 
+                                        type="radio"
+                                        name="visitSate"
+                                        value={false}
+                                        checked={newRestaurantInfo.restaurantVisitStatus === false}
+                                        onChange={(e) => setNewRestaurantInfo({
+                                            ...newRestaurantInfo, 
+                                            restaurantVisitStatus: false,
+                                            restaurantFavorite: INITIAL_STATE.restaurantFavorite
+                                        })}
+                                    />
+                                    no
+                                </label>
+                            </VisitStatusAnswer>
+                        </VisitStatusQuestion>
+                        {newRestaurantInfo.restaurantVisitStatus 
+                        ? <LikeOrDislikeQUestion>
+                            <p>What did you think about the restaurant?</p>
+                            <LikeOrDislikeAnswer>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="category"
+                                        value="liked"
+                                        checked={newRestaurantInfo.restaurantCategory === "liked"}
+                                        onChange={(e) => setNewRestaurantInfo({
+                                            ...newRestaurantInfo,
+                                            restaurantCategory: e.target.value
+                                        })}
+                                    />
+                                    Liked
+                                </label>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="category"
+                                        value="disliked"
+                                        checked={newRestaurantInfo.restaurantCategory === "disliked"}
+                                        onChange={(e) => setNewRestaurantInfo({
+                                            ...newRestaurantInfo, 
+                                            restaurantCategory: e.target.value,
+                                            restaurantFavorite: INITIAL_STATE.restaurantFavorite
+                                        })}
+                                    />
+                                    Disliked
+                                </label>
+                            </LikeOrDislikeAnswer>
+                        </LikeOrDislikeQUestion>
+                        : null}
+                        {newRestaurantInfo.restaurantVisitStatus && newRestaurantInfo.restaurantCategory === "liked"
+                        ? <FavoriteQUestion>
+                            <p>Would you like to add restaurant to favorites?</p>
+                            <FavoriteAnswer>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="favoriteStatus"
+                                        value={true}
+                                        checked={newRestaurantInfo.restaurantFavorite === true}
+                                        onChange={(e) => setNewRestaurantInfo({
+                                            ...newRestaurantInfo, 
+                                            restaurantFavorite: true
+                                        })}
+                                    />
+                                    yes
+                                </label>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="favoriteStatus"
+                                        value={false}
+                                        checked={newRestaurantInfo.restaurantFavorite === false}
+                                        onChange={(e) => setNewRestaurantInfo({
+                                            ...newRestaurantInfo,
+                                            restaurantFavorite: false
+                                        })}
+                                    />
+                                    no
+                                </label>
+                            </FavoriteAnswer>
+                        </FavoriteQUestion>
+                        : null}
+                    </QuestionSection>
+
                     <div>
-                        <p>Have you been to this restaurant?</p>
                         <label>
-                            <input 
-                                type="radio"
-                                name="visitSate"
-                                value={true}
-                                checked={newRestaurantInfo.restaurantVisitStatus === true}
-                                onChange={(e) => setNewRestaurantInfo({
-                                    ...newRestaurantInfo, 
-                                    restaurantVisitStatus: true
-                                })}
-                            />
-                            yes
-                        </label>
-                        <label>
-                            <input 
-                                type="radio"
-                                name="visitSate"
-                                value={false}
-                                checked={newRestaurantInfo.restaurantVisitStatus === false}
-                                onChange={(e) => setNewRestaurantInfo({
-                                    ...newRestaurantInfo, 
-                                    restaurantVisitStatus: false,
-                                    restaurantFavorite: INITIAL_STATE.restaurantFavorite
-                                })}
-                            />
-                            no
-                        </label>
-                    </div>
-                    {newRestaurantInfo.restaurantVisitStatus 
-                    ? <div>
-                        <p>What did you think about the restaurant?</p>
-                        <label>
-                            <input
-                                type="radio"
-                                name="category"
-                                value="liked"
-                                checked={newRestaurantInfo.restaurantCategory === "liked"}
-                                onChange={(e) => setNewRestaurantInfo({
-                                    ...newRestaurantInfo,
-                                    restaurantCategory: e.target.value
-                                })}
-                            />
-                            Liked
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="category"
-                                value="disliked"
-                                checked={newRestaurantInfo.restaurantCategory === "disliked"}
-                                onChange={(e) => setNewRestaurantInfo({
-                                    ...newRestaurantInfo, 
-                                    restaurantCategory: e.target.value,
-                                    restaurantFavorite: INITIAL_STATE.restaurantFavorite
-                                })}
-                            />
-                            Disliked
-                        </label>
-                    </div>
-                    : null}
-                    {newRestaurantInfo.restaurantVisitStatus && newRestaurantInfo.restaurantCategory === "liked"
-                    ? <div>
-                        <p>Would you like to add restaurant to favorites?</p>
-                        <label>
-                            <input
-                                type="radio"
-                                name="favoriteStatus"
-                                value={true}
-                                checked={newRestaurantInfo.restaurantFavorite === true}
-                                onChange={(e) => setNewRestaurantInfo({
-                                    ...newRestaurantInfo, 
-                                    restaurantFavorite: true
-                                })}
-                            />
-                            yes
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="favoriteStatus"
-                                value={false}
-                                checked={newRestaurantInfo.restaurantFavorite === false}
-                                onChange={(e) => setNewRestaurantInfo({
-                                    ...newRestaurantInfo,
-                                    restaurantFavorite: false
-                                })}
-                            />
-                            no
-                        </label>
-                    </div>
-                    : null}
-                    <div>
-                        <label>
-                            Comments about the restaurant:
-                            <textarea
+                            Comments about the restaurant
+                            <CommentInput
                                 value={newRestaurantInfo.restaurantComment}
                                 onChange={(e) => setNewRestaurantInfo({
                                     ...newRestaurantInfo,
@@ -310,39 +326,51 @@ const AddRestaurantPage = () => {
                             />
                         </label>
                     </div>
-                </div>
-                <div>
-                    <p>Add pictures? You can add up to 3 images</p>
+
                     <div>
-                        <input 
-                            disabled={imagesToUpload.length === 3}
-                            type="file" 
-                            accept="image/*"
-                            onChange={(e) => setImage(e.target.files[0])}
-                        />
-                        <button 
-                            disabled={imagesToUpload.length === 3}
-                            onClick={() => AddToImageUpload()}
-                        >
-                            add Image
-                        </button>
-                        {imagesToUpload.length > 0 
-                        ? <div>
-                            {imagesToUpload.map((image, index) => {
-                                return (
-                                    <div key={image.name + index}>
-                                        <img  src={URL.createObjectURL(image)} alt={image.name}/>
-                                        <button onClick={ () => handleDeleteImage(image)}>
-                                            Delete
-                                        </button>
-                                    </div>
-                                )
-                            })}
-                        </div>
-                        : null}
+                        <p>Add pictures?</p>
+                        <PictureInstruction>{`(You can add up to 3 images)`}</PictureInstruction>
+                        <PictureSection>
+                            {imagesToUpload.length < 3 ? 
+                                <>
+                                    <ChooseFileBtn 
+                                        disabled={imagesToUpload.length === 3}
+                                        type="file" 
+                                        accept="image/*"
+                                        onChange={(e) => setImage(e.target.files[0])}
+                                    />
+                                    <AddImageBtn 
+                                        disabled={imagesToUpload.length === 3}
+                                        onClick={() => AddToImageUpload()}
+                                    >
+                                        <AddImageText>Add Image</AddImageText>
+                                        <AddImageIcon><IoIosAddCircle/></AddImageIcon>
+                                    </AddImageBtn>
+                                </>
+                            : null}
+                            {imagesToUpload.length > 0 
+                            ? <UploadedImagesSection>
+                                {imagesToUpload.map((image, index) => {
+                                    return (
+                                        <ImageWrapper key={image.name + index}>
+                                            <UploadedImage  src={URL.createObjectURL(image)} alt={image.name}/>
+                                            <DeleteImageBtn onClick={ () => handleDeleteImage(image)}>
+                                                X
+                                            </DeleteImageBtn>
+                                        </ImageWrapper>
+                                    )
+                                })}
+                            </UploadedImagesSection>
+                            : null}
+                        </PictureSection>
                     </div>
-                </div>
-                <button 
+                </FormSection>
+
+                {errorStatus 
+                ? <ErrorMessage>Failed to add restaurant. Please try again.</ErrorMessage> 
+                : null}
+                
+                <SubmitBtn 
                     onClick={handleSubmit}
                     disabled={
                         newRestaurantInfo.restaurantName === "" 
@@ -351,14 +379,29 @@ const AddRestaurantPage = () => {
                     }
                 >
                     Submit
-                </button>
-            </>
-            : <div>
-                <p>Restaurant Added!</p>
-                <button onClick={() => setSubmitStatus(false)}>Add another restaurant</button>
+                </SubmitBtn>
             </div>
-            }
-            {errorStatus ? <p>Failed to add restaurant. Please try again.</p> : null}
+            : uploadStatus && submitStatus
+            ? <div>
+                <SuccessMessage>
+                    Restaurant Added!
+                </SuccessMessage>
+                <AddAnotherRestaurantBtn 
+                    onClick={() => { 
+                        navigate("/home/addRestaurant", {state: null});
+                        setUploadStatus(false);
+                        setSubmitStatus(false);
+                    }}
+                >
+                    Add another restaurant
+                </AddAnotherRestaurantBtn>
+            </div>
+            : (
+                <LoadingSection>
+                    <CircularProgress />
+                </LoadingSection>
+            )}
+
         </Wrapper>
     );
 };
@@ -366,10 +409,268 @@ const AddRestaurantPage = () => {
 export default AddRestaurantPage;
 
 const Wrapper = styled.div`
-
+    font-size: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    margin: var(--offset-top) 20px;
+    font-family: var(--body-font);
 `;
 
 const InputSection = styled.div`
     display: flex;
     flex-direction: column;
+    padding-bottom: 15px;
+    margin: 15px 0;
+    border-bottom: 1px solid #e6e6e6;
+`;
+
+const PageTitle = styled.p`
+    font-size: 2rem;
+`;
+
+const FormSection = styled.div`
+    margin: 10px 0;
+    padding: 20px 40px 40px 30px;
+    width: 75%;
+    max-width: 1000px;
+    max-width: 1000px;
+    border: 1px solid #f0f0f0;
+    border-radius: 15px;
+    box-shadow: 0 2px 5px #e8e8e8;
+    background-color: white;
+
+    @media (max-width: 850px){
+        width: 75%;
+    }
+`;
+
+const NameInput = styled.textarea`
+    display: block;
+    font-size: 1rem;
+    width: 100%;
+    margin: 5px 0 10px 0;
+    padding: 5px;
+    font-weight: normal;
+    word-wrap: break-word;
+    font-family: var(--body-font);
+    resize: none;
+    border-color: #d9d9d9;
+    border-radius: 5px;
+`;
+
+const AddressInput = styled(NameInput)`
+    height: auto;
+`;
+
+const PhoneNumberInput = styled(NameInput)`
+    height: 20px;
+`;
+
+const WebsiteInput = styled(NameInput)`
+    height: auto;
+`;
+
+const CuisineInput = styled(NameInput)`
+    height: auto;
+`;
+
+const QuestionSection = styled.div`
+    padding-bottom: 15px;
+    margin: 15px 0;
+    border-bottom: 1px solid #e6e6e6;
+`;
+
+const VisitStatusQuestion = styled.div`
+    margin: 15px 0;
+`;
+
+const LikeOrDislikeQUestion = styled(VisitStatusQuestion)`
+`;
+
+const FavoriteQUestion = styled(VisitStatusQuestion)`
+`;
+
+const VisitStatusAnswer = styled.div`
+    margin: 10px 0;
+`;
+
+const LikeOrDislikeAnswer = styled(VisitStatusAnswer)`
+    margin: 10px 0;
+`;
+
+const FavoriteAnswer = styled(VisitStatusAnswer)`
+    margin: 10px 0;
+`;
+
+const CommentInput = styled(NameInput)`
+    min-height: 150px;
+`;
+
+const PictureSection = styled.div`
+    margin: 20px 0;
+`;
+
+const PictureInstruction = styled.p`
+    font-size: 1rem;
+`;
+
+const SubmitBtn = styled.button`
+    font-family: var(--body-font);
+    font-size: 1.1rem;
+    padding: 5px 10px;
+    border: 1px solid #0c5a4a;
+    border-radius: 10px;
+    background-color: #0c5a4a;
+    color: white;
+
+    &:hover {
+        cursor: pointer;
+        border: 1px solid #0c5a4a;
+        background-color: transparent;
+        color: #0c5a4a;
+    };
+
+    &:active {
+        transform: scale(0.85);
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+    }
+`;
+
+const ChooseFileBtn = styled.input`
+    max-width: 200px;
+    border-bottom: 1px dashed #e6e6e6;
+    margin-bottom: 10px;
+
+    &::file-selector-button {
+        font-family: var(--body-font);
+        font-size: 0.90rem;
+        padding: 5px 10px;
+        border: 1px solid #0c5a4a;
+        border-radius: 10px;
+        background-color: #0c5a2a;
+        color: white;
+        margin-left: 5px;
+    
+        &:hover {
+            border: 1px solid #0c5a4a;
+            background-color: transparent;
+            color: #0c5a4a;
+        };
+    
+        &:active {
+            transform: scale(0.85);
+        }
+    };
+`;
+
+const AddImageBtn = styled.button`
+    font-family: var(--body-font);
+    font-size: 0.90rem;
+    padding: 5px 10px;
+    border: 1px solid #0c5a4a;
+    border-radius: 10px;
+    background-color: #0c5a2a;
+    color: white;
+    margin-left: 5px;
+
+    &:hover {
+        cursor: pointer;
+        border: 1px solid #0c5a4a;
+        background-color: transparent;
+        color: #0c5a4a;
+    };
+
+    &:active {
+        transform: scale(0.85);
+    }
+
+    @media (max-width: 850px){
+        border: none;
+        color: #0c5a2a;
+        background-color: transparent;
+        padding: 0 5px;
+
+        &:hover {
+        border: none;
+        color: #0c5a4a;
+    };
+    }
+`;
+
+const AddImageText = styled.span`
+    @media (max-width: 850px){
+        display: none;
+    }
+`;
+
+const AddImageIcon = styled.span`
+    display: none;
+
+    @media (max-width: 850px){
+        display: inline;
+        position: relative;
+        top: 5px;
+        font-size: 1.2rem;
+    }
+`
+const UploadedImage = styled.img`
+    max-height: 150px;
+    margin: 0 5px;
+`;
+
+const UploadedImagesSection = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+`;
+
+const DeleteImageBtn = styled.button`
+    position: absolute;
+    left: 5px;
+    background-color: #b30000;
+    color: white;
+    border: none;
+    font-size: 1rem;
+`;
+
+const ImageWrapper = styled.div`
+    position: relative;
+`;
+
+const AddAnotherRestaurantBtn = styled.button`
+    font-family: var(--body-font);
+    font-size: 0.95rem;
+    padding: 5px 10px;
+    border: 1px solid #0c5a4a;
+    border-radius: 10px;
+    background-color: #0c5a4a;
+    color: white;
+
+    &:hover {
+        cursor: pointer;
+        border: 1px solid #0c5a4a;
+        background-color: transparent;
+        color: #0c5a4a;
+    };
+
+    &:active {
+        transform: scale(0.85);
+    }
+`;
+
+const SuccessMessage = styled.p`
+    margin: 15px 0;
+`;
+
+const ErrorMessage = styled.p`
+    margin: 15px 0;
+    color: red;
+`;
+
+const LoadingSection = styled.div`
+    position: absolute;
+    left: 50%;
+    top: 25%;
 `;
