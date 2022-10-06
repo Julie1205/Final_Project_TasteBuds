@@ -1,4 +1,10 @@
 import { Link } from "react-router-dom";
+import { FiMapPin } from "react-icons/fi";
+import { HiOutlinePhone } from "react-icons/hi";
+import { IoEarthSharp } from "react-icons/io5";
+import { AiFillStar, AiOutlineLike, AiOutlineDislike} from "react-icons/ai";
+import EatStatusColor from "../assets/EatStatusColor.png"
+import EatStatusNew from "../assets/EatStatus_new2.png"
 
 const RestaurantTile = ( { restaurant } ) => {
 
