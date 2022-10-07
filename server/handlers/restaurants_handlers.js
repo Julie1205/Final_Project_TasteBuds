@@ -50,7 +50,7 @@ const getUserRestaurants = async (req, res) => {
             
             ]).toArray();
 
-            filteredResults
+            filteredResults.length > 0
             ? res.status(200).json( { status: 200, data: filteredResults[0]} )
             : res.status(404).json( {status: 400, data: email, message: "user not found"});
         }
