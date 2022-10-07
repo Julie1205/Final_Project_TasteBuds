@@ -114,29 +114,33 @@ const RestaurantDetailsPage = () => {
             { restaurantDetails && user && !deleteStatus
             ? <RestaurantSection>
                 <HeaderSection>
-                    <PageTitle>
-                        {restaurantDetails.restaurantName}
-                        {restaurantDetails.restaurantVisitStatus === true 
-                        ? <EatenIcon src={EatStatusColor} alt="Icon for eaten"/>
-                        : <NewPlaceIcon src={EatStatusNew} alt="Icon for not eaten" />
-                        }
-                        {restaurantDetails.restaurantCategory 
-                        ? restaurantDetails.restaurantCategory === "liked"
-                        ? <LikeIcon>
-                            <AiOutlineLike/>
-                            </LikeIcon> 
-                        : <DislikeIcon>
-                            <AiOutlineDislike/>
-                        </DislikeIcon> 
-                        : null
-                        }
-                        {restaurantDetails.restaurantFavorite 
-                        ? <FavoriteIcon>
-                            <AiFillStar/>
-                        </FavoriteIcon> 
-                        : null
-                        }
-                    </PageTitle>
+                    <div>
+                        <PageTitle>
+                            {restaurantDetails.restaurantName}
+                        </PageTitle>
+                        <span>
+                            {restaurantDetails.restaurantVisitStatus === true 
+                            ? <EatenIcon src={EatStatusColor} alt="Icon for eaten"/>
+                            : <NewPlaceIcon src={EatStatusNew} alt="Icon for not eaten" />
+                            }
+                            {restaurantDetails.restaurantCategory 
+                            ? restaurantDetails.restaurantCategory === "liked"
+                            ? <LikeIcon>
+                                <AiOutlineLike/>
+                                </LikeIcon> 
+                            : <DislikeIcon>
+                                <AiOutlineDislike/>
+                            </DislikeIcon> 
+                            : null
+                            }
+                            {restaurantDetails.restaurantFavorite 
+                            ? <FavoriteIcon>
+                                <AiFillStar/>
+                            </FavoriteIcon> 
+                            : null
+                            }
+                        </span>
+                    </div>
                     <EditAndDeleteIcons>
                         <EditLink 
                             to={`/home/restaurant/edit/${ restaurantDetails._id }`} 
@@ -256,7 +260,6 @@ const HeaderSection = styled.div`
     align-items: center;
     justify-content: space-between;
     margin-bottom: 10px;
-    width: 100%;
 `;
 
 const EditLink = styled(Link)`
@@ -304,7 +307,7 @@ const BackBtn = styled.button`
     }
 `;
 
-const PageTitle = styled.p`
+const PageTitle = styled.span`
     font-size: 2rem;
 `;
 
@@ -317,8 +320,7 @@ const RestaurantSection = styled.div`
     border-radius: 15px;
     box-shadow: 0 2px 5px #e8e8e8;
     background-color: white;
-    display: flex;
-    flex-direction: column;
+    display: grid;
 `;
 
 const AddressSection = styled.p`
@@ -326,10 +328,10 @@ const AddressSection = styled.p`
     align-items: center;
     word-wrap: break-word;
     margin: 5px 0;
-    width: 84%;
 `;
 
 const PhoneSection = styled(AddressSection)`
+
 `;
 
 const WebsiteSection = styled(AddressSection)`
@@ -340,7 +342,6 @@ const DetailsSection = styled.div`
     padding-bottom: 10px;
     margin-bottom: 10px;
     min-width: 300px;
-    width: 84%;
 `;
 
 const PlaceIcon = styled.span`
@@ -383,9 +384,11 @@ const DislikeIcon = styled(LikeIcon)`
 `;
 
 const EditAndDeleteIcons = styled.div`
+    max-width: 55%;
 `;
 
 const WebsiteText = styled.span`
+    width: 84%;
     word-wrap: break-all;
 `;
 
