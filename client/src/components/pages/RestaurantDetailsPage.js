@@ -15,7 +15,8 @@ import EatStatusNew from "../../assets/EatStatus_new2.png"
 const RestaurantDetailsPage = () => {
     const [restaurantDetails, setRestaurantDetails] = useState(null);
     const [deleteStatus, setDeleteStatus] = useState(false);
-    const [errorStatus, setErrorStatus] =useState(false);
+    const [errorStatus, setErrorStatus] = useState(false);
+    const [displayedImage, setDisplayImage] = useState(null);
     const { id } = useParams();
     const { user } = useAuth0();
     const navigate = useNavigate();
@@ -27,6 +28,9 @@ const RestaurantDetailsPage = () => {
             .then(result => {
                 if(result.status === 200) {
                     setRestaurantDetails(result.data.restaurants[0]);
+                    if(result.data.restaurants[0].imageUrl.length > 0) {
+                        setDisplayImage(result.data.restaurants[0].imageUrl[0].url);
+                    } 
                 }
                 else{
                     return Promise.reject(result)
@@ -52,6 +56,7 @@ const RestaurantDetailsPage = () => {
                     return "success"
                 }
                 else {
+                    setErrorStatus(true);
                     return Promise.reject(result)
                 }
             })
@@ -59,7 +64,6 @@ const RestaurantDetailsPage = () => {
         });
         return(deletePromises);
     };
-
     const handleDelete = () => {
         setErrorStatus(false);
 
@@ -175,15 +179,16 @@ const RestaurantDetailsPage = () => {
                         <WebIcon>
                             <IoEarthSharp/>
                         </WebIcon>
-                        <WebsiteText 
-                            href={restaurantDetails.restaurantWebsite}                         
-                            target="_blank"
-                            rel="noreferrer noopener"
-                        >
-                            {restaurantDetails.restaurantWebsite}
-                        </WebsiteText> 
+                        <WebsiteText>
+                            <a 
+                                href={restaurantDetails.restaurantWebsite}                         
+                                target="_blank"
+                                rel="noreferrer noopener"
+                            >
+                                {restaurantDetails.restaurantWebsite}
+                            </a>
+                        </WebsiteText>
                     </WebsiteSection>
-
                     : null
                     }
                 </DetailsSection>
@@ -195,22 +200,35 @@ const RestaurantDetailsPage = () => {
                 </div>
                 : null
                 }
-
-                
                 
                 {restaurantDetails.restaurantComment 
                 ? <div>
-                    <p>What you had to say about this restaurant:</p>
-                    <p>{restaurantDetails.restaurantComment}</p>
+                    <CommentHeader>
+                        What you had to say about this restaurant:
+                    </CommentHeader>
+                    <CommentSection>
+                        <p>{restaurantDetails.restaurantComment}</p>
+                    </CommentSection>
                 </div>
                 : null
                 }
-                {/* {restaurantDetails.imageUrl.length > 0 ?
-                    restaurantDetails.imageUrl.map((image) => {
-                        return <img  key={image.public_id} src={image.url} alt="image uploaded"/>
-                    })
-                : null} */}
-
+                {restaurantDetails.imageUrl.length > 0 ?
+                    <PicturesSection>
+                        <ImageBtnSection>
+                            {restaurantDetails.imageUrl.map((image) => {
+                                return (
+                                    <PictureBtn 
+                                        key={image.public_id}
+                                        onClick={(e) => setDisplayImage(e.target.src)}
+                                    >
+                                        <Picture  src={image.url} alt="image uploaded"/>
+                                    </PictureBtn>
+                                )
+                            })}
+                        </ImageBtnSection>
+                        <DisplayedPicture src={displayedImage} alt="displayed image"/>
+                    </PicturesSection>
+                : null}
 
                 {errorStatus ? <p>Could not delete restaurant</p> : null}
             </RestaurantSection>
@@ -238,6 +256,7 @@ const HeaderSection = styled.div`
     align-items: center;
     justify-content: space-between;
     margin-bottom: 10px;
+    width: 100%;
 
     /* @media (max-width: 850px){
         flex-direction: column;
@@ -316,6 +335,7 @@ const AddressSection = styled.p`
     align-items: center;
     word-wrap: break-word;
     margin: 5px 0;
+    width: 84%;
 `;
 
 const PhoneSection = styled(AddressSection)`
@@ -328,6 +348,8 @@ const DetailsSection = styled.div`
     border-bottom: 1px solid #e6e6e6;
     padding-bottom: 10px;
     margin-bottom: 10px;
+    min-width: 300px;
+    width: 84%;
 `;
 
 const PlaceIcon = styled.span`
@@ -372,6 +394,47 @@ const DislikeIcon = styled(LikeIcon)`
 const EditAndDeleteIcons = styled.div`
 `;
 
-const WebsiteText = styled.a`
-    word-wrap: break-all; 
+const WebsiteText = styled.p`
+    word-wrap: break-all;
+`;
+
+const CommentHeader = styled.p`
+    margin: 25px 0 10px 0;
+`;
+
+const CommentSection = styled.div`
+    margin-bottom: 20px;
+    padding: 5px;
+    font-weight: bold;
+`;
+
+const PicturesSection = styled.div`
+    display: grid;
+    grid-template-columns: 25% 75%;
+`;
+
+const Picture = styled.img`
+    width: 25%;
+    border: 5px solid white;
+    box-shadow: 0 0 5px gray;
+`;
+
+const DisplayedPicture = styled.img`
+    max-width: 75%;
+    border: 10px solid white;
+    box-shadow: 0 0 5px gray;
+`;
+
+const PictureBtn = styled.button`
+    background-color: transparent;
+    border: none;
+
+    &:hover{
+        cursor: pointer;
+    };
+`;
+
+const ImageBtnSection = styled.div`
+    display: flex;
+    flex-direction: column;
 `;

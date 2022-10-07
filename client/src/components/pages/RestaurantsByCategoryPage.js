@@ -1,6 +1,8 @@
+import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import CircularProgress from '@mui/material/CircularProgress';
 
 import RestaurantTile from "../RestaurantTile";
 
@@ -67,7 +69,7 @@ const RestaurantsByCategoryPage = () => {
     }, [category])
 
     return (
-        <div>
+        <Wapper>
             {errorStatus ? <p>Restaurants Not Found</p> : null}
             {restaurantInfo 
             ? restaurantInfo.length >= 1 
@@ -76,9 +78,26 @@ const RestaurantsByCategoryPage = () => {
                     return <RestaurantTile key={`tile${restaurant._id}`} restaurant={restaurant}/>
                 })
             : <p>No restaurants in this category</p>
-            : <p>Loading</p>}
-        </div>
+            : (
+                <LoadingSection>
+                    <CircularProgress />
+                </LoadingSection>
+            )}
+        </Wapper>
     )
 };
 
 export default RestaurantsByCategoryPage;
+
+const Wapper =  styled.div`
+    display: flex;
+    flex-direction: column;
+    margin: var(--offset-top) 20px;
+    font-family: var(--body-font);
+`;
+
+const LoadingSection = styled.div`
+    position: absolute;
+    left: 50%;
+    top: 25%;
+`;
