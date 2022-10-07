@@ -257,11 +257,6 @@ const HeaderSection = styled.div`
     justify-content: space-between;
     margin-bottom: 10px;
     width: 100%;
-
-    /* @media (max-width: 850px){
-        flex-direction: column;
-        align-items: flex-start;
-    } */
 `;
 
 const EditLink = styled(Link)`
@@ -271,10 +266,6 @@ const EditLink = styled(Link)`
     font-size: 1.1rem;
     position: relative;
     top: 2px;
-
-    /* @media (max-width: 720px){
-        top: -5px;
-    } */
 `;
 
 const DeleteBtn = styled.button`
@@ -394,12 +385,13 @@ const DislikeIcon = styled(LikeIcon)`
 const EditAndDeleteIcons = styled.div`
 `;
 
-const WebsiteText = styled.p`
+const WebsiteText = styled.span`
     word-wrap: break-all;
 `;
 
 const CommentHeader = styled.p`
     margin: 25px 0 10px 0;
+    font-size: 1rem;
 `;
 
 const CommentSection = styled.div`
@@ -410,19 +402,29 @@ const CommentSection = styled.div`
 
 const PicturesSection = styled.div`
     display: grid;
-    grid-template-columns: 25% 75%;
+    grid-template-columns: 100px calc(100% - 100px);
+
+    @media (max-width: 850px){
+        grid-template-columns: 60px calc(100% - 60px);
+    };
 `;
 
 const Picture = styled.img`
     width: 25%;
+    min-width: 50px;
     border: 5px solid white;
     box-shadow: 0 0 5px gray;
+
+    @media (max-width: 850px){
+        min-width: 30px;
+    };
 `;
 
 const DisplayedPicture = styled.img`
     max-width: 75%;
     border: 10px solid white;
     box-shadow: 0 0 5px gray;
+    margin-bottom: 20px;
 `;
 
 const PictureBtn = styled.button`

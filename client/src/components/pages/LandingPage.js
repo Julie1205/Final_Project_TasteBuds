@@ -37,6 +37,3 @@ const Slogan = styled.p`
     margin-bottom: 15px;
     color: #FFF89A;
 `;
-
-// #1a1a1a
-//#062d2d
