@@ -18,6 +18,10 @@ const SearchBar = ( { restaurants } ) => {
         })
     }
 
+    const handleOpen = () => {
+        setOpenModal(true);
+    };
+
     const handleClose = () => {
         setSearchValue("")
         setOpenModal(false);
@@ -25,8 +29,15 @@ const SearchBar = ( { restaurants } ) => {
 
     return (
         <>
-            <SearchBtn onClick={() => setOpenModal(true)}>Search in category</SearchBtn>
-            <Dialog open={openModal} onClose={handleClose}>
+            <SearchBtn 
+                onClick={handleOpen}
+            >
+                Search in category
+            </SearchBtn>
+            <Dialog 
+                open={openModal} 
+                onClose={handleClose}
+            >
                 <SearchModal>
                     <SearchBarArea>
                         <label>
