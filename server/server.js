@@ -29,7 +29,7 @@ app.get("/get-restaurants-near-me/:address", getRestaurantsNearMe);
 app.get("/get-find-restaurant/:restaurantName/:city", findRestaurant);
 
 //user restaurants endpoints
-app.get("/get-user-restaurants/:email", getUserRestaurants);
+app.get("/get-user-restaurants/:email/:category", getUserRestaurants);
 app.get("/get-restaurant/:email/:_id", getRestaurant);
 app.post("/add-restaurant/:email", addRestaurant);
 app.patch("/update-restaurant/:email", updateRestaurant);

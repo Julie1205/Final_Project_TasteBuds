@@ -17,44 +17,11 @@ const RestaurantsByCategoryPage = () => {
         setRestaurantInfo(null);
 
         if(user) {
-            fetch(`/get-user-restaurants/${user.email}`)
+            fetch(`/get-user-restaurants/${user.email}/${category}`)
             .then(res => res.json())
             .then(results => {
                 if(results.status === 200) {
-                    if(category === "All") {
-                        setRestaurantInfo(results.data.restaurants);
-                    }
-                    else if(category === "Been_To") {
-                        const filteredRestaurants = results.data.restaurants.filter((restaurant) => {
-                            return restaurant.restaurantVisitStatus === true;
-                        });
-                        setRestaurantInfo(filteredRestaurants);
-                    }
-                    else if(category === "Liked") {
-                        const filteredRestaurants = results.data.restaurants.filter((restaurant) => {
-                            return restaurant.restaurantCategory === "liked";
-                        });
-                        setRestaurantInfo(filteredRestaurants);
-                    }
-                    else if(category === "Disliked") {
-                        const filteredRestaurants = results.data.restaurants.filter((restaurant) => {
-                            return restaurant.restaurantCategory === "disliked";
-                        });
-                        setRestaurantInfo(filteredRestaurants);
-                    }
-                    else if(category === "Favorite") {
-                        const filteredRestaurants = results.data.restaurants.filter((restaurant) => {
-                            return restaurant.restaurantFavorite === true;
-                        });
-                        setRestaurantInfo(filteredRestaurants);
-
-                    }
-                    else if(category === "Wish_List") {
-                        const filteredRestaurants = results.data.restaurants.filter((restaurant) => {
-                            return restaurant.restaurantVisitStatus === false;
-                        });
-                        setRestaurantInfo(filteredRestaurants);
-                    }
+                    setRestaurantInfo(results.data.restaurants);
                 }
                 else {
                     setErrorStatus(true);

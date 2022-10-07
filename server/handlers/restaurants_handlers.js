@@ -1,23 +1,62 @@
 const { USERS_COLLECTION } = require("../constants/mongoDbConstants");
 const { v4: uuidv4 } = require("uuid");
 
-//handler to get all the user's restaurants
+const FILTERED_CATEGORIES = ["Been_To", "Liked", "Disliked", "Favorite", "Wish_List"];
+const FILTERED_CATEGORIES_ASSOCIATED_VALUE = [
+    [ "restaurantVisitStatus", true ],
+    [ "restaurantCategory", "liked" ],
+    [ "restaurantCategory", "disliked" ],
+    [ "restaurantFavorite", true ],
+    [ "restaurantVisitStatus", false ]
+];
+
+//handler to get the user's restaurants based on the category
 const getUserRestaurants = async (req, res) => {
-    const { email } = req.params;
+    const { email, category } = req.params;
     const db = req.app.locals.db;
 
     try {
-        const fieldsToReturn = { 
-            projection: { 
-                _id: 0,
-                restaurants: 1
-            } 
-        }
-        const results = await db.collection(USERS_COLLECTION).findOne({email: email}, fieldsToReturn);
 
-        results
+        if(category === "All") {
+            const fieldsToReturn = { 
+                projection: { 
+                    _id: 0,
+                    restaurants: 1
+                } 
+            }
+
+            const results = await db.collection(USERS_COLLECTION).findOne({ email }, fieldsToReturn);
+
+            results
             ? res.status(200).json( { status: 200, data: results} )
             : res.status(404).json( {status: 400, data: email, message: "user not found"})
+        }
+        else if(FILTERED_CATEGORIES.includes(category)){
+            const conditionValueIndex = FILTERED_CATEGORIES.findIndex((filterCategory) => filterCategory === category);
+            const conditionValue = FILTERED_CATEGORIES_ASSOCIATED_VALUE[conditionValueIndex];
+
+            const filteredResults = await db.collection(USERS_COLLECTION).aggregate([
+                { $match: { email } },
+                { $project: {
+                    restaurants: { 
+                        $filter: {
+                            input: "$restaurants",
+                            as: "restaurant",
+                            cond: { $eq: [`$$restaurant.${ conditionValue[0] }`, conditionValue[1]] }
+                        }
+                    },
+                    _id: 0
+                }}
+            
+            ]).toArray();
+
+            filteredResults
+            ? res.status(200).json( { status: 200, data: filteredResults[0]} )
+            : res.status(404).json( {status: 400, data: email, message: "user not found"});
+        }
+        else {
+            res.status(404).json( {status: 400, data: email, message: "Category does not exist."});
+        }
     }
     catch (err) {
         console.log(err.stack);
