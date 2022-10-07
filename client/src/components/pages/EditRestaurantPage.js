@@ -297,7 +297,8 @@ const EditRestaurantPage = () => {
                                 }
                                 onChange={(e) => setUpdatedValues({
                                     ...updatedValues,
-                                    restaurantCuisine: (e.target.value).trim().charAt(0).toLocaleUpperCase() + (e.target.value).toLocaleLowerCase().slice(1)
+                                    restaurantCuisine: (e.target.value).trim().charAt(0).toLocaleUpperCase() 
+                                    + (e.target.value).toLocaleLowerCase().slice(1)
                                 })}
                             />
                         </label>

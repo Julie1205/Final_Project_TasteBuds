@@ -29,25 +29,32 @@ const AddRestaurantPage = () => {
     const [errorStatus, setErrorStatus] = useState(false);
     const [imageTypeError, setImageTypeError] = useState(false);
     const [newRestaurantId, setNewRestaurantId] = useState("");
+
     const { user } = useAuth0();
     const location = useLocation();
+
     const navigate = useNavigate();
+    const path = useLocation().pathname;
 
     //this useEffect is to update the newRestaurantInfo with details from a searched restautant
     useEffect(() => {
         if(location.state) {
             const { data } = location.state;
 
-            setNewRestaurantInfo({
-                ...newRestaurantInfo,
-                restaurantName: data.name,
-                restaurantAddress: data.address,
-                restaurantPhoneNumber: data.phone_number ? data.phone_number : "",
-                restaurantWebsite: data.website ? data.website : ""
-            })
+            if(data) {
+                setNewRestaurantInfo({
+                    ...newRestaurantInfo,
+                    restaurantName: data.name,
+                    restaurantAddress: data.address,
+                    restaurantPhoneNumber: data.phone_number ? data.phone_number : "",
+                    restaurantWebsite: data.website ? data.website : ""
+                })
+            }
         }
     }, [])
 
+    //handlers verification of file type 
+    //and adding image files to array for upload by handleSubmit
     const AddToImageUpload = () => {
         const fileExtensionIndex = image.name.lastIndexOf(".") + 1;
         const fileExtension = image.name.slice(fileExtensionIndex).toLocaleLowerCase();
@@ -59,6 +66,7 @@ const AddRestaurantPage = () => {
         }
     }
 
+    //handles deleting image file from array
     const handleDeleteImage = (imageFile) => {
         const imageIndex = imagesToUpload.findIndex((image) => {
             return image.name === imageFile.name && image.lastModified === imageFile.lastModified
@@ -71,7 +79,8 @@ const AddRestaurantPage = () => {
         URL.revokeObjectURL(imageFile);
     };
 
-    //creates an array of promises to upload images to cloudinary and return data needed to store in Mongodb
+    //creates an array of promises to upload images to cloudinary 
+    //and return data needed to store in Mongodb
     const handleCloudinaryUpload = (imageFile) => {
         const formData = new FormData();
         formData.append("file", imageFile);
@@ -222,7 +231,8 @@ const AddRestaurantPage = () => {
                                 value={newRestaurantInfo.restaurantCuisine}
                                 onChange={(e) => setNewRestaurantInfo({
                                     ...newRestaurantInfo,
-                                    restaurantCuisine: ((e.target.value).trim().charAt(0).toLocaleUpperCase() + (e.target.value).toLocaleLowerCase().slice(1)).trim()
+                                    restaurantCuisine: ((e.target.value).trim().charAt(0).toLocaleUpperCase() 
+                                    + (e.target.value).toLocaleLowerCase().slice(1))
                                 })}
                             />
                         </label>
@@ -344,9 +354,13 @@ const AddRestaurantPage = () => {
 
                     <div>
                         <p>Add pictures?</p>
-                        <PictureInstruction>{`(You can add up to 3 images of format JPEG, JPG or PNG)`}</PictureInstruction>
+                        <PictureInstruction>
+                            {`(You can add up to 3 images of format JPEG, JPG or PNG)`}
+                        </PictureInstruction>
                         {imageTypeError 
-                        ? <ImageTypeErrorMessage>Only images of type JPEG, JPG or PNG are allowed.</ImageTypeErrorMessage> 
+                        ? <ImageTypeErrorMessage>
+                            Only images of type JPEG, JPG or PNG are allowed.
+                        </ImageTypeErrorMessage> 
                         : null}
                         <PictureSection>
                             {imagesToUpload.length < 3 ? 
@@ -390,7 +404,9 @@ const AddRestaurantPage = () => {
                 </FormSection>
 
                 {errorStatus 
-                ? <ErrorMessage>Failed to add restaurant. Please try again.</ErrorMessage> 
+                ? <ErrorMessage>
+                    Failed to add restaurant. Please try again.
+                </ErrorMessage> 
                 : null}
                 
                 <SubmitBtn 
@@ -410,7 +426,9 @@ const AddRestaurantPage = () => {
                     Restaurant Added!
                 </SuccessMessage>
                 <GoToNewRestaurantBtn
-                    onClick={() => navigate(`/home/restaurant/${newRestaurantId}`)}
+                    onClick={() => {
+                        navigate(`/home/restaurant/${newRestaurantId}`, {state: { path }})
+                    }}
                 >
                     Go to new restaurant page
                 </GoToNewRestaurantBtn>

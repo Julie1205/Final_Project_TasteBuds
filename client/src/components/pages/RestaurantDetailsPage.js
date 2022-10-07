@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { BsArrowLeftShort } from "react-icons/bs";
@@ -18,9 +18,12 @@ const RestaurantDetailsPage = () => {
     const [deleteStatus, setDeleteStatus] = useState(false);
     const [errorStatus, setErrorStatus] = useState(false);
     const [displayedImage, setDisplayImage] = useState(null);
+
     const { id } = useParams();
     const { user } = useAuth0();
+
     const navigate = useNavigate();
+    const {state} = useLocation();
 
     useEffect(() => {
         if(user) {
@@ -41,6 +44,7 @@ const RestaurantDetailsPage = () => {
         }
     }, [id, user])
 
+    //handles creating delete promises fof removing image from cloudinary
     const handleDeleteImageInCloudinary = () => {
         const deletePromises = restaurantDetails.imageUrl.map((image) => {
             return fetch("/delete-image", {
@@ -65,6 +69,8 @@ const RestaurantDetailsPage = () => {
         });
         return(deletePromises);
     };
+
+    //handles fufilling cloudinary delete promises and updating mongoDb
     const handleDelete = () => {
         setErrorStatus(false);
 
@@ -108,7 +114,7 @@ const RestaurantDetailsPage = () => {
     return (
         <Wrapper>
             <BackBtn 
-                onClick={ () => navigate(-1) }
+                onClick={ () => navigate(state.path, {state: {}}) }
             >
                 <BsArrowLeftShort/>
             </BackBtn>

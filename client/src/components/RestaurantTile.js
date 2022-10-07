@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { AiFillStar, AiOutlineLike, AiOutlineDislike} from "react-icons/ai";
 import EatStatusColor from "../assets/EatStatusColor.png"
@@ -6,10 +6,11 @@ import EatStatusNew from "../assets/EatStatus_new2.png"
 
 const RestaurantTile = ( { restaurant } ) => {
     const navigate = useNavigate();
+    const path = useLocation().pathname;
 
     return (
         <RestaurantLinkBtn 
-            onClick={() => navigate(`/home/restaurant/${restaurant._id}`)}
+            onClick={() => navigate(`/home/restaurant/${restaurant._id}`, {state: { path }})}
         >
             <RestaurantName>
                 {restaurant.restaurantName}
