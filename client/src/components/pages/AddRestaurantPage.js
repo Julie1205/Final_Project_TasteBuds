@@ -28,6 +28,7 @@ const AddRestaurantPage = () => {
     const [uploadStatus, setUploadStatus] = useState(false);
     const [errorStatus, setErrorStatus] = useState(false);
     const [imageTypeError, setImageTypeError] = useState(false);
+    const [newRestaurantId, setNewRestaurantId] = useState("");
     const { user } = useAuth0();
     const location = useLocation();
     const navigate = useNavigate();
@@ -111,6 +112,7 @@ const AddRestaurantPage = () => {
                     .then(res => res.json())
                     .then(data => {
                         if(data.status === 201) {
+                            setNewRestaurantId(data.data);
                             setImage(null);
                             setImagesToUpload(INITIAL_STATE_FOR_IMAGES_TO_UPLOAD)
                             setNewRestaurantInfo(INITIAL_STATE);
@@ -145,6 +147,7 @@ const AddRestaurantPage = () => {
                     setImage(null);
                     setImagesToUpload(INITIAL_STATE_FOR_IMAGES_TO_UPLOAD)
                     setNewRestaurantInfo(INITIAL_STATE);
+                    setNewRestaurantId(data.data);
                     setSubmitStatus(true);
                 }
                 else {
@@ -406,6 +409,11 @@ const AddRestaurantPage = () => {
                 <SuccessMessage>
                     Restaurant Added!
                 </SuccessMessage>
+                <GoToNewRestaurantBtn
+                    onClick={() => navigate(`/home/restaurant/${newRestaurantId}`)}
+                >
+                    Go to new restaurant page
+                </GoToNewRestaurantBtn>
                 <AddAnotherRestaurantBtn 
                     onClick={() => { 
                         navigate("/home/addRestaurant", {state: null});
@@ -700,4 +708,9 @@ const LoadingSection = styled.div`
 `;
 
 const ImageTypeErrorMessage = styled(ErrorMessage)`
+`;
+
+const GoToNewRestaurantBtn = styled(AddAnotherRestaurantBtn)`
+    display: block;
+    margin-bottom: 10px;
 `;

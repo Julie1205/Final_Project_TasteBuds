@@ -98,7 +98,7 @@ const addRestaurant = async (req, res) => {
             const filter = {email: email};
             const updateValue = { $push: {restaurants: newRestaurantInfo} }
             const results = await db.collection(USERS_COLLECTION).updateOne(filter, updateValue);
-    
+
             if(results.matchedCount === 0) {
                 res.status(404).json( {status: 404, data: email, message: "User not found."});
             }
@@ -106,7 +106,7 @@ const addRestaurant = async (req, res) => {
                 res.status(400).json( {status: 400, data: email, message: "Unable to add restaurant. Information is the same in database."});
             }
             else if(results.matchedCount === 1 && results.modifiedCount === 1) {
-                res.status(201).json( { status: 201, message: "Restaurant added." } )
+                res.status(201).json( { status: 201, message: "Restaurant added.", data: newRestaurantInfo._id } )
             }
         }
         catch (err) {
