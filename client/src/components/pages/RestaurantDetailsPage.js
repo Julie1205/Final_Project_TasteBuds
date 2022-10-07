@@ -11,6 +11,7 @@ import { RiDeleteBin5Fill } from "react-icons/ri";
 import { AiFillStar, AiOutlineLike, AiOutlineDislike} from "react-icons/ai";
 import EatStatusColor from "../../assets/EatStatusColor.png"
 import EatStatusNew from "../../assets/EatStatus_new2.png"
+import CircularProgress from '@mui/material/CircularProgress';
 
 const RestaurantDetailsPage = () => {
     const [restaurantDetails, setRestaurantDetails] = useState(null);
@@ -238,7 +239,11 @@ const RestaurantDetailsPage = () => {
             </RestaurantSection>
             : restaurantDetails && user && deleteStatus 
             ? <p>Restaurant Deleted</p>
-            : null}
+            : (
+                <LoadingSection>
+                    <CircularProgress />
+                </LoadingSection>
+            )}
         </Wrapper>
     )
 
@@ -442,4 +447,10 @@ const PictureBtn = styled.button`
 const ImageBtnSection = styled.div`
     display: flex;
     flex-direction: column;
+`;
+
+const LoadingSection = styled.div`
+    position: absolute;
+    left: 50%;
+    top: 25%;
 `;

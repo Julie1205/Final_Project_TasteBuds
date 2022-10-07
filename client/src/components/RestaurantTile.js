@@ -1,68 +1,68 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AiFillStar, AiOutlineLike, AiOutlineDislike} from "react-icons/ai";
 import EatStatusColor from "../assets/EatStatusColor.png"
 import EatStatusNew from "../assets/EatStatus_new2.png"
 
 const RestaurantTile = ( { restaurant } ) => {
+    const navigate = useNavigate();
+
     return (
-        <Wrapper>
-            <RestaurantLink 
-                to={`/home/restaurant/${restaurant._id}`}
-            >
-                <RestaurantName>
-                    {restaurant.restaurantName}
-                </RestaurantName>
-                <p>
-                    <span>
+        <RestaurantLinkBtn 
+            onClick={() => navigate(`/home/restaurant/${restaurant._id}`)}
+        >
+            <RestaurantName>
+                {restaurant.restaurantName}
+            </RestaurantName>
+            {
+                restaurant.restaurantCuisine 
+                ? <p>{restaurant.restaurantCuisine}</p> 
+                : null
+            }
+            <p>
+                <span>
+                    {
+                        restaurant.restaurantVisitStatus  
+                        ? <EatenIcon src={EatStatusColor} alt="been to icon"/> 
+                        : <NewPlaceIcon src={EatStatusNew} alt="have not been to icon" />
+                    }
+                </span>
+                {
+                    restaurant.restaurantVisitStatus 
+                    ? <span>
                         {
-                            restaurant.restaurantVisitStatus  
-                            ? <EatenIcon src={EatStatusColor} alt="been to icon"/> 
-                            : <NewPlaceIcon src={EatStatusNew} alt="have not been to icon" />
+                            restaurant.restaurantCategory === "liked" 
+                            ? <LikeIcon>
+                                <AiOutlineLike/>
+                            </LikeIcon>
+                            : <DislikeIcon>
+                                <AiOutlineDislike/>
+                            </DislikeIcon> 
                         }
-                    </span>
-                    {
-                        restaurant.restaurantVisitStatus 
-                        ? <span>
-                            {
-                                restaurant.restaurantCategory === "liked" 
-                                ? <LikeIcon>
-                                    <AiOutlineLike/>
-                                </LikeIcon>
-                                : <DislikeIcon>
-                                    <AiOutlineDislike/>
-                                </DislikeIcon> 
-                            }
-                        </span> 
-                        : null
-                    }
-                    {
-                        restaurant.restaurantFavorite === true
-                        ? <FavoriteIcon>
-                            <AiFillStar/>
-                        </FavoriteIcon> 
-                        : null 
-                    }
-                </p>
-            </RestaurantLink>
-        </Wrapper>
+                    </span> 
+                    : null
+                }
+                {
+                    restaurant.restaurantFavorite === true
+                    ? <FavoriteIcon>
+                        <AiFillStar/>
+                    </FavoriteIcon> 
+                    : null 
+                }
+            </p>
+        </RestaurantLinkBtn>
     );
 };
 
 export default RestaurantTile;
 
-const RestaurantLink = styled(Link)`
-    text-decoration: none;
-    color: black;
+const RestaurantLinkBtn = styled.button`
     font-size: 1.2rem;
-    width: 65%;
-`;
-
-const Wrapper = styled.div`
+    font-family: var(--body-font);
     text-align: center;
     margin: 10px 0;
     padding: 20px 30px;
-    width: 65%;
+    width: 85%;
     max-width: 1000px;
     border: 1px solid #f0f0f0;
     border-radius: 15px;
@@ -72,6 +72,7 @@ const Wrapper = styled.div`
     left: -15px;
 
     &:hover {
+        cursor: pointer;
         transform: scale(1.05);
     };
 `;
