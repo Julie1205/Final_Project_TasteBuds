@@ -5,6 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import CircularProgress from '@mui/material/CircularProgress';
 
 import RestaurantTile from "../RestaurantTile";
+import SearchBar from "../SearchBar";
 
 const RestaurantsByCategoryPage = () => {
     const [restaurantInfo, setRestaurantInfo] = useState(null);
@@ -40,10 +41,14 @@ const RestaurantsByCategoryPage = () => {
             {errorStatus ? <p>Restaurants Not Found</p> : null}
             {restaurantInfo 
             ? restaurantInfo.length >= 1 
-            ?
-                restaurantInfo.map((restaurant) => {
+            ? <>
+                <div>
+                    <SearchBar restaurants={restaurantInfo}/>
+                </div>
+                { restaurantInfo.map((restaurant) => {
                     return <RestaurantTile key={`tile${restaurant._id}`} restaurant={restaurant}/>
-                })
+                })}
+            </>
             : <p>No restaurants in this category</p>
             : (
                 <LoadingSection>
@@ -68,3 +73,4 @@ const LoadingSection = styled.div`
     left: 50%;
     top: 25%;
 `;
+
