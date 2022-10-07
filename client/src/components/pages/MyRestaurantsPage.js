@@ -51,19 +51,22 @@ const Wrapper = styled.div`
 const LinkSection = styled.div`
     margin: 15px 0;
     padding: 5px 10px 5px 0;
-    border-bottom: 1px solid #d9d9d9;
+    border-bottom: 1px solid #cccccc;
 `;
 
 const CateroryLink = styled(NavLink)`
     text-decoration: none;
     color: black;
     font-size: var(--body-font);
-    padding: 5px 15px ;
+    padding: 5px 14px ;
 
         &.active {
             color: white;
             border-radius: 10px 10px 0 0;
-            background-color: #d9d9d9;
+            background-color: #cccccc;
+            border-top: 1px solid #bfbfbf;
+            border-left: 1px solid #bfbfbf;
+            border-right: 1px solid #bfbfbf;
         };
 `;
 
