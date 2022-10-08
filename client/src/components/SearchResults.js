@@ -6,7 +6,7 @@ import { HiOutlinePhone } from "react-icons/hi";
 import { IoEarthSharp } from "react-icons/io5";
 
 const restaurant = ( { restaurant } ) => {
-    console.log(restaurant)
+
     return (
         <RestaurantInfo>
             <RestaurantInfoSection>
