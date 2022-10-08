@@ -5,7 +5,7 @@ import { FiMapPin } from "react-icons/fi";
 import { HiOutlinePhone } from "react-icons/hi";
 import { IoEarthSharp } from "react-icons/io5";
 
-const SearchResults = ( { restaurant } ) => {
+const SearchPopUp = ( { restaurant } ) => {
 
     return (
         <RestaurantInfo>
@@ -19,9 +19,6 @@ const SearchResults = ( { restaurant } ) => {
                     <PlaceIcon>
                         <FiMapPin />
                     </PlaceIcon>
-                    <AddressLabel>
-                        Address:
-                    </AddressLabel>
                     <AddressResult>
                         { restaurant.address }
                     </AddressResult>
@@ -31,9 +28,6 @@ const SearchResults = ( { restaurant } ) => {
                     <PhoneIcon>
                         <HiOutlinePhone/>
                     </PhoneIcon>
-                    <PhoneLabel>
-                        Phone Number:
-                    </PhoneLabel>
                     <PhoneResult>
                         { restaurant.phone_number }
                     </PhoneResult>
@@ -45,9 +39,6 @@ const SearchResults = ( { restaurant } ) => {
                     <WebIcon>
                         <IoEarthSharp/>
                     </WebIcon>
-                    <WebsiteLabel>
-                        Website:
-                    </WebsiteLabel> 
                     <WebsiteResult 
                         href={ `${ restaurant.website }` } 
                         target="_blank"
@@ -58,67 +49,52 @@ const SearchResults = ( { restaurant } ) => {
                 </WebsiteSection> 
                 : null
                 }
-                { restaurant.distance 
-                ? <DistanceSection>
-                    <DistanceLabel>
-                        Distance:
-                    </DistanceLabel>
-                    <DistanceResult>
-                        { `${ restaurant.distance }m` }
-                    </DistanceResult>
-                </DistanceSection>
-                : null
-                }
             </RestaurantInfoSection>
             <SaveIcon 
                 to="/home/addRestaurant" 
                 state={ { data: restaurant } }
             >
-                <SaveText>Save</SaveText>
-                <BsFillBookmarkFill />
+                <Icon>
+                    <BsFillBookmarkFill />
+                </Icon>
             </SaveIcon>
         </RestaurantInfo>
     )
 };
 
-export default SearchResults;
+export default SearchPopUp;
 
 const RestaurantInfo = styled.div`
     margin: 15px 0;
-    max-width: 60vw;
+    max-width: 100%;
     border: 1px solid black;
     display: grid;
-    grid-template-columns: calc(100% - 80px) 80px;
-    align-items: flex-start;
+    grid-template-columns: calc(100% - 50px) 50px;
+    align-items: baseline;
     padding: 10px 15px;
     border: 1px solid #f0f0f0;
     border-radius: 15px;
     box-shadow: 0 2px 5px #e8e8e8;
-    background-color: white;
+`;
 
-    @media (max-width: 850px) {
-        grid-template-columns: calc(100% - 42px) 42px;
+const Icon = styled.span`
+    color: #0c5a4a;
+
+    &:hover {
+        color: #009933;
     };
 `;
 
 const SaveIcon = styled(Link)`
     text-decoration: none;
-    font-family: var(--body-font);
-    font-size: 0.90rem;
+    font-size: 1.2rem;
     padding: 5px 10px;
-    border: 1px solid #0c5a4a;
     border-radius: 10px;
-    background-color: #0c5a2a;
-    color: white;
-    display: flex;
-    align-items: center;
-    margin-left: 5px;
+    color: #0c5a4a;
 
     &:hover {
         cursor: pointer;
-        border: 1px solid #0c5a4a;
         background-color: transparent;
-        color: #0c5a4a;
     };
 
     &:active {
@@ -126,64 +102,19 @@ const SaveIcon = styled(Link)`
     }
 `;
 
-const SaveText = styled.p`
-    margin-right: 5px;
-
-    @media (max-width: 850px) {
-        display: none;
-    };
-`;
-
-const AddressLabel = styled.span`
-    font-weight: bold;
-    margin-right: 5px;
-
-    @media (max-width: 850px) {
-        display: none;
-    };
-`;
-
-const PhoneLabel = styled(AddressLabel)`
-    @media (max-width: 850px) {
-        display: none;
-    };
-`;
-
-const WebsiteLabel = styled(AddressLabel)`
-    @media (max-width: 850px) {
-        display: none;
-    };
-`;
-
-const DistanceLabel = styled(AddressLabel)`
-    @media (max-width: 850px) {
-        display: inline;
-    };
-`;
-
 const NameSection = styled.p`
-    margin: 5px 0 10px 0;
-
-    @media (max-width: 850px) {
-        display: flex;
-        align-items: center;
-    };
+    margin: 2px 0;
+    display: flex;
+    align-items: center;
 `;
 
 const AddressSection = styled(NameSection)`
-    margin: 5px 0;
 `;
 
 const PhoneSection = styled(NameSection)`
-    margin: 5px 0;
 `;
 
 const WebsiteSection = styled(NameSection)`
-    margin: 5px 0;
-`;
-
-const DistanceSection = styled(NameSection)`
-    margin: 5px 0;
 `;
 
 const NameResult = styled.span`
@@ -203,13 +134,9 @@ const PhoneResult = styled(AddressResult)`
 
 const WebsiteResult = styled.a`
     word-wrap: break-word;
-    
-    @media (max-width: 850px) {
-        width: 95%;
-    }
-`;
-
-const DistanceResult = styled(AddressResult)`
+    font-family: var(--body-font);
+    font-size: 1rem;
+    width: 200px;
 `;
 
 const RestaurantInfoSection = styled.div`

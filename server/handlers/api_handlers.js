@@ -36,13 +36,16 @@ const getRestaurantsNearMe = (req, res) => {
             }
         })
         .then(location => {
-            return fetch(
-                `https://trueway-places.p.rapidapi.com/FindPlacesNearby?location=${ location }&type=restaurant&radius=1000&language=en`, 
-                placesOptions
+            return (
+                fetch(
+                    `https://trueway-places.p.rapidapi.com/FindPlacesNearby?location=${ location }&type=restaurant&radius=1000&language=en`, 
+                    placesOptions
+                ).then(res => res.json())
+                .then(data => {
+                    console.log(location.split("%2C"))
+                    return res.status(200).json({ status: 200, data: data.results, location: location.split("%2C") })})
             )
-        })
-        .then(res => res.json())
-        .then(data => res.status(200).json({ status: 200, data: data.results}))
+        }) 
         .catch(err => {
             res.status(err.status).json( { status: err.status, data: address, message: err.message } )
         });
