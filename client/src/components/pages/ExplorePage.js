@@ -27,8 +27,8 @@ const ExplorePage = () => {
 
     const handleSearch = () => {
         setSearchState(true);
-        const addressParam = `${address.trim().toLowerCase()} ${city.trim().toLowerCase()}`;
-        const uri = encodeURI(`/get-restaurants-near-me/${addressParam}`);
+        const addressParam = `${ address.trim().toLowerCase() } ${ city.trim().toLowerCase() }`;
+        const uri = encodeURI(`/get-restaurants-near-me/${ addressParam }`);
 
         fetch(uri)
         .then(res => res.json())
@@ -58,7 +58,7 @@ const ExplorePage = () => {
 
     return (
         <Wrapper>
-            {!searchResults && !searchState ?    
+            { !searchResults && !searchState ?    
                 (<div>
                     <div>
                         <PageTitle>Explore Your area</PageTitle> 
@@ -69,15 +69,15 @@ const ExplorePage = () => {
                             id="streetAddress" 
                             label="Street Address" 
                             variant="standard" 
-                            value={address}
-                            onChange={handleAddressInputChange}
+                            value={ address }
+                            onChange={ handleAddressInputChange }
                         />
                         <TextField 
                             id="city" 
                             label="City" 
                             variant="standard" 
-                            value={city}
-                            onChange={handleCityInputChange}
+                            value={ city }
+                            onChange={ handleCityInputChange }
                         />
                     </InputSection>
 
@@ -88,8 +88,8 @@ const ExplorePage = () => {
                     }
 
                     <SearchBtn 
-                        disabled={!address || !city}
-                        onClick={handleSearch}
+                        disabled={ !address || !city }
+                        onClick={ handleSearch }
                     >
                         Search
                     </SearchBtn>
@@ -99,18 +99,18 @@ const ExplorePage = () => {
                 <div>
                     <SearchTitle>Restaurants Near You</SearchTitle>
                     <div>
-                        {searchResults.length > 0 ?
+                        { searchResults.length > 0 ?
                         <>
-                            <MakeNewSearchBtn onClick={handleMakeNewSearch}>Make another search</MakeNewSearchBtn>
+                            <MakeNewSearchBtn onClick={ handleMakeNewSearch }>Make another search</MakeNewSearchBtn>
                             {
                                 searchResults.map((restaurant) => {
-                                    return <SearchResults key={`search${restaurant.id}`} restaurant={restaurant} />
+                                    return <SearchResults key={ `search${ restaurant.id }` } restaurant={ restaurant } />
                                 })
                             }
                         </>
                         : <div>
                             <NoRestaurant>No Restaurants Found</NoRestaurant>
-                            <NewSearchBtn onClick={handleMakeNewSearch}>Make another search</NewSearchBtn>
+                            <NewSearchBtn onClick={ handleMakeNewSearch }>Make another search</NewSearchBtn>
                         </div>}
                     </div>
                 </div>
@@ -145,9 +145,9 @@ const InputSection = styled.div`
     box-shadow: 0 2px 5px #e8e8e8;
     background-color: white;
 
-    @media (max-width: 850px){
-            width: 75%;
-    }
+    @media (max-width: 850px) {
+        width: 75%;
+    };
 `;
 
 const PageTitle = styled.p`

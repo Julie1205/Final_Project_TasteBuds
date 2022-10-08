@@ -10,22 +10,22 @@ const RestaurantTile = ( { restaurant } ) => {
 
     return (
         <RestaurantLinkBtn 
-            onClick={() => navigate(`/home/restaurant/${restaurant._id}`, {state: { path }})}
+            onClick={ () => navigate(`/home/restaurant/${ restaurant._id }`, { state: { path } }) }
         >
             <RestaurantName>
-                {restaurant.restaurantName}
+                { restaurant.restaurantName }
             </RestaurantName>
             {
                 restaurant.restaurantCuisine 
-                ? <p>{restaurant.restaurantCuisine}</p> 
+                ? <p>{ restaurant.restaurantCuisine }</p> 
                 : null
             }
             <p>
                 <span>
                     {
                         restaurant.restaurantVisitStatus  
-                        ? <EatenIcon src={EatStatusColor} alt="been to icon"/> 
-                        : <NewPlaceIcon src={EatStatusNew} alt="have not been to icon" />
+                        ? <EatenIcon src={ EatStatusColor } alt="been to icon"/> 
+                        : <NewPlaceIcon src={ EatStatusNew } alt="have not been to icon" />
                     }
                 </span>
                 {

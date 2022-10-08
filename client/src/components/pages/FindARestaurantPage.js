@@ -35,11 +35,11 @@ const FindARestaurantPage = () => {
 
     const handleSearch = () => {
         setSearchState(true);
-        const restaurantNameParam = `${restaurantName.trim().toLowerCase()}`;
-        const cityParam = `${city.trim().toLowerCase()}`;
-        const streetParam = `${street.trim().toLowerCase()}`;
+        const restaurantNameParam = `${ restaurantName.trim().toLowerCase() }`;
+        const cityParam = `${ city.trim().toLowerCase() }`;
+        const streetParam = `${ street.trim().toLowerCase() }`;
 
-        const uri = encodeURI(`/get-find-restaurant/${restaurantNameParam}/${cityParam}?street=${streetParam}`);
+        const uri = encodeURI(`/get-find-restaurant/${ restaurantNameParam }/${ cityParam }?street=${ streetParam }`);
         fetch(uri)
         .then(res => res.json())
         .then(results => {
@@ -72,40 +72,40 @@ const FindARestaurantPage = () => {
         <Wrapper>
             <PageTitle>Find a Restaurant</PageTitle>
             <SecondTextLine>Search for a restaurant by name and city</SecondTextLine>
-            {!searchResults && !searchState ?    
+            { !searchResults && !searchState ?    
                 (<div>
                     <InputSection>
                         <TextField 
                             id="restaurantName" 
                             label="Restaurant Name" 
                             variant="standard" 
-                            value={restaurantName}
-                            onChange={handleRestaurantNameInputChange}
+                            value={ restaurantName }
+                            onChange={ handleRestaurantNameInputChange }
                         />
                         <TextField 
                             id="city" 
                             label="City" 
                             variant="standard" 
-                            value={city}
-                            onChange={handleCityInputChange}
+                            value={ city }
+                            onChange={ handleCityInputChange }
                         />
                             <TextField 
                             id="streetName" 
                             label="Street Name (optional)" 
                             variant="standard" 
-                            value={street}
-                            onChange={handleAddressInputChange}
+                            value={ street }
+                            onChange={ handleAddressInputChange }
                         />
                     </InputSection>
 
-                    {errorStatus 
+                    { errorStatus 
                     ? <ErrorMessage>Could not find restaurant.</ErrorMessage> 
                     : null
                     }
 
                     <SearchBtn 
-                        disabled={!restaurantName || !city}
-                        onClick={handleSearch}
+                        disabled={ !restaurantName || !city }
+                        onClick={ handleSearch }
                     >
                         Search
                     </SearchBtn>
@@ -113,10 +113,10 @@ const FindARestaurantPage = () => {
             : searchResults && searchState
             ? (
                 <div>
-                    <MakeNewSearchBtn onClick={handleMakeNewSearch}>Make another search</MakeNewSearchBtn>
+                    <MakeNewSearchBtn onClick={ handleMakeNewSearch }>Make another search</MakeNewSearchBtn>
                     {
                         searchResults.map((restaurant) => {
-                            return <SearchResults key={`search${restaurant.id}`} restaurant={restaurant} />
+                            return <SearchResults key={ `search${ restaurant.id }` } restaurant={ restaurant } />
                         })
                     }
                 </div>
@@ -151,9 +151,9 @@ const InputSection = styled.div`
     box-shadow: 0 2px 5px #e8e8e8;
     background-color: white;
 
-    @media (max-width: 850px){
-            width: 75%;
-    }
+    @media (max-width: 850px) {
+        width: 75%;
+    };
 `;
 
 const PageTitle = styled.p`

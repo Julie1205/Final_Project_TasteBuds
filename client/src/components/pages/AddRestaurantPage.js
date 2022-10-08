@@ -116,7 +116,7 @@ const AddRestaurantPage = () => {
                             "Content-Type": "application/json",
                             "Accept": "application/json"
                         },
-                        body: JSON.stringify({...newRestaurantInfo, imageUrl: result})
+                        body: JSON.stringify( { ...newRestaurantInfo, imageUrl: result } )
                     })
                     .then(res => res.json())
                     .then(data => {
@@ -142,7 +142,7 @@ const AddRestaurantPage = () => {
             .catch((err) => console.log(err))
         }
         else {
-            fetch(`/add-restaurant/${user.email}`, {
+            fetch(`/add-restaurant/${ user.email }`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -184,7 +184,7 @@ const AddRestaurantPage = () => {
                             <NameInput
                                 required
                                 placeholder="Example: O noir"
-                                value={newRestaurantInfo.restaurantName}
+                                value={ newRestaurantInfo.restaurantName }
                                 onChange={(e) => setNewRestaurantInfo({
                                     ...newRestaurantInfo, 
                                     restaurantName: e.target.value
@@ -195,7 +195,7 @@ const AddRestaurantPage = () => {
                             Restaurant Address
                             <AddressInput
                                 placeholder="Example: 124 Rue Prince Arthur East, Montreal QC H2X 1B5"
-                                value={newRestaurantInfo.restaurantAddress}
+                                value={ newRestaurantInfo.restaurantAddress }
                                 onChange={(e) => setNewRestaurantInfo({
                                     ...newRestaurantInfo, 
                                     restaurantAddress: e.target.value
@@ -206,7 +206,7 @@ const AddRestaurantPage = () => {
                             Restaurant Phone number
                             <PhoneNumberInput 
                                 placeholder="Example: +1-514-937-9727"
-                                value={newRestaurantInfo.restaurantPhoneNumber}
+                                value={ newRestaurantInfo.restaurantPhoneNumber }
                                 onChange={(e) => setNewRestaurantInfo({
                                     ...newRestaurantInfo,
                                     restaurantPhoneNumber: e.target.value
@@ -217,7 +217,7 @@ const AddRestaurantPage = () => {
                             Restaurant website
                             <WebsiteInput 
                                 placeholder="Example: www.onoir.com"
-                                value={newRestaurantInfo.restaurantWebsite}
+                                value={ newRestaurantInfo.restaurantWebsite }
                                 onChange={(e) => setNewRestaurantInfo({
                                     ...newRestaurantInfo,
                                     restaurantWebsite: e.target.value
@@ -228,12 +228,12 @@ const AddRestaurantPage = () => {
                             Restaurant cusine/type
                             <CuisineInput 
                                 placeholder="Example: French Cuisine"
-                                value={newRestaurantInfo.restaurantCuisine}
-                                onChange={(e) => setNewRestaurantInfo({
+                                value={ newRestaurantInfo.restaurantCuisine }
+                                onChange={ (e) => setNewRestaurantInfo({
                                     ...newRestaurantInfo,
                                     restaurantCuisine: ((e.target.value).trim().charAt(0).toLocaleUpperCase() 
                                     + (e.target.value).toLocaleLowerCase().slice(1))
-                                })}
+                                }) }
                             />
                         </label>
                     </InputSection>
@@ -245,12 +245,12 @@ const AddRestaurantPage = () => {
                                     <input 
                                         type="radio"
                                         name="visitSate"
-                                        value={true}
+                                        value={ true }
                                         checked={newRestaurantInfo.restaurantVisitStatus === true}
-                                        onChange={(e) => setNewRestaurantInfo({
+                                        onChange={ (e) => setNewRestaurantInfo({
                                             ...newRestaurantInfo, 
                                             restaurantVisitStatus: true
-                                        })}
+                                        }) }
                                     />
                                     yes
                                 </label>
@@ -258,19 +258,19 @@ const AddRestaurantPage = () => {
                                     <input 
                                         type="radio"
                                         name="visitSate"
-                                        value={false}
-                                        checked={newRestaurantInfo.restaurantVisitStatus === false}
-                                        onChange={(e) => setNewRestaurantInfo({
+                                        value={ false }
+                                        checked={ newRestaurantInfo.restaurantVisitStatus === false }
+                                        onChange={ (e) => setNewRestaurantInfo({
                                             ...newRestaurantInfo, 
                                             restaurantVisitStatus: false,
                                             restaurantFavorite: INITIAL_STATE.restaurantFavorite
-                                        })}
+                                        }) }
                                     />
                                     no
                                 </label>
                             </VisitStatusAnswer>
                         </VisitStatusQuestion>
-                        {newRestaurantInfo.restaurantVisitStatus 
+                        { newRestaurantInfo.restaurantVisitStatus 
                         ? <LikeOrDislikeQUestion>
                             <p>What did you think about the restaurant?</p>
                             <LikeOrDislikeAnswer>
@@ -279,11 +279,11 @@ const AddRestaurantPage = () => {
                                         type="radio"
                                         name="category"
                                         value="liked"
-                                        checked={newRestaurantInfo.restaurantCategory === "liked"}
-                                        onChange={(e) => setNewRestaurantInfo({
+                                        checked={ newRestaurantInfo.restaurantCategory === "liked" }
+                                        onChange={ (e) => setNewRestaurantInfo({
                                             ...newRestaurantInfo,
                                             restaurantCategory: e.target.value
-                                        })}
+                                        }) }
                                     />
                                     Liked
                                 </label>
@@ -292,19 +292,19 @@ const AddRestaurantPage = () => {
                                         type="radio"
                                         name="category"
                                         value="disliked"
-                                        checked={newRestaurantInfo.restaurantCategory === "disliked"}
-                                        onChange={(e) => setNewRestaurantInfo({
+                                        checked={ newRestaurantInfo.restaurantCategory === "disliked" }
+                                        onChange={ (e) => setNewRestaurantInfo({
                                             ...newRestaurantInfo, 
                                             restaurantCategory: e.target.value,
                                             restaurantFavorite: INITIAL_STATE.restaurantFavorite
-                                        })}
+                                        }) }
                                     />
                                     Disliked
                                 </label>
                             </LikeOrDislikeAnswer>
                         </LikeOrDislikeQUestion>
                         : null}
-                        {newRestaurantInfo.restaurantVisitStatus && newRestaurantInfo.restaurantCategory === "liked"
+                        { newRestaurantInfo.restaurantVisitStatus && newRestaurantInfo.restaurantCategory === "liked"
                         ? <FavoriteQuestion>
                             <p>Would you like to add restaurant to favorites?</p>
                             <FavoriteAnswer>
@@ -313,11 +313,11 @@ const AddRestaurantPage = () => {
                                         type="radio"
                                         name="favoriteStatus"
                                         value={true}
-                                        checked={newRestaurantInfo.restaurantFavorite === true}
-                                        onChange={(e) => setNewRestaurantInfo({
+                                        checked={ newRestaurantInfo.restaurantFavorite === true }
+                                        onChange={ (e) => setNewRestaurantInfo({
                                             ...newRestaurantInfo, 
                                             restaurantFavorite: true
-                                        })}
+                                        }) }
                                     />
                                     yes
                                 </label>
@@ -325,12 +325,12 @@ const AddRestaurantPage = () => {
                                     <input
                                         type="radio"
                                         name="favoriteStatus"
-                                        value={false}
-                                        checked={newRestaurantInfo.restaurantFavorite === false}
-                                        onChange={(e) => setNewRestaurantInfo({
+                                        value={ false }
+                                        checked={ newRestaurantInfo.restaurantFavorite === false }
+                                        onChange={ (e) => setNewRestaurantInfo({
                                             ...newRestaurantInfo,
                                             restaurantFavorite: false
-                                        })}
+                                        }) }
                                     />
                                     no
                                 </label>
@@ -343,11 +343,11 @@ const AddRestaurantPage = () => {
                         <label>
                             Comments about the restaurant
                             <CommentInput
-                                value={newRestaurantInfo.restaurantComment}
-                                onChange={(e) => setNewRestaurantInfo({
+                                value={ newRestaurantInfo.restaurantComment }
+                                onChange={ (e) => setNewRestaurantInfo({
                                     ...newRestaurantInfo,
                                     restaurantComment: e.target.value
-                                })}
+                                }) }
                             />
                         </label>
                     </div>
@@ -355,59 +355,62 @@ const AddRestaurantPage = () => {
                     <div>
                         <p>Add pictures?</p>
                         <PictureInstruction>
-                            {`(You can add up to 3 images of format JPEG, JPG or PNG)`}
+                            { `(You can add up to 3 images of format JPEG, JPG or PNG)` }
                         </PictureInstruction>
-                        {imageTypeError 
+                        { imageTypeError 
                         ? <ImageTypeErrorMessage>
                             Only images of type JPEG, JPG or PNG are allowed.
                         </ImageTypeErrorMessage> 
-                        : null}
+                        : null 
+                        }
                         <PictureSection>
-                            {imagesToUpload.length < 3 ? 
+                            { imagesToUpload.length < 3 ? 
                                 <>
                                     <ChooseFileBtn 
-                                        disabled={imagesToUpload.length === 3}
+                                        disabled={ imagesToUpload.length === 3 }
                                         type="file" 
                                         accept="image/png, image/jpeg"
-                                        onChange={(e) => {
+                                        onChange={ (e) => {
                                             setImageTypeError(false);
                                             setImage(e.target.files[0])
-                                        }}
+                                        } }
                                     />
                                     <AddImageBtn 
                                         disabled={
                                             imagesToUpload.length === 3
                                         }
-                                        onClick={() => AddToImageUpload()}
+                                        onClick={ () => AddToImageUpload() }
                                     >
                                         <AddImageText>Add Image</AddImageText>
                                         <AddImageIcon><IoIosAddCircle/></AddImageIcon>
                                     </AddImageBtn>
                                 </>
                             : null}
-                            {imagesToUpload.length > 0 
+                            { imagesToUpload.length > 0 
                             ? <UploadedImagesSection>
-                                {imagesToUpload.map((image, index) => {
+                                { imagesToUpload.map((image, index) => {
                                     return (
-                                        <ImageWrapper key={image.name + index}>
-                                            <UploadedImage  src={URL.createObjectURL(image)} alt={image.name}/>
-                                            <DeleteImageBtn onClick={ () => handleDeleteImage(image)}>
+                                        <ImageWrapper key={ image.name + index }>
+                                            <UploadedImage  src={ URL.createObjectURL(image) } alt={ image.name }/>
+                                            <DeleteImageBtn onClick={ () => handleDeleteImage(image) }>
                                                 X
                                             </DeleteImageBtn>
                                         </ImageWrapper>
                                     )
-                                })}
+                                }) }
                             </UploadedImagesSection>
-                            : null}
+                            : null
+                            }
                         </PictureSection>
                     </div>
                 </FormSection>
 
-                {errorStatus 
+                { errorStatus 
                 ? <ErrorMessage>
                     Failed to add restaurant. Please try again.
                 </ErrorMessage> 
-                : null}
+                : null
+                }
                 
                 <SubmitBtn 
                     onClick={handleSubmit}
@@ -426,15 +429,15 @@ const AddRestaurantPage = () => {
                     Restaurant Added!
                 </SuccessMessage>
                 <GoToNewRestaurantBtn
-                    onClick={() => {
-                        navigate(`/home/restaurant/${newRestaurantId}`, {state: { path }})
-                    }}
+                    onClick={ () => {
+                        navigate(`/home/restaurant/${ newRestaurantId }`, { state: { path } })
+                    } }
                 >
                     Go to new restaurant page
                 </GoToNewRestaurantBtn>
                 <AddAnotherRestaurantBtn 
                     onClick={() => { 
-                        navigate("/home/addRestaurant", {state: null});
+                        navigate("/home/addRestaurant", { state: null });
                         setUploadStatus(false);
                         setSubmitStatus(false);
                     }}
@@ -577,11 +580,11 @@ const SubmitBtn = styled.button`
 
     &:active {
         transform: scale(0.85);
-    }
+    };
 
     &:disabled {
         cursor: not-allowed;
-    }
+    };
 `;
 
 const ChooseFileBtn = styled.input`
@@ -607,7 +610,7 @@ const ChooseFileBtn = styled.input`
     
         &:active {
             transform: scale(0.85);
-        }
+        };
     };
 `;
 
@@ -630,35 +633,35 @@ const AddImageBtn = styled.button`
 
     &:active {
         transform: scale(0.85);
-    }
+    };
 
     &:disabled {
         cursor: not-allowed;
-    }
+    };
 
-    @media (max-width: 850px){
+    @media (max-width: 850px) {
         border: none;
         color: #0c5a2a;
         background-color: transparent;
         padding: 0 5px;
 
         &:hover {
-        border: none;
-        color: #0c5a4a;
+            border: none;
+            color: #0c5a4a;
+        };
     };
-    }
 `;
 
 const AddImageText = styled.span`
-    @media (max-width: 850px){
+    @media (max-width: 850px) {
         display: none;
-    }
+    };
 `;
 
 const AddImageIcon = styled.span`
     display: none;
 
-    @media (max-width: 850px){
+    @media (max-width: 850px) {
         display: inline;
         position: relative;
         top: 5px;
@@ -707,7 +710,7 @@ const AddAnotherRestaurantBtn = styled.button`
 
     &:active {
         transform: scale(0.85);
-    }
+    };
 `;
 
 const SuccessMessage = styled.p`

@@ -225,10 +225,9 @@ const EditRestaurantPage = () => {
                 <span>Editing restaurant: </span>
                 <RestaurantEditing>{data.restaurantName}</RestaurantEditing>
             </PageTitle>
-            {!submitStatus && !uploadStatus  
+            { !submitStatus && !uploadStatus  
             ? <div>
                 <FormSection>
-
                     <InputSection>
                         <label>
                             Restaurant Name:
@@ -521,11 +520,11 @@ const EditRestaurantPage = () => {
                             ? <>
                                 <CurrentPictureTitle>Current pictures</CurrentPictureTitle>
                                 <UploadedImagesSection>
-                                    {newImageUrlArr.map((image, index) => {
+                                    { newImageUrlArr.map((image, index) => {
                                         if(image.url !== undefined) {
                                             return (
-                                                <ImageWrapper key={image.public_id}>
-                                                    <UploadedImage  src={image.url} alt="image uploaded"/>
+                                                <ImageWrapper key={ image.public_id }>
+                                                    <UploadedImage  src={ image.url } alt="image uploaded"/>
                                                     <DeleteImageBtn onClick={ () => {
                                                         removeImage(image.public_id);
                                                     }}>
@@ -536,9 +535,9 @@ const EditRestaurantPage = () => {
                                         }
                                         else {
                                             return (
-                                                <ImageWrapperUrl key={image.name + index}>
-                                                    <UploadedImageUrl  src={URL.createObjectURL(image)} alt={image.name}/>
-                                                    <DeleteImageUrlBtn onClick={ () => removeImage(image)}>
+                                                <ImageWrapperUrl key={ image.name + index }>
+                                                    <UploadedImageUrl  src={ URL.createObjectURL(image) } alt={ image.name }/>
+                                                    <DeleteImageUrlBtn onClick={ () => removeImage(image) }>
                                                         X
                                                     </DeleteImageUrlBtn>
                                                 </ImageWrapperUrl>
@@ -559,7 +558,7 @@ const EditRestaurantPage = () => {
 
                 <div>
                     <SubmitBtn 
-                        onClick={handleSubmit}
+                        onClick={ handleSubmit }
                         disabled={
                             updatedValues.restaurantName === "" 
                             || (Object.keys(updatedValues).length === 0 && changeInImageUrl !== true)
@@ -568,7 +567,7 @@ const EditRestaurantPage = () => {
                         Submit
                     </SubmitBtn>
                     <CancelBtn 
-                        onClick={() => navigate(-1)}
+                        onClick={ () => navigate(-1) }
                     >
                         Cancel
                     </CancelBtn>
@@ -583,7 +582,7 @@ const EditRestaurantPage = () => {
                 </UploadImageErrorMessage>
                 : null
                 }
-                <BackBtn onClick={() => navigate(-1)}>Back</BackBtn>
+                <BackBtn onClick={ () => navigate(-1) }>Back</BackBtn>
             </div>
             : (
                 <LoadingSection>
@@ -666,7 +665,7 @@ const ChooseFileBtn = styled.input`
     
         &:active {
             transform: scale(0.85);
-        }
+        };
     };
 `;
 
@@ -689,35 +688,35 @@ const AddImageBtn = styled.button`
 
     &:active {
         transform: scale(0.85);
-    }
+    };
 
     &:disabled {
         cursor: not-allowed;
-    }
+    };
 
-    @media (max-width: 850px){
+    @media (max-width: 850px) {
         border: none;
         color: #0c5a2a;
         background-color: transparent;
         padding: 0 5px;
 
         &:hover {
-        border: none;
-        color: #0c5a4a;
+            border: none;
+            color: #0c5a4a;
+        };
     };
-    }
 `;
 
 const AddImageText = styled.span`
-    @media (max-width: 850px){
+    @media (max-width: 850px) {
         display: none;
-    }
+    };
 `;
 
 const AddImageIcon = styled.span`
     display: none;
 
-    @media (max-width: 850px){
+    @media (max-width: 850px) {
         display: inline;
         position: relative;
         top: 5px;
@@ -817,9 +816,9 @@ const FormSection = styled.div`
     box-shadow: 0 2px 5px #e8e8e8;
     background-color: white;
 
-    @media (max-width: 850px){
+    @media (max-width: 850px) {
         width: 75%;
-    }
+    };
 `;
 
 const ErrorMessage = styled.p`
@@ -845,11 +844,11 @@ const SubmitBtn = styled.button`
 
     &:active {
         transform: scale(0.85);
-    }
+    };
 
     &:disabled {
         cursor: not-allowed;
-    }
+    };
 `;
 
 const CancelBtn = styled.button`
@@ -871,7 +870,7 @@ const CancelBtn = styled.button`
 
     &:active {
         transform: scale(0.85);
-    }
+    };
 `;
 
 const LoadingSection = styled.div`
@@ -898,7 +897,7 @@ const BackBtn = styled.button`
 
     &:active {
         transform: scale(0.85);
-    }
+    };
 `;
 
 const SuccessMessage = styled.p`

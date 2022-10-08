@@ -6,10 +6,10 @@ const LogoutButton = () => {
     const { logout } = useAuth0();
 
     return (
-        <LogOutBtn onClick={() => {
+        <LogOutBtn onClick={ () => {
             localStorage.removeItem("username");
-            logout({ returnTo: "http://localhost:3000" });
-        }}
+            logout( { returnTo: "http://localhost:3000" } );
+        } }
         >
             Log Out
         </LogOutBtn>
@@ -36,9 +36,9 @@ const LogOutBtn = styled.button`
 
     &:active {
         transform: scale(0.85);
-    }
+    };
 
-    @media (max-width: 850px){
+    @media (max-width: 850px) {
             font-size: 0.8rem;
-        }
+    };
 `;

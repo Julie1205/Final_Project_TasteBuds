@@ -20,7 +20,7 @@ const HomePage = () => {
 
     useEffect(() => {
         if(user){
-            fetch(`/get-user/${user.email}`)
+            fetch(`/get-user/${ user.email }`)
             .then(res => res.json())
             .then(data => {
                 if(data.status === 200) {
@@ -41,12 +41,12 @@ const HomePage = () => {
         <Wrapper>
             <Header>
                 <LogoLink to="/home/explore">
-                    <LogoImg src={Logo} alt="TasteBud Logo"/>
+                    <LogoImg src={ Logo } alt="TasteBud Logo"/>
                     <AppName>TasteBuds</AppName>
                 </LogoLink>
                 <WelcomeMessage>
                     {userName 
-                    ? <p>{`Welcome ${userName.charAt(0).toUpperCase() + userName.slice(1)}!`}</p> 
+                    ? <p>{ `Welcome ${ userName.charAt(0).toUpperCase() + userName.slice(1) }!` }</p> 
                     : <p>Welcome!</p>
                     }
                 </WelcomeMessage>
@@ -69,9 +69,9 @@ const Wrapper = styled.div`
     display: grid;
     grid-template-rows: 100px calc(100vh - 100px);
 
-        @media (max-width: 850px){
-            grid-template-rows: 75px calc(100vh - 75px);
-        }
+    @media (max-width: 850px) {
+        grid-template-rows: 75px calc(100vh - 75px);
+    };
 `;
 
 const Header = styled.div`
@@ -87,9 +87,9 @@ const Content = styled.div`
     display: grid;
     grid-template-columns: 215px calc(100vw - 250px);
 
-        @media (max-width: 850px){
-            grid-template-columns: 15% 85%;
-        }
+    @media (max-width: 850px) {
+        grid-template-columns: 15% 85%;
+    };
 `;
 
 const LogoImg = styled.img`
@@ -104,11 +104,11 @@ const LogoLink = styled(Link)`
     width: 40vw;
     text-decoration: none;
 
-    @media (max-width: 850px){
+    @media (max-width: 850px) {
         flex-direction: column;
         justify-content: center;
         align-items: flex-start;
-    }
+    };
 
 `;
 
@@ -117,9 +117,9 @@ const AppName = styled.p`
     font-size: 1.3rem;
     color: #fffde6;
 
-    @media (max-width: 850px){
+    @media (max-width: 850px) {
             font-size: 0.75rem;
-        }
+    };
 `;
 
 const WelcomeMessage = styled.div`

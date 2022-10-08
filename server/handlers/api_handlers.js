@@ -7,11 +7,11 @@ const { TRUEWAY_KEY } = process.env;
 const getRestaurantsNearMe = (req, res) => {
     const { address } = req.params;
 
-    const geoUrl = encodeURI(`https://trueway-geocoding.p.rapidapi.com/Geocode?address=${address}&language=en`);
+    const geoUrl = encodeURI(`https://trueway-geocoding.p.rapidapi.com/Geocode?address=${ address }&language=en`);
     const geoOptions = {
     method: 'GET',
     headers: {
-        'X-RapidAPI-Key': `${TRUEWAY_KEY}`,
+        'X-RapidAPI-Key': `${ TRUEWAY_KEY }`,
         'X-RapidAPI-Host': 'trueway-geocoding.p.rapidapi.com'
     }
     };
@@ -19,7 +19,7 @@ const getRestaurantsNearMe = (req, res) => {
     const placesOptions = {
         method: 'GET',
         headers: {
-            'X-RapidAPI-Key': `${TRUEWAY_KEY}`,
+            'X-RapidAPI-Key': `${ TRUEWAY_KEY }`,
             'X-RapidAPI-Host': 'trueway-places.p.rapidapi.com'
         }
         };
@@ -29,15 +29,15 @@ const getRestaurantsNearMe = (req, res) => {
         .then(res => res.json())
         .then(geoData => {
             if(geoData.results.length === 0 || geoData.results[0].type !== "street_address") {
-                return Promise.reject({status: 404, message: "Address not found"});
+                return Promise.reject( { status: 404, message: "Address not found" } );
             }
             else {
-                return `${geoData.results[0].location.lat}%2C${geoData.results[0].location.lng}`
+                return `${ geoData.results[0].location.lat }%2C${ geoData.results[0].location.lng }`
             }
         })
         .then(location => {
             return fetch(
-                `https://trueway-places.p.rapidapi.com/FindPlacesNearby?location=${location}&type=restaurant&radius=1000&language=en`, 
+                `https://trueway-places.p.rapidapi.com/FindPlacesNearby?location=${ location }&type=restaurant&radius=1000&language=en`, 
                 placesOptions
             )
         })
@@ -57,13 +57,13 @@ const findRestaurant = (req, res) => {
     const { restaurantName, city } = req.params;
     const { street } = req.query;
 
-    const query = `${restaurantName} restaurant ${city} ${street}`
-    const url = encodeURI(`https://trueway-places.p.rapidapi.com/FindPlaceByText?text=${query}&language=en`);
+    const query = `${ restaurantName } restaurant ${ city } ${ street }`
+    const url = encodeURI(`https://trueway-places.p.rapidapi.com/FindPlaceByText?text=${ query }&language=en`);
 
     const options = {
     method: 'GET',
     headers: {
-        'X-RapidAPI-Key': `${TRUEWAY_KEY}`,
+        'X-RapidAPI-Key': `${ TRUEWAY_KEY }`,
         'X-RapidAPI-Host': 'trueway-places.p.rapidapi.com'
     }
     };
@@ -83,7 +83,7 @@ const findRestaurant = (req, res) => {
             });
     }
     else {
-        res.status(400).json( { status: 400, data: {restaurantName, city}, message: "Missing restaurant name or city." } );
+        res.status(400).json( { status: 400, data: { restaurantName, city }, message: "Missing restaurant name or city." } );
     }
 }
 

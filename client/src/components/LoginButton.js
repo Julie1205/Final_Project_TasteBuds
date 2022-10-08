@@ -5,7 +5,7 @@ import styled from "styled-components";
 const LoginButton = () => {
     const { loginWithRedirect } = useAuth0();
 
-    return <EnterBtn onClick={() => loginWithRedirect()}>Enter</EnterBtn>;
+    return <EnterBtn onClick={ () => loginWithRedirect() }>Enter</EnterBtn>;
 };
 
 export default LoginButton;
@@ -30,5 +30,5 @@ const EnterBtn = styled.button`
 
     &:active {
         transform: scale(0.85);
-    }
+    };
 `;

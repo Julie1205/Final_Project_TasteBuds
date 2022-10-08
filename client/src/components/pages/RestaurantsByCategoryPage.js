@@ -18,7 +18,7 @@ const RestaurantsByCategoryPage = () => {
         setRestaurantInfo(null);
 
         if(user) {
-            fetch(`/get-user-restaurants/${user.email}/${category}`)
+            fetch(`/get-user-restaurants/${ user.email }/${ category }`)
             .then(res => res.json())
             .then(results => {
                 if(results.status === 200) {
@@ -43,10 +43,10 @@ const RestaurantsByCategoryPage = () => {
             ? restaurantInfo.length >= 1 
             ? <>
                 <div>
-                    <SearchBar restaurants={restaurantInfo}/>
+                    <SearchBar restaurants={ restaurantInfo }/>
                 </div>
                 { restaurantInfo.map((restaurant) => {
-                    return <RestaurantTile key={`tile${restaurant._id}`} restaurant={restaurant}/>
+                    return <RestaurantTile key={`tile${ restaurant._id }`} restaurant={ restaurant }/>
                 })}
             </>
             : <p>No restaurants in this category</p>

@@ -11,7 +11,7 @@ const restaurant = ( { restaurant } ) => {
                         Name:
                     </NameLabel>
                     <NameResult>
-                        {restaurant.name}
+                        { restaurant.name }
                     </NameResult>
                 </NameSection>
                 <AddressSection>
@@ -19,42 +19,42 @@ const restaurant = ( { restaurant } ) => {
                         Address:
                     </AddressLabel>
                     <AddressResult>
-                        {restaurant.address}
+                        { restaurant.address }
                     </AddressResult>
                 </AddressSection>
-                {restaurant.phone_number 
+                { restaurant.phone_number 
                 ? <PhoneSection>
                     <PhoneLabel>
                         Phone Number:
                     </PhoneLabel>
                     <PhoneResult>
-                        {restaurant.phone_number}
+                        { restaurant.phone_number }
                     </PhoneResult>
                 </PhoneSection> 
                 : null
                 }
-                {restaurant.website 
+                { restaurant.website 
                 ? <WebsiteSection>
                     <WebsiteLabel>
                         Website:
                     </WebsiteLabel> 
                     <WebsiteResult 
-                        href={`${restaurant.website}`} 
+                        href={ `${ restaurant.website }` } 
                         target="_blank"
                         rel="noreferrer noopener"
                     >
-                        {restaurant.website}
+                        { restaurant.website }
                     </WebsiteResult>
                 </WebsiteSection> 
                 : null
                 }
-                {restaurant.distance 
+                { restaurant.distance 
                 ? <DistanceSection>
                     <DistanceLabel>
                         Distance:
                     </DistanceLabel>
                     <DistanceResult>
-                        {`${restaurant.distance}m`}
+                        { `${ restaurant.distance }m` }
                     </DistanceResult>
                 </DistanceSection>
                 : null
@@ -62,7 +62,7 @@ const restaurant = ( { restaurant } ) => {
             </RestaurantInfoSection>
             <SaveIcon 
                 to="/home/addRestaurant" 
-                state={{data: restaurant}}
+                state={ { data: restaurant } }
             >
                 <SaveText>Save</SaveText>
                 <BsFillBookmarkFill />
@@ -86,9 +86,9 @@ const RestaurantInfo = styled.div`
     box-shadow: 0 2px 5px #e8e8e8;
     background-color: white;
 
-    @media (max-width: 850px){
+    @media (max-width: 850px) {
         grid-template-columns: calc(100% - 42px) 42px;
-    }
+    };
 `;
 
 const SaveIcon = styled(Link)`
@@ -119,9 +119,9 @@ const SaveIcon = styled(Link)`
 const SaveText = styled.p`
     margin-right: 5px;
 
-    @media (max-width: 850px){
+    @media (max-width: 850px) {
         display: none;
-    }
+    };
 `;
 
 const NameLabel = styled.span`

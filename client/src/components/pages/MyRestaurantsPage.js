@@ -8,11 +8,11 @@ import { CATEGORIES } from "../constants/categories";
 const MyRestaurantsPage = () => {
     const LOGOS = [
         <AllTab>All</AllTab>, 
-        <EatenIcon src={EatStatusColor} alt="been to icon"/>,
+        <EatenIcon src={ EatStatusColor } alt="been to icon"/>,
         <LikeIcon><AiOutlineLike/></LikeIcon>,
         <DislikeIcon><AiOutlineDislike/></DislikeIcon> ,
         <FavoriteIcon><AiFillStar/></FavoriteIcon> ,
-        <NewPlaceIcon src={EatStatusNew} alt="have not been to icon" />
+        <NewPlaceIcon src={ EatStatusNew } alt="have not been to icon" />
     ];
 
     return (
@@ -27,9 +27,9 @@ const MyRestaurantsPage = () => {
                                 to={category}
                             >
                                 <CategoryName>
-                                    {category.replace("_", " ")}
+                                    { category.replace("_", " ") }
                                 </CategoryName>
-                                {LOGOS[index]}
+                                { LOGOS[index] }
                             </CateroryLink>
                         );
                     })
@@ -104,19 +104,19 @@ const DislikeIcon = styled(LikeIcon)`
 `;
 
 const CategoryName = styled.span`
-    @media (max-width: 1035px){
+    @media (max-width: 1035px) {
         font-size: 1.1rem;
-    }
+    };
     
-    @media (max-width: 975px){
+    @media (max-width: 975px) {
         display: none;
-    }
+    };
 `;
 
 const AllTab = styled.span`
     display: none;
 
-    @media (max-width: 975px){
+    @media (max-width: 975px) {
         display: inline;
-    }
+    };
 `;

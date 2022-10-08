@@ -23,7 +23,7 @@ const RestaurantDetailsPage = () => {
     const { user } = useAuth0();
 
     const navigate = useNavigate();
-    const {state} = useLocation();
+    const { state } = useLocation();
 
     useEffect(() => {
         if(user) {
@@ -114,7 +114,7 @@ const RestaurantDetailsPage = () => {
     return (
         <Wrapper>
             <BackBtn 
-                onClick={ () => navigate(state.path, {state: {}}) }
+                onClick={ () => navigate(state.path, { state: {} }) }
             >
                 <BsArrowLeftShort/>
             </BackBtn>
@@ -123,14 +123,14 @@ const RestaurantDetailsPage = () => {
                 <HeaderSection>
                     <div>
                         <PageTitle>
-                            {restaurantDetails.restaurantName}
+                            { restaurantDetails.restaurantName }
                         </PageTitle>
                         <span>
-                            {restaurantDetails.restaurantVisitStatus === true 
+                            { restaurantDetails.restaurantVisitStatus === true 
                             ? <EatenIcon src={EatStatusColor} alt="Icon for eaten"/>
                             : <NewPlaceIcon src={EatStatusNew} alt="Icon for not eaten" />
                             }
-                            {restaurantDetails.restaurantCategory 
+                            { restaurantDetails.restaurantCategory 
                             ? restaurantDetails.restaurantCategory === "liked"
                             ? <LikeIcon>
                                 <AiOutlineLike/>
@@ -140,7 +140,7 @@ const RestaurantDetailsPage = () => {
                             </DislikeIcon> 
                             : null
                             }
-                            {restaurantDetails.restaurantFavorite 
+                            { restaurantDetails.restaurantFavorite 
                             ? <FavoriteIcon>
                                 <AiFillStar/>
                             </FavoriteIcon> 
@@ -156,31 +156,31 @@ const RestaurantDetailsPage = () => {
                             <MdEdit />
                         </EditLink>
                         <DeleteBtn 
-                            onClick={handleDelete}
+                            onClick={ handleDelete }
                         >
                             <RiDeleteBin5Fill />
                         </DeleteBtn>
                     </EditAndDeleteIcons>
                 </HeaderSection>
                 <DetailsSection>
-                    {restaurantDetails.restaurantAddress 
+                    { restaurantDetails.restaurantAddress 
                     ? <AddressSection>
                         <PlaceIcon>
                             <FiMapPin />
                         </PlaceIcon>
                         <span>
-                            {restaurantDetails.restaurantAddress}
+                            { restaurantDetails.restaurantAddress }
                         </span>
                     </AddressSection> 
                     : null
                     }
-                    {restaurantDetails.restaurantPhoneNumber 
+                    { restaurantDetails.restaurantPhoneNumber 
                     ? <PhoneSection>
                         <PhoneIcon>
                             <HiOutlinePhone/>
                         </PhoneIcon>
                         <span>
-                            {restaurantDetails.restaurantPhoneNumber}
+                            { restaurantDetails.restaurantPhoneNumber }
                         </span>
                     </PhoneSection> 
                     : null
@@ -192,11 +192,11 @@ const RestaurantDetailsPage = () => {
                         </WebIcon>
                         <WebsiteText>
                             <a 
-                                href={restaurantDetails.restaurantWebsite}                         
+                                href={ restaurantDetails.restaurantWebsite }                         
                                 target="_blank"
                                 rel="noreferrer noopener"
                             >
-                                {restaurantDetails.restaurantWebsite}
+                                { restaurantDetails.restaurantWebsite }
                             </a>
                         </WebsiteText>
                     </WebsiteSection>
@@ -204,44 +204,47 @@ const RestaurantDetailsPage = () => {
                     }
                 </DetailsSection>
 
-                {restaurantDetails.restaurantCuisine 
+                { restaurantDetails.restaurantCuisine 
                 ? <div>
                     <span>Cuisine/Type: </span>
-                    <span>{restaurantDetails.restaurantCuisine}</span> 
+                    <span>{ restaurantDetails.restaurantCuisine }</span> 
                 </div>
                 : null
                 }
                 
-                {restaurantDetails.restaurantComment 
+                { restaurantDetails.restaurantComment 
                 ? <div>
                     <CommentHeader>
                         What you had to say about this restaurant:
                     </CommentHeader>
                     <CommentSection>
-                        <p>{restaurantDetails.restaurantComment}</p>
+                        <p>{ restaurantDetails.restaurantComment }</p>
                     </CommentSection>
                 </div>
                 : null
                 }
-                {restaurantDetails.imageUrl.length > 0 ?
+                { restaurantDetails.imageUrl.length > 0 ?
                     <PicturesSection>
                         <ImageBtnSection>
-                            {restaurantDetails.imageUrl.map((image) => {
+                            { restaurantDetails.imageUrl.map((image) => {
                                 return (
                                     <PictureBtn 
                                         key={image.public_id}
                                         onClick={(e) => setDisplayImage(e.target.src)}
                                     >
-                                        <Picture  src={image.url} alt="image uploaded"/>
+                                        <Picture  src={ image.url } alt="image uploaded"/>
                                     </PictureBtn>
                                 )
                             })}
                         </ImageBtnSection>
-                        <DisplayedPicture src={displayedImage} alt="displayed image"/>
+                        <DisplayedPicture src={ displayedImage } alt="displayed image"/>
                     </PicturesSection>
                 : null}
 
-                {errorStatus ? <p>Could not delete restaurant</p> : null}
+                { errorStatus 
+                ? <p>Could not delete restaurant</p> 
+                : null 
+                }
             </RestaurantSection>
             : restaurantDetails && user && deleteStatus 
             ? <p>Restaurant Deleted</p>
@@ -315,7 +318,7 @@ const BackBtn = styled.button`
 
     &:active {
         transform: scale(0.85);
-    }
+    };
 `;
 
 const PageTitle = styled.span`
@@ -418,7 +421,7 @@ const PicturesSection = styled.div`
     display: grid;
     grid-template-columns: 100px calc(100% - 100px);
 
-    @media (max-width: 850px){
+    @media (max-width: 850px) {
         grid-template-columns: 60px calc(100% - 60px);
     };
 `;
@@ -429,7 +432,7 @@ const Picture = styled.img`
     border: 5px solid white;
     box-shadow: 0 0 5px gray;
 
-    @media (max-width: 850px){
+    @media (max-width: 850px) {
         min-width: 30px;
     };
 `;

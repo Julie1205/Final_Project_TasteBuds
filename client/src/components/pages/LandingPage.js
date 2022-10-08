@@ -5,7 +5,7 @@ import LoginButton from "../LoginButton";
 const LandingPage = () => {
     return (
         <Wrapper>
-            <img src={Logo} alt="TasteBud Logo"/>
+            <img src={ Logo } alt="TasteBud Logo"/>
             <AppName>TasteBuds</AppName>
             <Slogan>Where are we eating?</Slogan>
             <LoginButton/>

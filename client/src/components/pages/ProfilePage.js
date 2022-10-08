@@ -12,8 +12,8 @@ const ProfilePage = () => {
     return (
     isAuthenticated && (
         <Wrapper>
-            <img src={user.picture} alt={user.name} />
-            <p>{`email: ${user.email}`}</p>
+            <img src={ user.picture } alt={ user.name } />
+            <p>{ `email: ${ user.email }` }</p>
         </Wrapper>
     )
     );

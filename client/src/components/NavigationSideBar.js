@@ -57,14 +57,14 @@ const HomeLink = styled(NavLink)`
     display: flex;
     align-items: center;
 
-        &.active {
-            color: white;
-            background-color: #37865e;
-        };
+    &.active {
+        color: white;
+        background-color: #37865e;
+    };
 
-        @media (max-width: 850px){
-           font-size: 1.5rem;
-    }
+    @media (max-width: 850px) {
+        font-size: 1.5rem;
+    };
 `;
 
 const MyRestaurantsLink = styled(HomeLink)`
@@ -79,9 +79,9 @@ const FindARestaurantsLink = styled(HomeLink)`
 const HomeText = styled.span`
     margin-left: 10px;
 
-    @media (max-width: 850px){
+    @media (max-width: 850px) {
         display: none;
-    }
+    };
 `;
 
 const MyRestaurantsText = styled(HomeText)`

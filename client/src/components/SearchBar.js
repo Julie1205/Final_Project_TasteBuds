@@ -30,40 +30,40 @@ const SearchBar = ( { restaurants } ) => {
     return (
         <>
             <SearchBtn 
-                onClick={handleOpen}
+                onClick={ handleOpen }
             >
                 Search in category
             </SearchBtn>
             <Dialog 
-                open={openModal} 
-                onClose={handleClose}
+                open={ openModal } 
+                onClose={ handleClose }
             >
                 <SearchModal>
                     <SearchBarArea>
                         <label>
                             <SearchInput
-                                value={searchValue}
+                                value={ searchValue }
                                 placeholder="search restaurant"
-                                onChange={(e) => setSearchValue(e.target.value)}
+                                onChange={ (e) => setSearchValue(e.target.value) }
                             />
                             <SearchLabel>
                                 <BiSearch/>
                             </SearchLabel>
                         </label>
                     </SearchBarArea>
-                    {searchMatches.length > 0 
+                    { searchMatches.length > 0 
                     ? <SearchResultArea>
-                        {searchMatches.map((match) => {
+                        { searchMatches.map((match) => {
                             return (
                                 <ResultLink
-                                    key={`search${match._id}`}
-                                    to={`/home/restaurant/${match._id}`} 
+                                    key={ `search${ match._id }` }
+                                    to={ `/home/restaurant/${ match._id }` } 
                                     state={ { path } }
                                 >
-                                    {match.restaurantName}
+                                    { match.restaurantName }
                                 </ResultLink>
                             )
-                        })}
+                        }) }
                     </SearchResultArea>
                     : null}
                 </SearchModal>
@@ -92,7 +92,7 @@ const SearchBtn = styled.button`
 
     &:active {
         transform: scale(0.85);
-    }
+    };
 `;
 
 const SearchModal = styled.div`
