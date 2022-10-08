@@ -1,6 +1,10 @@
 const express = require("express");
 const morgan = require("morgan");
-const { connectToMongoDb,  closeMongoDb } = require("./mongoDBConnectionFunctions/mongoDBConnectionHandlers");
+
+const { 
+    connectToMongoDb,  
+    closeMongoDb 
+} = require("./mongoDBConnectionFunctions/mongoDBConnectionHandlers");
 
 const { 
     getRestaurantsNearMe, 

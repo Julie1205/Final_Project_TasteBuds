@@ -1,14 +1,11 @@
-const { USERS_COLLECTION } = require("../constants/mongoDbConstants");
 const { v4: uuidv4 } = require("uuid");
 
-const FILTERED_CATEGORIES = ["Been_To", "Liked", "Disliked", "Favorite", "Wish_List"];
-const FILTERED_CATEGORIES_ASSOCIATED_VALUE = [
-    [ "restaurantVisitStatus", true ],
-    [ "restaurantCategory", "liked" ],
-    [ "restaurantCategory", "disliked" ],
-    [ "restaurantFavorite", true ],
-    [ "restaurantVisitStatus", false ]
-];
+const { USERS_COLLECTION } = require("../constants/mongoDbConstants");
+const { 
+    FILTERED_CATEGORIES, 
+    FILTERED_CATEGORIES_ASSOCIATED_VALUE,
+    UPDATABLE_FIELDS
+} = require("../constants/restaurantHandlerConstants");
 
 //handler to get the user's restaurants based on the category
 const getUserRestaurants = async (req, res) => {
@@ -152,18 +149,7 @@ const deleteRestaurant = async (req,res) => {
     }
 };
 
-const UPDATABLE_FIELDS = [
-    "restaurantName",
-    "restaurantAddress",
-    "restaurantPhoneNumber",
-    "restaurantWebsite",
-    "restaurantVisitStatus",
-    "restaurantCategory",
-    "restaurantFavorite",
-    "restaurantCuisine",
-    "restaurantComment",
-    "imageUrl"
-];
+
 
 //update a restaurant in user's restaurant array
 const updateRestaurant = async (req, res) => {
@@ -214,4 +200,10 @@ const updateRestaurant = async (req, res) => {
     }
 };
 
-module.exports = { getUserRestaurants, getRestaurant, addRestaurant, deleteRestaurant, updateRestaurant }
+module.exports = { 
+    getUserRestaurants, 
+    getRestaurant, 
+    addRestaurant, 
+    deleteRestaurant, 
+    updateRestaurant 
+}
