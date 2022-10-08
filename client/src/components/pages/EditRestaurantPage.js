@@ -116,7 +116,8 @@ const EditRestaurantPage = () => {
     //handles update of restaurant in mongodb
     //resolves delete promises and upload promises for changes in cloudinary
     //then updates restaurant in mongodb
-    const handleSubmit = () => {
+    const handleSubmit = (ev) => {
+        ev.preventDefault();
         setUploadStatus(true);
         setErrorStatus(false);
 
@@ -226,7 +227,7 @@ const EditRestaurantPage = () => {
                 <RestaurantEditing>{data.restaurantName}</RestaurantEditing>
             </PageTitle>
             { !submitStatus && !uploadStatus  
-            ? <div>
+            ? <form>
                 <FormSection>
                     <InputSection>
                         <label>
@@ -572,7 +573,7 @@ const EditRestaurantPage = () => {
                         Cancel
                     </CancelBtn>
                 </div>
-            </div>
+            </form>
             : uploadStatus && submitStatus 
             ? <div>
                 <SuccessMessage>Restaurant Info Updated</SuccessMessage>
