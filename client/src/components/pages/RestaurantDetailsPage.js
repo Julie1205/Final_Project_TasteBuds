@@ -151,7 +151,7 @@ const RestaurantDetailsPage = () => {
                     <EditAndDeleteIcons>
                         <EditLink 
                             to={`/home/restaurant/edit/${ restaurantDetails._id }`} 
-                            state={ { data: restaurantDetails } }
+                            state={ { data: restaurantDetails, path: state.path } }
                         >
                             <MdEdit />
                         </EditLink>

@@ -3,6 +3,7 @@ import { useState } from "react";
 import TextField from '@mui/material/TextField';
 import CircularProgress from '@mui/material/CircularProgress';
 import SearchResults from "../SearchResults";
+import Map from "../Map";
 
 const ExplorePage = () => {
     const [address, setAddress] = useState("");
@@ -10,6 +11,8 @@ const ExplorePage = () => {
     const [searchResults, setSearchResults] = useState(null);
     const [searchState, setSearchState] = useState(false);
     const [errorStatus, setErrorStatus] = useState(false);
+    const [geoCoordinates, setGeoCoortinates] = useState([]);
+    const [mapStatus, setMapStatus] = useState(false);
 
     const handleAddressInputChange = (e) => {
         if(errorStatus) {
@@ -36,6 +39,7 @@ const ExplorePage = () => {
             if(results.status === 200) {
                 setAddress("");
                 setCity("");
+                setGeoCoortinates(results.location)
                 setSearchResults(results.data);
             }
             else {
@@ -49,7 +53,9 @@ const ExplorePage = () => {
         })
     };
 
-    const handleMakeNewSearch = () => {
+    const handleMakeNewSearch = (e) => {
+        setGeoCoortinates([]);
+        setMapStatus(false);
         setSearchResults(null);
         setAddress("");
         setCity("");
@@ -102,10 +108,19 @@ const ExplorePage = () => {
                         { searchResults.length > 0 ?
                         <>
                             <MakeNewSearchBtn onClick={ handleMakeNewSearch }>Make another search</MakeNewSearchBtn>
-                            {
-                                searchResults.map((restaurant) => {
-                                    return <SearchResults key={ `search${ restaurant.id }` } restaurant={ restaurant } />
-                                })
+                            { mapStatus 
+                            ? <>
+                                <ListViewBtn onClick={ () => setMapStatus(false) }>View List</ListViewBtn>
+                                <Map restaurants={searchResults} geoCoordinates={geoCoordinates}/>
+                            </>
+                            : <>
+                                <MapViewBtn onClick={ () => setMapStatus(true) }>View Map</MapViewBtn>
+                                {
+                                    searchResults.map((restaurant) => {
+                                        return <SearchResults key={ `search${ restaurant.id }` } restaurant={ restaurant } />
+                                    })
+                                }
+                            </>
                             }
                         </>
                         : <div>
@@ -206,4 +221,12 @@ const MakeNewSearchBtn = styled(SearchBtn)`
 
 const SecondTextLine = styled.p`
     font-size: 1.1rem;
+`;
+
+const MapViewBtn = styled(SearchBtn)`
+    margin-left: 10px;
+`;
+
+const ListViewBtn = styled(SearchBtn)`
+    margin: 0 0 10px 10px;
 `;

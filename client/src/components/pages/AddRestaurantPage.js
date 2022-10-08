@@ -100,7 +100,6 @@ const AddRestaurantPage = () => {
     
     //handles adding restaurant to mongodb
     const handleSubmit = (ev) => {
-        ev.preventDefault();
         setUploadStatus(true);
         setErrorStatus(false);
         
@@ -177,7 +176,7 @@ const AddRestaurantPage = () => {
         <Wrapper>
             <PageTitle>Add a Restaurant</PageTitle>
             {!submitStatus && !uploadStatus
-            ? <form>
+            ? <div>
                 <FormSection>
                     <InputSection>
                         <label>
@@ -423,7 +422,7 @@ const AddRestaurantPage = () => {
                 >
                     Submit
                 </SubmitBtn>
-            </form>
+            </div>
             : uploadStatus && submitStatus
             ? <div>
                 <SuccessMessage>

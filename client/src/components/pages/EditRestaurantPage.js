@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { IoIosAddCircle } from "react-icons/io";
@@ -11,8 +11,9 @@ const INITIAL_STATE_IMAGES_DELETED = [];
 
 const EditRestaurantPage = () => {
     const location = useLocation();
-    const { data } = location.state;
+    const { data, path } = location.state;
     const { user } = useAuth0();
+    const { id } = useParams();
 
     const [updatedValues, setUpdatedValues] = useState(INITIAL_STATE);
     const [changeInImageUrl, setChangeInImageUrl] = useState(false);
@@ -227,7 +228,7 @@ const EditRestaurantPage = () => {
                 <RestaurantEditing>{data.restaurantName}</RestaurantEditing>
             </PageTitle>
             { !submitStatus && !uploadStatus  
-            ? <form>
+            ? <div>
                 <FormSection>
                     <InputSection>
                         <label>
@@ -568,12 +569,12 @@ const EditRestaurantPage = () => {
                         Submit
                     </SubmitBtn>
                     <CancelBtn 
-                        onClick={ () => navigate(-1) }
+                        onClick={ () => navigate(`/home/restaurant/${id}`, { state: { path } }) }
                     >
                         Cancel
                     </CancelBtn>
                 </div>
-            </form>
+            </div>
             : uploadStatus && submitStatus 
             ? <div>
                 <SuccessMessage>Restaurant Info Updated</SuccessMessage>
