@@ -1,20 +1,24 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { BsFillBookmarkFill } from "react-icons/bs";
+import { FiMapPin } from "react-icons/fi";
+import { HiOutlinePhone } from "react-icons/hi";
+import { IoEarthSharp } from "react-icons/io5";
 
 const restaurant = ( { restaurant } ) => {
+    console.log(restaurant)
     return (
         <RestaurantInfo>
             <RestaurantInfoSection>
                 <NameSection>
-                    <NameLabel>
-                        Name:
-                    </NameLabel>
                     <NameResult>
                         { restaurant.name }
                     </NameResult>
                 </NameSection>
                 <AddressSection>
+                    <PlaceIcon>
+                        <FiMapPin />
+                    </PlaceIcon>
                     <AddressLabel>
                         Address:
                     </AddressLabel>
@@ -24,6 +28,9 @@ const restaurant = ( { restaurant } ) => {
                 </AddressSection>
                 { restaurant.phone_number 
                 ? <PhoneSection>
+                    <PhoneIcon>
+                        <HiOutlinePhone/>
+                    </PhoneIcon>
                     <PhoneLabel>
                         Phone Number:
                     </PhoneLabel>
@@ -35,6 +42,9 @@ const restaurant = ( { restaurant } ) => {
                 }
                 { restaurant.website 
                 ? <WebsiteSection>
+                    <WebIcon>
+                        <IoEarthSharp/>
+                    </WebIcon>
                     <WebsiteLabel>
                         Website:
                     </WebsiteLabel> 
@@ -124,56 +134,94 @@ const SaveText = styled.p`
     };
 `;
 
-const NameLabel = styled.span`
+const AddressLabel = styled.span`
     font-weight: bold;
     margin-right: 5px;
+
+    @media (max-width: 850px) {
+        display: none;
+    };
 `;
 
-const AddressLabel = styled(NameLabel)`
+const PhoneLabel = styled(AddressLabel)`
+    @media (max-width: 850px) {
+        display: none;
+    };
 `;
 
-const PhoneLabel = styled(NameLabel)`
+const WebsiteLabel = styled(AddressLabel)`
+    @media (max-width: 850px) {
+        display: none;
+    };
 `;
 
-const WebsiteLabel = styled(NameLabel)`
-`;
-
-const DistanceLabel = styled(NameLabel)`
+const DistanceLabel = styled(AddressLabel)`
+    @media (max-width: 850px) {
+        display: inline;
+    };
 `;
 
 const NameSection = styled.p`
-    margin: 5px 0;
+    margin: 5px 0 10px 0;
+
+    @media (max-width: 850px) {
+        display: flex;
+        align-items: center;
+    };
 `;
 
 const AddressSection = styled(NameSection)`
+    margin: 5px 0;
 `;
 
 const PhoneSection = styled(NameSection)`
+    margin: 5px 0;
 `;
 
 const WebsiteSection = styled(NameSection)`
+    margin: 5px 0;
 `;
 
 const DistanceSection = styled(NameSection)`
+    margin: 5px 0;
 `;
 
 const NameResult = styled.span`
-    word-wrap: break-word; 
+    word-wrap: break-word;
+    font-weight: bold;
+    font-size: 1.2rem;
 `;
 
-const AddressResult = styled(NameResult)`
+const AddressResult = styled.span`
+    word-wrap: break-word;
+    font-weight: normal;
+    font-size: 1rem;
 `;
 
-const PhoneResult = styled(NameResult)`
+const PhoneResult = styled(AddressResult)`
 `;
 
 const WebsiteResult = styled.a`
-    word-wrap: break-word; 
+    word-wrap: break-word;
+    
+    @media (max-width: 850px) {
+        width: 95%;
+    }
 `;
 
-const DistanceResult = styled(NameResult)`
+const DistanceResult = styled(AddressResult)`
 `;
 
 const RestaurantInfoSection = styled.div`
     max-width: 55vw;
+`;
+
+const PlaceIcon = styled.span`
+    margin-right: 5px;
+`;
+
+const PhoneIcon = styled(PlaceIcon)`
+`;
+
+const WebIcon = styled(PlaceIcon)`
 `;
