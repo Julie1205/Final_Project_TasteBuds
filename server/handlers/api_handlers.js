@@ -42,7 +42,6 @@ const getRestaurantsNearMe = (req, res) => {
                     placesOptions
                 ).then(res => res.json())
                 .then(data => {
-                    console.log(location.split("%2C"))
                     return res.status(200).json({ status: 200, data: data.results, location: location.split("%2C") })})
             )
         }) 
