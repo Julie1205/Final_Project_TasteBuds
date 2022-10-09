@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { useState } from "react";
 import TextField from '@mui/material/TextField';
 import CircularProgress from '@mui/material/CircularProgress';
-import SearchResults from "../SearchResults";
-import Map from "../Map_Components/Map";
+import SearchResults from "./SearchResults";
+import Map from "../../Map_Components/Map";
 
 const ExplorePage = () => {
     const [address, setAddress] = useState("");

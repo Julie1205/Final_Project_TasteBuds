@@ -4,10 +4,10 @@ import GlobalStyles from "./components/GlobalStyles";
 import LandingPage from "./components/pages/Landing_Page_Components/LandingPage";
 import HomePage from "./components/pages/Home_Page_Components/HomePage";
 import MyRestaurantsPage from "./components/pages/MyRestaurantsPage";
-import ExplorePage from "./components/pages/ExplorePage";
+import ExplorePage from "./components/pages/Search_Pages_Components/ExplorePage";
 import RestaurantsByCategoryPage from "./components/pages/Restaurants_Category_Page_Components/RestaurantsByCategoryPage";
 import AddRestaurantPage from "./components/pages/AddRestaurantPage";
-import FindARestaurantPage from "./components/pages/FindARestaurantPage";
+import FindARestaurantPage from "./components/pages/Search_Pages_Components/FindARestaurantPage";
 import RestaurantDetailsPage from "./components/pages/RestaurantDetailsPage"
 import EditRestaurantPage from "./components/pages/EditRestaurantPage";
 
