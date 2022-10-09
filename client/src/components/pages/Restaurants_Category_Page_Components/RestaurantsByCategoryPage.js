@@ -6,17 +6,23 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import RestaurantTile from "./RestaurantTile";
 import SearchBar from "./SearchBar";
+import Map from "../../Map_Components/Map";
+
+//default map is centered on coordinates of Montreal
+const GEOCOORDINATES = [45.501690, -73.567253];
 
 const RestaurantsByCategoryPage = () => {
     const [restaurantInfo, setRestaurantInfo] = useState(null);
     const [errorStatus, setErrorStatus] = useState(false);
+    const [mapStatus, setMapStatus] = useState(false);
     const { user } = useAuth0();
     const { category } = useParams();
 
     useEffect(() => {
         setErrorStatus(false);
         setRestaurantInfo(null);
-
+        setMapStatus(false);
+        
         if(user) {
             fetch(`/get-user-restaurants/${ user.email }/${ category }`)
             .then(res => res.json())
@@ -44,10 +50,32 @@ const RestaurantsByCategoryPage = () => {
             ? <>
                 <div>
                     <SearchBar restaurants={ restaurantInfo }/>
+                    {mapStatus 
+                    ? <>
+                        <ListViewBtn 
+                        onClick={ () => setMapStatus(false) }
+                        >
+                            View List
+                        </ListViewBtn>
+                        <MapMessage>
+                            Only Restaurants saved using searches will appear on map.
+                        </MapMessage>
+                        <Map restaurants={restaurantInfo} geoCoordinates={GEOCOORDINATES} search={false}/>
+                    </>
+                    : <>
+                        <MapViewBtn 
+                        onClick={ () => setMapStatus(true) }
+                        >
+                            View Map
+                        </MapViewBtn>
+                        <>
+                            { restaurantInfo.map((restaurant) => {
+                                return <RestaurantTile key={`tile${ restaurant._id }`} restaurant={ restaurant }/>
+                            })}
+                        </>
+                    </>
+                    }
                 </div>
-                { restaurantInfo.map((restaurant) => {
-                    return <RestaurantTile key={`tile${ restaurant._id }`} restaurant={ restaurant }/>
-                })}
             </>
             : <p>No restaurants in this category</p>
             : (
@@ -74,3 +102,33 @@ const LoadingSection = styled.div`
     top: 25%;
 `;
 
+const MapViewBtn = styled.button`
+    margin-left: 10px;
+    font-family: var(--body-font);
+    font-size: 0.95rem;
+    padding: 5px 10px;
+    border: 1px solid #0c5a4a;
+    border-radius: 10px;
+    background-color: #0c5a4a;
+    color: white;
+
+    &:hover {
+        cursor: pointer;
+        border: 1px solid #0c5a4a;
+        background-color: transparent;
+        color: #0c5a4a;
+    };
+
+    &:active {
+        transform: scale(0.85);
+    }
+`;
+
+const ListViewBtn = styled(MapViewBtn)`
+    margin: 0 0 10px 10px;
+`;
+
+const MapMessage = styled.p`
+    font-size: 1rem;
+    margin-bottom: 5px;
+`;
