@@ -10,6 +10,7 @@ import AddRestaurantPage from "./components/pages/AddRestaurantPage";
 import FindARestaurantPage from "./components/pages/Search_Pages_Components/FindARestaurantPage";
 import RestaurantDetailsPage from "./components/pages/RestaurantDetailsPage"
 import EditRestaurantPage from "./components/pages/EditRestaurantPage";
+import PageNotFound from "./components/pages/PageNotFound";
 
 const App = () => {
 
@@ -27,9 +28,9 @@ const App = () => {
           <Route path="restaurant/edit/:id" element={<EditRestaurantPage/>} />
           <Route path="addRestaurant" element={<AddRestaurantPage />}/>
           <Route path="findARestaurant" element={<FindARestaurantPage />}/>
-          <Route path="*" element={<p>Page not found</p>} />
+          <Route path="*" element={<PageNotFound />} />
         </Route> 
-        <Route path="*" element={<p>Page not found</p>} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
   );
