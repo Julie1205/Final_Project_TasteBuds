@@ -14,7 +14,13 @@ const SearchBar = ( { restaurants } ) => {
 
     if(searchValue.length >= 2) {
     searchMatches = restaurants.filter((restaurant) => {
-            return restaurant.restaurantName.toLowerCase().includes(searchValue.toLowerCase().trim());
+            return (
+                restaurant.restaurantName
+                    .toLowerCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .includes(searchValue.toLowerCase().trim())
+            )
         })
     }
 
