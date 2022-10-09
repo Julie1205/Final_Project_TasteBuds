@@ -15,6 +15,7 @@ const INITIAL_STATE = {
     restaurantFavorite: false,
     restaurantComment: "",
     restaurantCuisine: "",
+    location: {},
     imageUrl: []
 }
 
@@ -47,7 +48,8 @@ const AddRestaurantPage = () => {
                     restaurantName: data.name,
                     restaurantAddress: data.address,
                     restaurantPhoneNumber: data.phone_number ? data.phone_number : "",
-                    restaurantWebsite: data.website ? data.website : ""
+                    restaurantWebsite: data.website ? data.website : "",
+                    location: { ...data.location }
                 })
             }
         }
@@ -263,6 +265,7 @@ const AddRestaurantPage = () => {
                                         onChange={ (e) => setNewRestaurantInfo({
                                             ...newRestaurantInfo, 
                                             restaurantVisitStatus: false,
+                                            restaurantCategory: INITIAL_STATE.restaurantCategory,
                                             restaurantFavorite: INITIAL_STATE.restaurantFavorite
                                         }) }
                                     />

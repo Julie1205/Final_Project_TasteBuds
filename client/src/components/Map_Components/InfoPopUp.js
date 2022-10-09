@@ -1,10 +1,10 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { AiFillStar, AiOutlineLike, AiOutlineDislike} from "react-icons/ai";
-import EatStatusColor from "../../../assets/EatStatusColor.png";
-import EatStatusNew from "../../../assets/EatStatus_new2.png";
+import EatStatusColor from "../../assets/EatStatusColor.png";
+import EatStatusNew from "../../assets/EatStatus_new2.png";
 
-const RestaurantTile = ( { restaurant } ) => {
+const InfoPopUp = ( { restaurant } ) => {
     const navigate = useNavigate();
     const path = useLocation().pathname;
 
@@ -17,7 +17,7 @@ const RestaurantTile = ( { restaurant } ) => {
             </RestaurantName>
             {
                 restaurant.restaurantCuisine 
-                ? <p>{ restaurant.restaurantCuisine }</p> 
+                ? <Cuisine>{ restaurant.restaurantCuisine }</Cuisine> 
                 : null
             }
             <p>
@@ -53,29 +53,25 @@ const RestaurantTile = ( { restaurant } ) => {
             </p>
         </RestaurantLinkBtn>
     );
+
 };
 
-export default RestaurantTile;
+export default InfoPopUp;
 
 const RestaurantLinkBtn = styled.button`
     font-size: 1.2rem;
     font-family: var(--body-font);
     text-align: center;
     margin: 10px 0;
-    padding: 20px 30px;
-    width: 85%;
-    max-width: 1000px;
+    padding: 10px 20px;
     border: 1px solid #f0f0f0;
     border-radius: 15px;
     box-shadow: 0 2px 5px #e8e8e8;
     background-color: white;
-    position: relative;
-    left: -15px;
 
     &:hover {
         cursor: pointer;
-        transform: scale(1.05);
-    };
+    }
 `;
 
 const FavoriteIcon = styled.span`
@@ -108,5 +104,9 @@ const DislikeIcon = styled(LikeIcon)`
 `;
 
 const RestaurantName = styled.span`
-    font-size: 1.4rem;
+    font-size: 1.3rem;
+`;
+
+const Cuisine = styled.span`
+    display: block;
 `;

@@ -111,13 +111,13 @@ const ExplorePage = () => {
                             { mapStatus 
                             ? <>
                                 <ListViewBtn onClick={ () => setMapStatus(false) }>View List</ListViewBtn>
-                                <Map restaurants={searchResults} geoCoordinates={geoCoordinates}/>
+                                <Map restaurants={searchResults} geoCoordinates={geoCoordinates} search={"area"}/>
                             </>
                             : <>
                                 <MapViewBtn onClick={ () => setMapStatus(true) }>View Map</MapViewBtn>
                                 {
                                     searchResults.map((restaurant) => {
-                                        return <SearchResults key={ `search${ restaurant.id }` } restaurant={ restaurant } />
+                                        return <SearchResults key={ `searchArea${ restaurant.id }` } restaurant={ restaurant } />
                                     })
                                 }
                             </>

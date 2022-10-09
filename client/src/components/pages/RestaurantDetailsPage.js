@@ -412,6 +412,8 @@ const CommentHeader = styled.p`
 `;
 
 const CommentSection = styled.div`
+    line-height: 1.3;
+    white-space: pre-line;
     margin-bottom: 20px;
     padding: 5px;
     font-weight: bold;
