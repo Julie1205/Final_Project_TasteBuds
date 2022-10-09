@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import CircularProgress from '@mui/material/CircularProgress';
 
-import RestaurantTile from "../RestaurantTile";
-import SearchBar from "../SearchBar";
+import RestaurantTile from "./RestaurantTile";
+import SearchBar from "./SearchBar";
 
 const RestaurantsByCategoryPage = () => {
     const [restaurantInfo, setRestaurantInfo] = useState(null);

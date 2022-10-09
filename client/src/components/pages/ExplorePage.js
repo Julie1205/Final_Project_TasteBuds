@@ -3,7 +3,7 @@ import { useState } from "react";
 import TextField from '@mui/material/TextField';
 import CircularProgress from '@mui/material/CircularProgress';
 import SearchResults from "../SearchResults";
-import Map from "../Map";
+import Map from "../Map_Components/Map";
 
 const ExplorePage = () => {
     const [address, setAddress] = useState("");

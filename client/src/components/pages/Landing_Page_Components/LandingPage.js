@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import Logo from "../../assets/Logo2.png";
-import LoginButton from "../LoginButton";
+import Logo from "../../../assets/Logo2.png";
+import LoginButton from "./LoginButton";
 
 const LandingPage = () => {
     return (

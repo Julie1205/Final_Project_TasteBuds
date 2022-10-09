@@ -1,9 +1,9 @@
 import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import NavigationSideBar from "../NavigationSideBar";
-import LogoutButton from "../LogoutButton";
-import Logo from "../../assets/Logo2.png";
+import NavigationSideBar from "../../NavigationSideBar";
+import LogoutButton from "./LogoutButton";
+import Logo from "../../../assets/Logo2.png";
 import { useAuth0 } from "@auth0/auth0-react";
 
 const HomePage = () => {

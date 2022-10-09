@@ -1,8 +1,8 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { AiFillStar, AiOutlineLike, AiOutlineDislike} from "react-icons/ai";
-import EatStatusColor from "../assets/EatStatusColor.png"
-import EatStatusNew from "../assets/EatStatus_new2.png"
+import EatStatusColor from "../../../assets/EatStatusColor.png"
+import EatStatusNew from "../../../assets/EatStatus_new2.png"
 
 const RestaurantTile = ( { restaurant } ) => {
     const navigate = useNavigate();
