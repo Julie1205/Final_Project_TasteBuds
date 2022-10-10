@@ -96,11 +96,15 @@ const RestaurantsByCategoryPage = () => {
                             >
                                 Change location
                             </ChangeLocationBtn>
-                            <ResetLocationBtn
+                            { flyToGeolocation[0] !== INITIAL_STATE_GEOCOORDINATES[0] 
+                                && flyToGeolocation[2] !== INITIAL_STATE_GEOCOORDINATES[1]
+                            ? <ResetLocationBtn
                                 onClick={ () => setFlyToGeolocation(INITIAL_STATE_GEOCOORDINATES)}
                             >
                                 Reset Location
                             </ResetLocationBtn>
+                            : null
+                            }
                         </>
                         : <LocationInputSection>
                             <Input 
@@ -110,20 +114,22 @@ const RestaurantsByCategoryPage = () => {
                                     setLocation(e.target.value);
                                 } }
                             />
-                            <SubmitBtn 
-                                onClick={ handleSubmit }
-                            >
-                                Submit
-                            </SubmitBtn>
-                            <CancelBtn
-                                onClick={ () => {
-                                    setLocationError(false);
-                                    setLocationInputStatus(false);
-                                    setLocation("");
-                                }}
-                            >
-                                Cancel
-                            </CancelBtn>
+                            <SubmitAndCancelBtnSection>
+                                <SubmitBtn 
+                                    onClick={ handleSubmit }
+                                >
+                                    Submit
+                                </SubmitBtn>
+                                <CancelBtn
+                                    onClick={ () => {
+                                        setLocationError(false);
+                                        setLocationInputStatus(false);
+                                        setLocation("");
+                                    }}
+                                >
+                                    Cancel
+                                </CancelBtn>
+                            </SubmitAndCancelBtnSection>
                         </LocationInputSection>
                         }
                         { locationError 
@@ -214,11 +220,20 @@ const MapMessage = styled.p`
 `;
 
 const ChangeLocationBtn = styled(MapViewBtn)`
+    @media (max-width: 545px) {
+        margin: 0 10px 10px 0;
+    };
 `;
 
 const LocationInputSection = styled.div`
     display: inline-block;
     margin: 0 0 10px 10px;
+
+    @media (max-width: 975px) {
+        display: block;
+        position: relative;
+        left: -5px;
+    };
 `;
 
 const Input = styled.input`
@@ -243,4 +258,9 @@ const LocationErrorMessage = styled.p`
     margin: 15px 0;
     color: red;
     font-size: 1rem;
+`;
+
+const SubmitAndCancelBtnSection = styled.div`
+    display: inline-block;
+    margin-top: 5px;
 `;
