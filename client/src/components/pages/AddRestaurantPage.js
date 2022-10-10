@@ -30,6 +30,7 @@ const AddRestaurantPage = () => {
     const [errorStatus, setErrorStatus] = useState(false);
     const [imageTypeError, setImageTypeError] = useState(false);
     const [newRestaurantId, setNewRestaurantId] = useState("");
+    const [imageUploadError, setImageUploadError] = useState(false);
 
     const { user } = useAuth0();
     const location = useLocation();
@@ -101,7 +102,7 @@ const AddRestaurantPage = () => {
     };
     
     //handles adding restaurant to mongodb
-    const handleSubmit = (ev) => {
+    const handleSubmit = () => {
         setUploadStatus(true);
         setErrorStatus(false);
         
@@ -109,16 +110,26 @@ const AddRestaurantPage = () => {
             const cloudinaryUploadPromises = imagesToUpload.map((image) => {
                 return handleCloudinaryUpload(image);
             });
+
             Promise.all(cloudinaryUploadPromises)
             .then(result => {
                 if(Array.isArray(result)) {
+                    let imagesArr = result;
+
+                    if(result.includes(undefined)) {
+                        setImageUploadError(true);
+                        imagesArr = result.filter((newImage) => {
+                            return newImage !== undefined;
+                        })
+                    }
+
                     fetch(`/add-restaurant/${user.email}`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                             "Accept": "application/json"
                         },
-                        body: JSON.stringify( { ...newRestaurantInfo, imageUrl: result } )
+                        body: JSON.stringify( { ...newRestaurantInfo, imageUrl: imagesArr } )
                     })
                     .then(res => res.json())
                     .then(data => {
@@ -130,8 +141,6 @@ const AddRestaurantPage = () => {
                             setSubmitStatus(true);
                         }
                         else {
-                            setUploadStatus(false);
-                            setErrorStatus(true);
                             return Promise.reject(data);
                         }
                     })
@@ -142,7 +151,6 @@ const AddRestaurantPage = () => {
                     })
                 }
                 else {
-                    setErrorStatus(true);
                     return Promise.reject(result);
                 }
             })
@@ -171,7 +179,6 @@ const AddRestaurantPage = () => {
                     setSubmitStatus(true);
                 }
                 else {
-                    setErrorStatus(true);
                     return Promise.reject(data);
                 }
             })
@@ -477,6 +484,12 @@ const AddRestaurantPage = () => {
                 <SuccessMessage>
                     Restaurant Added!
                 </SuccessMessage>
+                {imageUploadError 
+                ? <UploadImageErrorMessage>
+                    An error occurred. Some images were not uploaded properly.
+                </UploadImageErrorMessage>
+                : null
+                }
                 <GoToNewRestaurantBtn
                     onClick={ () => {
                         navigate(`/home/restaurant/${ newRestaurantId }`, { state: { path } })
@@ -487,6 +500,8 @@ const AddRestaurantPage = () => {
                 <AddAnotherRestaurantBtn 
                     onClick={() => { 
                         navigate("/home/addRestaurant", { state: null });
+                        setImageUploadError(false);
+                        setErrorStatus(false);
                         setUploadStatus(false);
                         setSubmitStatus(false);
                     }}
@@ -783,4 +798,7 @@ const ImageTypeErrorMessage = styled(ErrorMessage)`
 const GoToNewRestaurantBtn = styled(AddAnotherRestaurantBtn)`
     display: block;
     margin-bottom: 10px;
+`;
+
+const UploadImageErrorMessage = styled(ErrorMessage)`
 `;

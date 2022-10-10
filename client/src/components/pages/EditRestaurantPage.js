@@ -116,86 +116,91 @@ const EditRestaurantPage = () => {
     }
 
     //handles update of restaurant in mongodb
-    //resolves delete promises and upload promises for changes in cloudinary
-    //then updates restaurant in mongodb
+    //resolves cloudinary upload promises then updates restaurant in mongodb
+    //if mongodb update is successful resolves cloudinary delete promises
     const handleSubmit = (ev) => {
         ev.preventDefault();
         setUploadStatus(true);
         setErrorStatus(false);
 
         if(changeInImageUrl) {
-            const cloudinaryDeletePromises = imageDeletedArr.map((image) => {
-                return handleDeleteImageFromCloudinary(image);
+            const cloudinaryUploadPromises = imageAddedArr.map((imageAdded) => {
+                return handleUploadImageToCloudinary(imageAdded);
             });
 
-            Promise.all(cloudinaryDeletePromises)
-            .then(deleteResult => {
-                if(Array.isArray(deleteResult)) {
-                    const cloudinaryUploadPromises = imageAddedArr.map((imageAdded) => {
-                        return handleUploadImageToCloudinary(imageAdded);
+            Promise.all(cloudinaryUploadPromises)
+            .then(uploadResults => {
+                if(Array.isArray(uploadResults)) {
+                    const oldImagesArr = newImageUrlArr.filter((image) => {
+                        return image.public_id !== undefined
                     });
-                    Promise.all(cloudinaryUploadPromises)
-                    .then(uploadResults => {
-                        if(Array.isArray(uploadResults)) {
-                            const oldImagesArr = newImageUrlArr.filter((image) => {
-                                return image.public_id !== undefined
+
+                    let newImagesArr = [...uploadResults];
+
+                    if(uploadResults.includes(undefined)){
+                        setImageUploadError(true);
+                        newImagesArr = uploadResults.filter((newImage) => {
+                            return newImage !== undefined;
+                        })
+                    }
+
+                    fetch(`/update-restaurant/${ user.email }`, {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json"
+                        },
+                        body: JSON.stringify({
+                            ...updatedValues, 
+                            _id: data._id,
+                            imageUrl: [...oldImagesArr, ...newImagesArr]
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if(data.status === 200) {
+                            const cloudinaryDeletePromises = imageDeletedArr.map((image) => {
+                                return handleDeleteImageFromCloudinary(image);
                             });
+                
+                            Promise.all(cloudinaryDeletePromises)
+                            .then(deleteResult => {
+                                setUpdatedValues(INITIAL_STATE);
+                                setChangeInImageUrl(false);
+                                setImage(null);
+                                setErrorStatus(false);
+                                setSubmitStatus(true);
 
-                            let newImagesArr = [...uploadResults];
-
-                            if(uploadResults.includes(undefined)){
-                                newImagesArr = uploadResults.filter((newImage) => {
-                                    return newImage !== undefined;
-                                })
-                            }
-
-                            fetch(`/update-restaurant/${ user.email }`, {
-                                method: "PATCH",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    "Accept": "application/json"
-                                },
-                                body: JSON.stringify({
-                                    ...updatedValues, 
-                                    _id: data._id,
-                                    imageUrl: [...oldImagesArr, ...newImagesArr]
-                                })
-                            })
-                            .then(res => res.json())
-                            .then(data => {
-                                if(data.status === 200) {
-                                    setUpdatedValues(INITIAL_STATE);
-                                    setChangeInImageUrl(false);
-                                    setImage(null);
-                                    setErrorStatus(false);
-                                    setSubmitStatus(true);
-                                }
-                                else {
-                                    setUploadStatus(false);
-                                    setErrorStatus(true);
-                                    return Promise.reject(data);
+                                if(!Array.isArray(deleteResult)) {
+                                    return Promise.reject(deleteResult);
                                 }
                             })
-                            .catch((err) => console.log(err))
+                            .catch((err) => {
+                                setImageUploadError(true);
+                                console.log(err);
+                            })
                         }
                         else {
-                            setErrorStatus(true);
-                            return Promise.reject(uploadResults);
+                            return Promise.reject(data);
                         }
                     })
-                    .catch((err) => console.log(err))
+                    .catch((err) => {
+                        setErrorStatus(true);
+                        setUploadStatus(false);
+                        console.log(err);
+                    })
                 }
                 else {
-                    setErrorStatus(true);
-                    return Promise.reject(deleteResult);
+                    return Promise.reject(uploadResults);
                 }
             })
             .catch((err) => {
                 setErrorStatus(true);
                 setUploadStatus(false);
-                console.log(err)
+                console.log(err);
             })
         }
+
         else {
             fetch(`/update-restaurant/${user.email}`, {
                 method: "PATCH",
@@ -218,8 +223,6 @@ const EditRestaurantPage = () => {
                     setSubmitStatus(true);
                 }
                 else {
-                    setErrorStatus(true);
-                    setUploadStatus(false);
                     return Promise.reject(data);
                 }
             })
@@ -250,10 +253,13 @@ const EditRestaurantPage = () => {
                                     ? updatedValues.restaurantName 
                                     : data.restaurantName
                                 }
-                                onChange={(e) => setUpdatedValues({
-                                    ...updatedValues, 
-                                    restaurantName: e.target.value
-                                })}
+                                onChange={(e) => {
+                                    setErrorStatus(false);
+                                    setUpdatedValues({
+                                        ...updatedValues, 
+                                        restaurantName: e.target.value
+                                    })
+                                }}
                             />
                         </label>
                         <label>
@@ -264,10 +270,13 @@ const EditRestaurantPage = () => {
                                     ? updatedValues.restaurantAddress 
                                     : data.restaurantAddress
                                 }
-                                onChange={(e) => setUpdatedValues({
-                                    ...updatedValues, 
-                                    restaurantAddress: e.target.value
-                                })}
+                                onChange={(e) => {
+                                    setErrorStatus(false);
+                                    setUpdatedValues({
+                                        ...updatedValues, 
+                                        restaurantAddress: e.target.value
+                                    })
+                                }}
                             />
                         </label>
                         <label>
@@ -278,10 +287,13 @@ const EditRestaurantPage = () => {
                                     ? updatedValues.restaurantPhoneNumber 
                                     : data.restaurantPhoneNumber
                                 }
-                                onChange={(e) => setUpdatedValues({
+                                onChange={(e) => {
+                                    setErrorStatus(false);
+                                    setUpdatedValues({
                                     ...updatedValues,
-                                    restaurantPhoneNumber: e.target.value
-                                })}
+                                        restaurantPhoneNumber: e.target.value
+                                    })
+                                }}
                             />
                         </label>
                         <label>
@@ -292,10 +304,13 @@ const EditRestaurantPage = () => {
                                     ? updatedValues.restaurantWebsite 
                                     : data.restaurantWebsite
                                 }
-                                onChange={(e) => setUpdatedValues({
-                                    ...updatedValues,
-                                    restaurantWebsite: e.target.value
-                                })}
+                                onChange={(e) => {
+                                    setErrorStatus(false);
+                                    setUpdatedValues({
+                                        ...updatedValues,
+                                        restaurantWebsite: e.target.value
+                                    })
+                                }}
                             />
                         </label>
                         <label>
@@ -306,11 +321,14 @@ const EditRestaurantPage = () => {
                                     ? updatedValues.restaurantCuisine 
                                     : data.restaurantCuisine
                                 }
-                                onChange={(e) => setUpdatedValues({
-                                    ...updatedValues,
-                                    restaurantCuisine: (e.target.value).trim().charAt(0).toLocaleUpperCase() 
-                                    + (e.target.value).toLocaleLowerCase().slice(1)
-                                })}
+                                onChange={(e) => {
+                                    setErrorStatus(false);
+                                    setUpdatedValues({
+                                        ...updatedValues,
+                                        restaurantCuisine: (e.target.value).trim().charAt(0).toLocaleUpperCase() 
+                                        + (e.target.value).toLocaleLowerCase().slice(1)
+                                    })
+                                }}
                             />
                         </label>
                     </InputSection>
@@ -332,12 +350,15 @@ const EditRestaurantPage = () => {
                                             ? true 
                                             : false
                                         }
-                                        onChange={(e) => setUpdatedValues({
-                                            ...updatedValues, 
-                                            restaurantVisitStatus: true,
-                                            restaurantCategory: "liked",
-                                            restaurantFavorite: true
-                                        })}
+                                        onChange={(e) => {
+                                            setErrorStatus(false);
+                                            setUpdatedValues({
+                                                ...updatedValues, 
+                                                restaurantVisitStatus: true,
+                                                restaurantCategory: "liked",
+                                                restaurantFavorite: true
+                                            })
+                                        }}
                                     />
                                     yes
                                 </label>
@@ -355,12 +376,15 @@ const EditRestaurantPage = () => {
                                             ? true 
                                             : false
                                         }
-                                        onChange={(e) => setUpdatedValues({
-                                            ...updatedValues, 
-                                            restaurantVisitStatus: false,
-                                            restaurantCategory: "",
-                                            restaurantFavorite: false
-                                        })}
+                                        onChange={(e) => {
+                                            setErrorStatus(false);
+                                            setUpdatedValues({
+                                                ...updatedValues, 
+                                                restaurantVisitStatus: false,
+                                                restaurantCategory: "",
+                                                restaurantFavorite: false
+                                            })
+                                        }}
                                     />
                                     no
                                 </label>
@@ -387,10 +411,13 @@ const EditRestaurantPage = () => {
                                             ? true
                                             : false
                                         }
-                                        onChange={(e) => setUpdatedValues({
-                                            ...updatedValues,
-                                            restaurantCategory: e.target.value
-                                        })}
+                                        onChange={(e) => {
+                                            setErrorStatus(false);
+                                            setUpdatedValues({
+                                                ...updatedValues,
+                                                restaurantCategory: e.target.value
+                                            })
+                                        }}
                                     />
                                     Liked
                                 </label>
@@ -412,11 +439,14 @@ const EditRestaurantPage = () => {
                                             ? true
                                             : false
                                         }
-                                        onChange={(e) => setUpdatedValues({
-                                            ...updatedValues, 
-                                            restaurantCategory: e.target.value,
-                                            restaurantFavorite: false
-                                        })}
+                                        onChange={(e) => {
+                                            setErrorStatus(false);
+                                            setUpdatedValues({
+                                                ...updatedValues, 
+                                                restaurantCategory: e.target.value,
+                                                restaurantFavorite: false
+                                            })
+                                        }}
                                     />
                                     Disliked
                                 </label>
@@ -445,10 +475,13 @@ const EditRestaurantPage = () => {
                                             ? true
                                             : false
                                         }
-                                        onChange={(e) => setUpdatedValues({
-                                            ...updatedValues, 
-                                            restaurantFavorite: true
-                                        })}
+                                        onChange={(e) => {
+                                            setErrorStatus(false);
+                                            setUpdatedValues({
+                                                ...updatedValues, 
+                                                restaurantFavorite: true
+                                            })
+                                        }}
                                     />
                                     yes
                                 </label>
@@ -472,10 +505,13 @@ const EditRestaurantPage = () => {
                                             ? true
                                             : false
                                         }
-                                        onChange={(e) => setUpdatedValues({
-                                            ...updatedValues,
-                                            restaurantFavorite: false
-                                        })}
+                                        onChange={(e) => {
+                                            setErrorStatus(false);
+                                            setUpdatedValues({
+                                                ...updatedValues,
+                                                restaurantFavorite: false
+                                            })
+                                        }}
                                     />
                                     no
                                 </label>
@@ -491,10 +527,13 @@ const EditRestaurantPage = () => {
                                     ? updatedValues.restaurantComment 
                                     : data.restaurantComment
                                 }
-                                onChange={(e) => setUpdatedValues({
-                                    ...updatedValues,
-                                    restaurantComment: e.target.value
-                                })}
+                                onChange={(e) => {
+                                    setErrorStatus(false);
+                                    setUpdatedValues({
+                                        ...updatedValues,
+                                        restaurantComment: e.target.value
+                                    })
+                                }}
                             />
                         </label>
                     </div>
@@ -512,6 +551,7 @@ const EditRestaurantPage = () => {
                                         type="file" 
                                         accept="image/png, image/jpeg"
                                         onChange={(e) => {
+                                            setErrorStatus(false);
                                             setImageTypeError(false);
                                             setImage(e.target.files[0])
                                         }}
@@ -590,7 +630,7 @@ const EditRestaurantPage = () => {
                 <SuccessMessage>Restaurant Info Updated</SuccessMessage>
                 {imageUploadError 
                 ? <UploadImageErrorMessage>
-                    An error occurred. Some images were not uploaded properly.
+                    An error occurred. Some images were not uploaded or deleted properly.
                 </UploadImageErrorMessage>
                 : null
                 }
