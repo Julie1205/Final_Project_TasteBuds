@@ -135,13 +135,22 @@ const AddRestaurantPage = () => {
                             return Promise.reject(data);
                         }
                     })
+                    .catch((err) => {
+                        setErrorStatus(true);
+                        setUploadStatus(false);
+                        console.log(err);
+                    })
                 }
                 else {
                     setErrorStatus(true);
                     return Promise.reject(result);
                 }
             })
-            .catch((err) => console.log(err))
+            .catch((err) => {
+                setErrorStatus(true);
+                setUploadStatus(false);
+                console.log(err);
+            })
         }
         else {
             fetch(`/add-restaurant/${ user.email }`, {
@@ -169,7 +178,7 @@ const AddRestaurantPage = () => {
             .catch((err) => {
                 setUploadStatus(false);
                 setErrorStatus(true);
-                console.log(err)
+                console.log(err);
             })
         }
     };
@@ -187,10 +196,13 @@ const AddRestaurantPage = () => {
                                 required
                                 placeholder="Example: O noir"
                                 value={ newRestaurantInfo.restaurantName }
-                                onChange={(e) => setNewRestaurantInfo({
-                                    ...newRestaurantInfo, 
-                                    restaurantName: e.target.value
-                                })}
+                                onChange={(e) => {
+                                    setErrorStatus(false);
+                                    setNewRestaurantInfo({
+                                        ...newRestaurantInfo, 
+                                        restaurantName: e.target.value
+                                    })
+                                }}
                             />
                         </label>
                         <label>
@@ -198,10 +210,13 @@ const AddRestaurantPage = () => {
                             <AddressInput
                                 placeholder="Example: 124 Rue Prince Arthur East, Montreal QC H2X 1B5"
                                 value={ newRestaurantInfo.restaurantAddress }
-                                onChange={(e) => setNewRestaurantInfo({
-                                    ...newRestaurantInfo, 
-                                    restaurantAddress: e.target.value
-                                })}
+                                onChange={(e) => {
+                                    setErrorStatus(false);
+                                    setNewRestaurantInfo({
+                                        ...newRestaurantInfo, 
+                                        restaurantAddress: e.target.value
+                                    })
+                                }}
                             />
                         </label>
                         <label>
@@ -209,10 +224,13 @@ const AddRestaurantPage = () => {
                             <PhoneNumberInput 
                                 placeholder="Example: +1-514-937-9727"
                                 value={ newRestaurantInfo.restaurantPhoneNumber }
-                                onChange={(e) => setNewRestaurantInfo({
+                                onChange={(e) => {
+                                    setErrorStatus(false);
+                                    setNewRestaurantInfo({
                                     ...newRestaurantInfo,
                                     restaurantPhoneNumber: e.target.value
-                                })}
+                                    })
+                                }}
                             />
                         </label>
                         <label>
@@ -220,10 +238,13 @@ const AddRestaurantPage = () => {
                             <WebsiteInput 
                                 placeholder="Example: www.onoir.com"
                                 value={ newRestaurantInfo.restaurantWebsite }
-                                onChange={(e) => setNewRestaurantInfo({
-                                    ...newRestaurantInfo,
-                                    restaurantWebsite: e.target.value
-                                })}
+                                onChange={(e) => {
+                                    setErrorStatus(false);
+                                    setNewRestaurantInfo({
+                                        ...newRestaurantInfo,
+                                        restaurantWebsite: e.target.value
+                                    })
+                                }}
                             />
                         </label>
                         <label>
@@ -231,11 +252,14 @@ const AddRestaurantPage = () => {
                             <CuisineInput 
                                 placeholder="Example: French Cuisine"
                                 value={ newRestaurantInfo.restaurantCuisine }
-                                onChange={ (e) => setNewRestaurantInfo({
-                                    ...newRestaurantInfo,
-                                    restaurantCuisine: ((e.target.value).trim().charAt(0).toLocaleUpperCase() 
-                                    + (e.target.value).toLocaleLowerCase().slice(1))
-                                }) }
+                                onChange={ (e) => {
+                                    setErrorStatus(false);
+                                    setNewRestaurantInfo({
+                                        ...newRestaurantInfo,
+                                        restaurantCuisine: ((e.target.value).trim().charAt(0).toLocaleUpperCase() 
+                                        + (e.target.value).toLocaleLowerCase().slice(1))
+                                    })
+                                }}
                             />
                         </label>
                     </InputSection>
@@ -249,10 +273,13 @@ const AddRestaurantPage = () => {
                                         name="visitState"
                                         value={ true }
                                         checked={newRestaurantInfo.restaurantVisitStatus === true}
-                                        onChange={ (e) => setNewRestaurantInfo({
-                                            ...newRestaurantInfo, 
-                                            restaurantVisitStatus: true
-                                        }) }
+                                        onChange={ (e) => {
+                                            setErrorStatus(false);
+                                            setNewRestaurantInfo({
+                                                ...newRestaurantInfo, 
+                                                restaurantVisitStatus: true
+                                            })
+                                        }}
                                     />
                                     yes
                                 </label>
@@ -262,12 +289,15 @@ const AddRestaurantPage = () => {
                                         name="visitState"
                                         value={ false }
                                         checked={ newRestaurantInfo.restaurantVisitStatus === false }
-                                        onChange={ (e) => setNewRestaurantInfo({
-                                            ...newRestaurantInfo, 
-                                            restaurantVisitStatus: false,
-                                            restaurantCategory: INITIAL_STATE.restaurantCategory,
-                                            restaurantFavorite: INITIAL_STATE.restaurantFavorite
-                                        }) }
+                                        onChange={ (e) => {
+                                            setErrorStatus(false);
+                                            setNewRestaurantInfo({
+                                                ...newRestaurantInfo, 
+                                                restaurantVisitStatus: false,
+                                                restaurantCategory: INITIAL_STATE.restaurantCategory,
+                                                restaurantFavorite: INITIAL_STATE.restaurantFavorite
+                                            }) 
+                                        }}
                                     />
                                     no
                                 </label>
@@ -283,10 +313,13 @@ const AddRestaurantPage = () => {
                                         name="category"
                                         value="liked"
                                         checked={ newRestaurantInfo.restaurantCategory === "liked" }
-                                        onChange={ (e) => setNewRestaurantInfo({
-                                            ...newRestaurantInfo,
-                                            restaurantCategory: e.target.value
-                                        }) }
+                                        onChange={ (e) => {
+                                            setErrorStatus(false);
+                                            setNewRestaurantInfo({
+                                                ...newRestaurantInfo,
+                                                restaurantCategory: e.target.value
+                                            }) 
+                                        }}
                                     />
                                     Liked
                                 </label>
@@ -296,11 +329,14 @@ const AddRestaurantPage = () => {
                                         name="category"
                                         value="disliked"
                                         checked={ newRestaurantInfo.restaurantCategory === "disliked" }
-                                        onChange={ (e) => setNewRestaurantInfo({
-                                            ...newRestaurantInfo, 
-                                            restaurantCategory: e.target.value,
-                                            restaurantFavorite: INITIAL_STATE.restaurantFavorite
-                                        }) }
+                                        onChange={ (e) => {
+                                            setErrorStatus(false);
+                                            setNewRestaurantInfo({
+                                                ...newRestaurantInfo, 
+                                                restaurantCategory: e.target.value,
+                                                restaurantFavorite: INITIAL_STATE.restaurantFavorite
+                                            }) 
+                                        }}
                                     />
                                     Disliked
                                 </label>
@@ -317,10 +353,13 @@ const AddRestaurantPage = () => {
                                         name="favoriteStatus"
                                         value={true}
                                         checked={ newRestaurantInfo.restaurantFavorite === true }
-                                        onChange={ (e) => setNewRestaurantInfo({
-                                            ...newRestaurantInfo, 
-                                            restaurantFavorite: true
-                                        }) }
+                                        onChange={ (e) => {
+                                            setErrorStatus(false);
+                                            setNewRestaurantInfo({
+                                                ...newRestaurantInfo, 
+                                                restaurantFavorite: true
+                                            }) 
+                                        }}
                                     />
                                     yes
                                 </label>
@@ -330,10 +369,13 @@ const AddRestaurantPage = () => {
                                         name="favoriteStatus"
                                         value={ false }
                                         checked={ newRestaurantInfo.restaurantFavorite === false }
-                                        onChange={ (e) => setNewRestaurantInfo({
-                                            ...newRestaurantInfo,
-                                            restaurantFavorite: false
-                                        }) }
+                                        onChange={ (e) => {
+                                            setErrorStatus(false);
+                                            setNewRestaurantInfo({
+                                                ...newRestaurantInfo,
+                                                restaurantFavorite: false
+                                            }) 
+                                        }}
                                     />
                                     no
                                 </label>
@@ -347,10 +389,13 @@ const AddRestaurantPage = () => {
                             Comments about the restaurant
                             <CommentInput
                                 value={ newRestaurantInfo.restaurantComment }
-                                onChange={ (e) => setNewRestaurantInfo({
-                                    ...newRestaurantInfo,
-                                    restaurantComment: e.target.value
-                                }) }
+                                onChange={ (e) => {
+                                    setErrorStatus(false);
+                                    setNewRestaurantInfo({
+                                        ...newRestaurantInfo,
+                                        restaurantComment: e.target.value
+                                    }) 
+                                }}
                             />
                         </label>
                     </div>
@@ -374,6 +419,7 @@ const AddRestaurantPage = () => {
                                         type="file" 
                                         accept="image/png, image/jpeg"
                                         onChange={ (e) => {
+                                            setErrorStatus(false);
                                             setImageTypeError(false);
                                             setImage(e.target.files[0])
                                         } }

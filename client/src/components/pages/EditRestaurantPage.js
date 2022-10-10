@@ -68,6 +68,7 @@ const EditRestaurantPage = () => {
             URL.revokeObjectURL(imageIdentifier);
         } 
     };
+
     //create upload image to Cloudinary promises 
     const handleUploadImageToCloudinary = (imageFile) => {
         const formData = new FormData();
@@ -148,7 +149,7 @@ const EditRestaurantPage = () => {
                                 })
                             }
 
-                            fetch(`/update-restaurant/${user.email}`, {
+                            fetch(`/update-restaurant/${ user.email }`, {
                                 method: "PATCH",
                                 headers: {
                                     "Content-Type": "application/json",
@@ -189,7 +190,11 @@ const EditRestaurantPage = () => {
                     return Promise.reject(deleteResult);
                 }
             })
-            .catch((err) => console.log(err))
+            .catch((err) => {
+                setErrorStatus(true);
+                setUploadStatus(false);
+                console.log(err)
+            })
         }
         else {
             fetch(`/update-restaurant/${user.email}`, {
@@ -214,10 +219,15 @@ const EditRestaurantPage = () => {
                 }
                 else {
                     setErrorStatus(true);
+                    setUploadStatus(false);
                     return Promise.reject(data);
                 }
             })
-            .catch((err) => console.log(err))
+            .catch((err) => {
+                setErrorStatus(true);
+                setUploadStatus(false);
+                console.log(err)
+            })
         }
     };
 
