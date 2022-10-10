@@ -9,12 +9,16 @@ import SearchBar from "./SearchBar";
 import Map from "../../Map_Components/Map";
 
 //default map is centered on coordinates of Montreal
-const GEOCOORDINATES = [45.501690, -73.567253];
+const INITIAL_STATE_GEOCOORDINATES = [45.501690, -73.567253];
 
 const RestaurantsByCategoryPage = () => {
     const [restaurantInfo, setRestaurantInfo] = useState(null);
     const [errorStatus, setErrorStatus] = useState(false);
     const [mapStatus, setMapStatus] = useState(false);
+    const [locationInputStatus, setLocationInputStatus] = useState(false);
+    const [location, setLocation] = useState("");
+    const [flyToGeolocation, setFlyToGeolocation] = useState(INITIAL_STATE_GEOCOORDINATES);
+    const [locationError, setLocationError] = useState(false);
     const { user } = useAuth0();
     const { category } = useParams();
 
@@ -22,6 +26,10 @@ const RestaurantsByCategoryPage = () => {
         setErrorStatus(false);
         setRestaurantInfo(null);
         setMapStatus(false);
+        setLocationError(false);
+        setLocationInputStatus(false);
+        setLocation("");
+        setFlyToGeolocation(INITIAL_STATE_GEOCOORDINATES)
         
         if(user) {
             fetch(`/get-user-restaurants/${ user.email }/${ category }`)
@@ -40,7 +48,26 @@ const RestaurantsByCategoryPage = () => {
                 console.log(err)
             })
         }
-    }, [category])
+    }, [category]);
+
+    const handleSubmit = () => {
+        fetch(`/get-location/${location.toLowerCase().trim()}`)
+        .then(res => res.json())
+        .then(result => {
+            if(result.status === 200) {
+                setLocationInputStatus(false);
+                setFlyToGeolocation([result.data.lat, result.data.lng]);
+            }
+            else {
+                setLocationError(true);
+                return Promise.reject(result);
+            }
+        })
+        .catch(err => {
+            setLocationError(true);
+            console.log(err)
+        })
+    };
 
     return (
         <Wapper>
@@ -53,18 +80,71 @@ const RestaurantsByCategoryPage = () => {
                     {mapStatus 
                     ? <>
                         <ListViewBtn 
-                        onClick={ () => setMapStatus(false) }
+                        onClick={ () => {
+                            setLocationInputStatus(false);
+                            setLocationError(false);
+                            setMapStatus(false);
+                            setFlyToGeolocation(INITIAL_STATE_GEOCOORDINATES)
+                        } }
                         >
                             View List
                         </ListViewBtn>
+                        {!locationInputStatus 
+                        ? <>
+                            <ChangeLocationBtn 
+                                onClick={ () => setLocationInputStatus(true) }
+                            >
+                                Change location
+                            </ChangeLocationBtn>
+                            <ResetLocationBtn
+                                onClick={ () => setFlyToGeolocation(INITIAL_STATE_GEOCOORDINATES)}
+                            >
+                                Reset Location
+                            </ResetLocationBtn>
+                        </>
+                        : <LocationInputSection>
+                            <Input 
+                                placeholder="city and country"
+                                onChange={ (e) => {
+                                    setLocationError(false);
+                                    setLocation(e.target.value);
+                                } }
+                            />
+                            <SubmitBtn 
+                                onClick={ handleSubmit }
+                            >
+                                Submit
+                            </SubmitBtn>
+                            <CancelBtn
+                                onClick={ () => {
+                                    setLocationError(false);
+                                    setLocationInputStatus(false);
+                                    setLocation("");
+                                }}
+                            >
+                                Cancel
+                            </CancelBtn>
+                        </LocationInputSection>
+                        }
+                        { locationError 
+                        ? <LocationErrorMessage>
+                            Cannot find address
+                        </LocationErrorMessage>
+                        : null
+                        }
                         <MapMessage>
                             Only Restaurants saved using searches will appear on map.
                         </MapMessage>
-                        <Map restaurants={restaurantInfo} geoCoordinates={GEOCOORDINATES} search={false}/>
+                        <Map 
+                            restaurants={ restaurantInfo } 
+                            geoCoordinates={ INITIAL_STATE_GEOCOORDINATES } 
+                            search={ false }
+                            flyToGeoCoordinations={ flyToGeolocation }
+                        />
                     </>
                     : <>
                         <MapViewBtn 
-                        onClick={ () => setMapStatus(true) }
+                            onClick={ () => setMapStatus(true) }
                         >
                             View Map
                         </MapViewBtn>
@@ -131,4 +211,36 @@ const ListViewBtn = styled(MapViewBtn)`
 const MapMessage = styled.p`
     font-size: 1rem;
     margin-bottom: 5px;
+`;
+
+const ChangeLocationBtn = styled(MapViewBtn)`
+`;
+
+const LocationInputSection = styled.div`
+    display: inline-block;
+    margin: 0 0 10px 10px;
+`;
+
+const Input = styled.input`
+    font-family: var(--body-font);
+    font-size: 1rem;
+    border: 1px solid #d9d9d9;
+    border-radius: 5px;
+    padding: 5px;
+`;
+
+const SubmitBtn = styled(MapViewBtn)`
+    margin-left: 5px;
+`;
+
+const ResetLocationBtn = styled(MapViewBtn)`
+`;
+
+const CancelBtn = styled(MapViewBtn)`
+`;
+
+const LocationErrorMessage = styled.p`
+    margin: 15px 0;
+    color: red;
+    font-size: 1rem;
 `;

@@ -87,6 +87,38 @@ const findRestaurant = (req, res) => {
     else {
         res.status(400).json( { status: 400, data: { restaurantName, city }, message: "Missing restaurant name or city." } );
     }
-}
+};
 
-module.exports = { getRestaurantsNearMe, findRestaurant }
+const getLocation = (req, res) => {
+    const { address } = req.params;
+
+    const geoUrl = encodeURI(`https://trueway-geocoding.p.rapidapi.com/Geocode?address=${ address }&language=en`);
+    const geoOptions = {
+    method: 'GET',
+    headers: {
+        'X-RapidAPI-Key': `${ TRUEWAY_KEY }`,
+        'X-RapidAPI-Host': 'trueway-geocoding.p.rapidapi.com'
+    }
+    };
+
+    if(address !== "" && typeof(address) === "string") {
+        fetch(geoUrl, geoOptions)
+        .then(res => res.json())
+        .then(geoData => {
+            if(geoData.results.length === 0) {
+                return Promise.reject( { status: 404, message: "Address not found" } );
+            }
+            else {
+                return res.status(200).json( { status: 200, data: geoData.results[0].location } );
+            }
+        })
+        .catch(err => {
+            res.status(err.status).json( { status: err.status, data: address, message: err.message } )
+        });
+    }
+    else {
+        res.status(400).json( { status: 400, data: address, message: "Address not valid." } )
+    }
+};
+
+module.exports = { getRestaurantsNearMe, findRestaurant, getLocation }

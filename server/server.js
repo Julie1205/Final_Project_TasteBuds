@@ -8,7 +8,8 @@ const {
 
 const { 
     getRestaurantsNearMe, 
-    findRestaurant 
+    findRestaurant,
+    getLocation
 } = require("./handlers/api_handlers");
 
 const { 
@@ -40,10 +41,13 @@ app.patch("/update-restaurant/:email", updateRestaurant);
 app.delete("/delete-restaurant/:email", deleteRestaurant);
 
 //user profile endpoints
-app.get("/get-user/:email", getUser)
+app.get("/get-user/:email", getUser);
 
 //cloudinary images endpoints
-app.delete("/delete-image", deleteImage)
+app.delete("/delete-image", deleteImage);
+
+//get geolocation endpoints
+app.get("/get-location/:address", getLocation);
 
 //catch all other endpoints
 app.get("*", (req, res) => {

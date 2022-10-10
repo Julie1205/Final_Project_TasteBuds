@@ -1,11 +1,22 @@
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { useEffect, useRef } from 'react';
+
 import SearchPopUp from "./SearchPopUp";
 import InfoPopUp from "./InfoPopUp";
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 
-const Map = ( { restaurants, geoCoordinates, search } ) => {
+const Map = ( { restaurants, geoCoordinates, search, flyToGeoCoordinations } ) => {
+    const ref = useRef(null);
+
+    useEffect(() => {
+        if(flyToGeoCoordinations && ref.current) {
+            const map = ref.current;
+            map.setView(flyToGeoCoordinations, 10);
+        }
+    }, [flyToGeoCoordinations])
 
     return (
         <MapContainer 
+                ref={ref}
                 style={ { height: "500px", width: "100%" } }
                 center={ 
                     [Number(geoCoordinates[0]), Number(geoCoordinates[1])] } 
