@@ -246,7 +246,7 @@ const AddRestaurantPage = () => {
                                 <label>
                                     <input 
                                         type="radio"
-                                        name="visitSate"
+                                        name="visitState"
                                         value={ true }
                                         checked={newRestaurantInfo.restaurantVisitStatus === true}
                                         onChange={ (e) => setNewRestaurantInfo({
@@ -259,7 +259,7 @@ const AddRestaurantPage = () => {
                                 <label>
                                     <input 
                                         type="radio"
-                                        name="visitSate"
+                                        name="visitState"
                                         value={ false }
                                         checked={ newRestaurantInfo.restaurantVisitStatus === false }
                                         onChange={ (e) => setNewRestaurantInfo({

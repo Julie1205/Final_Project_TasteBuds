@@ -311,7 +311,7 @@ const EditRestaurantPage = () => {
                                 <label>
                                     <input 
                                         type="radio"
-                                        name="visitSate"
+                                        name="visitState"
                                         value={true}
                                         checked={
                                             updatedValues.restaurantVisitStatus === true 
@@ -334,7 +334,7 @@ const EditRestaurantPage = () => {
                                 <label>
                                     <input 
                                         type="radio"
-                                        name="visitSate"
+                                        name="visitState"
                                         value={false}
                                         checked={
                                             updatedValues.restaurantVisitStatus === false 
