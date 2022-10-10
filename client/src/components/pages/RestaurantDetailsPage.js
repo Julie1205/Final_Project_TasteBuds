@@ -414,12 +414,12 @@ const CommentHeader = styled.p`
 const CommentSection = styled.div`
     line-height: 1.3;
     white-space: pre-line;
-    margin-bottom: 20px;
     padding: 5px;
     font-weight: bold;
 `;
 
 const PicturesSection = styled.div`
+    margin-top: 15px;
     display: grid;
     grid-template-columns: 100px calc(100% - 100px);
 

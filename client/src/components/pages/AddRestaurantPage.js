@@ -350,7 +350,8 @@ const AddRestaurantPage = () => {
                             </LikeOrDislikeAnswer>
                         </LikeOrDislikeQUestion>
                         : null}
-                        { newRestaurantInfo.restaurantVisitStatus && newRestaurantInfo.restaurantCategory === "liked"
+                        { newRestaurantInfo.restaurantVisitStatus 
+                            && newRestaurantInfo.restaurantCategory === "liked"
                         ? <FavoriteQuestion>
                             <p>Would you like to add restaurant to favorites?</p>
                             <FavoriteAnswer>

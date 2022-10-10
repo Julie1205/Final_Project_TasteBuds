@@ -523,7 +523,7 @@ const EditRestaurantPage = () => {
                             Comments about the restaurant:
                             <CommentInput
                                 value={
-                                    updatedValues.restaurantComment 
+                                    updatedValues.restaurantComment !== undefined
                                     ? updatedValues.restaurantComment 
                                     : data.restaurantComment
                                 }
@@ -539,9 +539,13 @@ const EditRestaurantPage = () => {
                     </div>
                     <div>
                         <p>Add pictures?</p>
-                        <PictureInstruction>{`(You can add up to 3 images of format JPEG, JPG or PNG)`}</PictureInstruction>
+                        <PictureInstruction>
+                            {`(You can add up to 3 images of format JPEG, JPG or PNG)`}
+                        </PictureInstruction>
                         {imageTypeError 
-                        ? <ImageTypeErrorMessage>Only images of type JPEG, JPG or PNG are allowed.</ImageTypeErrorMessage> 
+                        ? <ImageTypeErrorMessage>
+                            Only images of type JPEG, JPG or PNG are allowed.
+                        </ImageTypeErrorMessage> 
                         : null}
                         <PictureSection>
                             {newImageUrlArr.length < 3 ?
