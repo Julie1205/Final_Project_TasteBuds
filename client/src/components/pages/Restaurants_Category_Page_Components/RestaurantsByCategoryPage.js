@@ -154,11 +154,11 @@ const RestaurantsByCategoryPage = () => {
                         >
                             View Map
                         </MapViewBtn>
-                        <>
+                        <RestaurantTilesSection>
                             { restaurantInfo.map((restaurant) => {
                                 return <RestaurantTile key={`tile${ restaurant._id }`} restaurant={ restaurant }/>
                             })}
-                        </>
+                        </RestaurantTilesSection>
                     </>
                     }
                 </div>
@@ -263,4 +263,10 @@ const LocationErrorMessage = styled.p`
 const SubmitAndCancelBtnSection = styled.div`
     display: inline-block;
     margin-top: 5px;
+`;
+
+const RestaurantTilesSection = styled.div`
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
 `;
