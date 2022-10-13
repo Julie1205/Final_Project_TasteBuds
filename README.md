@@ -23,34 +23,34 @@ TasteBuds was build using JavaScript, React, Node.js, Express.js, MongoDB, TrueW
 
 Log In page
 
-![log in](.\readMe_images\Login.png)
+![log in](https://github.com/Julie1205/Final_Project_TasteBuds/blob/bb094168cdaef461e7b49f924caebdd2f842c515/readMe_images/Login.png)
 
 Home page
 
-![log in](.\readMe_images\home.png)
+![log in](https://github.com/Julie1205/Final_Project_TasteBuds/blob/bb094168cdaef461e7b49f924caebdd2f842c515/readMe_images/home.png)
 
 Example of reastaurant search based on address and example of responsive design
 
-![log in](.\readMe_images\search_near_by.png) 
-![log in](.\readMe_images\search_near_by_responsiveness.png)
+![log in](https://github.com/Julie1205/Final_Project_TasteBuds/blob/bb094168cdaef461e7b49f924caebdd2f842c515/readMe_images/search_near_by.png) 
+![log in](https://github.com/Julie1205/Final_Project_TasteBuds/blob/bb094168cdaef461e7b49f924caebdd2f842c515/readMe_images/search_near_by_responsiveness.png)
 
 Map view feature
 
-![log in](.\readMe_images\search_near_by_map_PopUp.png)
+![log in](https://github.com/Julie1205/Final_Project_TasteBuds/blob/bb094168cdaef461e7b49f924caebdd2f842c515/readMe_images/search_near_by_map_PopUp.png)
 
 Add a restaurant page
 
-![log in](.\readMe_images\add_restaurant.png)
+![log in](https://github.com/Julie1205/Final_Project_TasteBuds/blob/bb094168cdaef461e7b49f924caebdd2f842c515/readMe_images/add_restaurant.png)
 
 My restaurant page where restaurants are display by category
 
-![log in](.\readMe_images\my_restaurants.png)
+![log in](https://github.com/Julie1205/Final_Project_TasteBuds/blob/bb094168cdaef461e7b49f924caebdd2f842c515/readMe_images/my_restaurants.png)
 
 Restaurant details page
 
-![log in](.\readMe_images\restaurant_details.png)
+![log in](https://github.com/Julie1205/Final_Project_TasteBuds/blob/bb094168cdaef461e7b49f924caebdd2f842c515/readMe_images/restaurant_details.png)
 
 Edit restaurant page
 
-![log in](.\readMe_images\Edit_restaurant.png)
+![log in](https://github.com/Julie1205/Final_Project_TasteBuds/blob/bb094168cdaef461e7b49f924caebdd2f842c515/readMe_images/Edit_restaurant.png)
 
