@@ -1,21 +1,31 @@
 # Final_Project_TasteBuds
 
 ## What TasteBuds is:
-TasteBuds is a full-stack web application where users can save restaurants they have been to or want to go to.
+TasteBuds is a **full-stack web application with responsive design** were logged in user can search for restaurants based on location or name and save them. 
 
-This application requires that users be logged in to use any of the features. Log in authentication and password encryption is handled by Auth0. 
+This application requires that users be logged in to use any of the features. 
 
-Once logged in, users can search for restaurants based on location or name and save them. Restaurants can be saved with the following tags: been to, wish to go to, liked, disliked, favorite. Additionally, users can also add cuisine type, comments and pictures to their saved restaurants. 
+Restaurants can be saved with the following tags: been to, wish to go to, liked, disliked, and/or favorite. 
 
-Saved restaurants can be found in their respective categories and searched for based on name or using map view. All saved restaurants entries can be edited and deleted. 
+Additionally, users can also add cuisine type, comments and pictures to their saved restaurants. 
 
-TasteBuds is also built with responsive design.
+Users can search in each category for their saved restaurant by name or view them on a map. 
+
+All saved restaurants entries can also be edited and deleted. 
 
 ---
 
 ## What was TasteBud Built with:
 
-TasteBuds was build using JavaScript, React, Node.js, Express.js, MongoDB, TrueWay Geocoding, TrueWay Places, Auth0, Cloudinary, and Leaflet.
+TasteBuds was build using **React, Node.js, Express.js, MongoDB, TrueWay Geocoding, TrueWay Places, Auth0, Cloudinary, and Leaflet**.
+
+- TrueWay Geocoding and Places were used to determine the user’s geolocation and search for nearby restaurants. 
+
+- Auth0 was used to handle all user creation, log in, and password encryption. 
+
+- Cloudinary was used to host images and provide URLs to display on the website. 
+
+- Leaflet was used to display saved restaurants and search results on a map.
 
 ---
 
